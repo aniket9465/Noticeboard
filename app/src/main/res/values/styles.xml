@@ -1,0 +1,21 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="android:textViewStyle">@style/RobotoTextViewStyle</item>
+        <item name="colorPrimary">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryXtraDark</item>
+        <item name="colorControlNormal">#80000000</item>
+        <item name="colorControlActivated">@color/colorAccentXtraDark</item>
+        <item name="colorControlHighlight">@color/colorAccentXtraDark</item>
+        <item name="colorAccent">@color/black</item>
+    </style>
+    <style name="RobotoTextViewStyle" parent="android:Widget.TextView">
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+    <style name="TextAppearence.App.TextInputLayout" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/colorAccentXtraDark</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+</resources>

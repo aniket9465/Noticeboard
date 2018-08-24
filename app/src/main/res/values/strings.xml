@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Noticeboard</string>
+    <string name="title_activity_login">Login</string>
+    <string name="contact_img">Having trouble signing in? <a href="http://img.channeli.in/contact/">Contact IMG</a></string>
+</resources>
