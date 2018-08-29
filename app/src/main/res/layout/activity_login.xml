@@ -23,9 +23,10 @@ android:background="@android:color/white">
             android:orientation="horizontal"
             android:focusableInTouchMode="true"
             android:id="@+id/clear_focus"
-            android:layout_width="0px"
-            android:layout_height="0px"/>
-
+            android:layout_height="0dp"
+            android:layout_width="0dp"
+            >
+        </LinearLayout>
         <android.support.percent.PercentRelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -111,6 +112,7 @@ android:background="@android:color/white">
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:enabled="false"
                     android:elevation="2dp"
                     android:background="@drawable/login_button_bg"
                     android:textStyle="bold"
@@ -146,7 +148,6 @@ android:background="@android:color/white">
                 android:text="@string/contact_img"/>
 
         </android.support.percent.PercentRelativeLayout>
-
         <TextView
             android:id="@+id/made_with_love"
             android:text="Made with \u2764 by IMG"
