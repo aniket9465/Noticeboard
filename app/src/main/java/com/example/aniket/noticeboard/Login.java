@@ -1,5 +1,7 @@
 package com.example.aniket.noticeboard;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -66,7 +68,9 @@ public class Login extends AppCompatActivity {
                             edit.putString("refresh_token",response.body().getRefresh());
                             edit.putString("access_token",response.body().getAccess());
                             edit.commit();
-
+                            Intent in=new Intent(Login.this,list_of_notices.class);
+                            startActivity(in);
+                            finish();
                             // new screen intent .......
 
                         }
@@ -75,6 +79,11 @@ public class Login extends AppCompatActivity {
                     @Override
                     public void onFailure(Call<login_response> call, Throwable t) {
                         Toast.makeText(Login.this, "connection issue", Toast.LENGTH_SHORT).show();
+                        //remove this
+                        Intent in=new Intent(Login.this,list_of_notices.class);
+                        startActivity(in);
+                        finish();
+                        ////
                     }
                 });
             }
