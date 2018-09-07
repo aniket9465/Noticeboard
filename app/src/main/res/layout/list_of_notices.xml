@@ -1,20 +1,45 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
-
-    <SearchView
-        android:id="@+id/search_bar"
-        android:background="#d4cfcf"
-        android:layout_margin="9dp"
+    <android.support.constraint.ConstraintLayout
+        android:layout_height="40dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:queryHint="search notices" />
+        android:id="@+id/lay">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/navigation_drawer"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/search"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </android.support.constraint.ConstraintLayout>
+    <android.support.v4.widget.SwipeRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/swipeContainer"
+        android:layout_below="@id/lay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
     <ScrollView
         android:background="#d4cfcf"
-        android:layout_below="@id/search_bar"
+        android:layout_below="@id/lay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="true"
@@ -22,13 +47,14 @@
         android:onClick="focus_change"
         >
 
-    <android.support.v7.widget.RecyclerView
+        <android.support.v7.widget.RecyclerView
         android:id="@+id/notice_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
-
-    </android.support.v7.widget.RecyclerView>
+        </android.support.v7.widget.RecyclerView>
 
     </ScrollView>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 </RelativeLayout>

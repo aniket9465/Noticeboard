@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,49 +27,76 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+
 public class list_of_notices extends AppCompatActivity {
 
     ArrayList<notice_card> mlist=new ArrayList<>();
     private boolean isLoading=false;
     private notices_list_adapter adapter;
     ProgressDialog progressDialog;
+    SwipeRefreshLayout swipeContainer;
+    static Retrofit retrofit;
+    static api_interface api_service;
+    String base_url="http://localhost:8000/get_notices/";
     RecyclerView view;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        api_service = functions.getRetrofitInstance(base_url,retrofit).create(api_interface.class);
         setContentView(R.layout.list_of_notices);
-        view=(RecyclerView) findViewById(R.id.notice_list);
+        view = findViewById(R.id.notice_list);
         view.requestFocus();
+        swipeContainer = findViewById(R.id.swipeContainer);
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Log.d("","refresh");
+                notice_request();
+                mlist.clear();
+
+            }
+        });
+        swipeContainer.setColorScheme(android.R.color.holo_blue_dark,
+                android.R.color.holo_green_dark);
         final LinearLayoutManager manager=new LinearLayoutManager(this.getApplicationContext());
         Log.d("tag",view+"");
         view.setLayoutManager(manager);
         adapter=new notices_list_adapter(mlist);
         view.setAdapter(adapter);
         notice_request();
-        view.addOnScrollListener(new RecyclerView.OnScrollListener()
-        {
+        EndlessRecyclerViewScrollListener mScrollListener = new EndlessRecyclerViewScrollListener(manager) {
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                int totalItemCount = manager.getItemCount();
-                int lastVisibleItem = manager.findLastVisibleItemPosition()+1;
-                Log.d("tag",totalItemCount+"  "+lastVisibleItem);
-                if (!isLoading && totalItemCount <= (lastVisibleItem)) {
-                    isLoading=true;
+            public void onLoadMore(int page, final int totalItemsCount, RecyclerView view) {
+                if(totalItemsCount>0 && totalItemsCount<=mlist.size() ){
+                    Log.d("","onloadmore");
                     notice_request();
-                    }
                 }
+            }
+        };
+        view.setOnScrollListener(mScrollListener);
 
-        });
-
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        /*SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) findViewById(R.id.search_bar);
         if (null != searchView) {
             searchView.setSearchableInfo(searchManager
                     .getSearchableInfo(getComponentName()));
             searchView.setIconifiedByDefault(false);
         }
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
 
+            @Override
+            public boolean onClose() {
+                searched="";
+                mlist.clear();
+                notice_request();
+                return false;
+            }
+        });
         SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
             public boolean onQueryTextChange(String newText) {
                 // this is your adapter that will be filtered
@@ -78,11 +107,15 @@ public class list_of_notices extends AppCompatActivity {
             public boolean onQueryTextSubmit(String query) {
                 //Here u can get the value "query" which is entered in the search box.
                 Log.d("",query);
-                notice_search();
+                if(query.equals(""))
+                    notice_request();
+                else
+                    notice_search(query);
+                searched=query;
                 return false;
             }
         };
-        searchView.setOnQueryTextListener(queryTextListener);
+        searchView.setOnQueryTextListener(queryTextListener);*/
 
     }
 
@@ -97,26 +130,86 @@ public class list_of_notices extends AppCompatActivity {
 
     void notice_request()
     {
-        //progressDialog=ProgressDialog.show(list_of_notices.this,"Loading","please wait",true);
-        for(int i=0;i<10;++i)
-        mlist.add(new notice_card());
+        if(swipeContainer!=null)
+            if(!swipeContainer.isRefreshing())
+               progressDialog=ProgressDialog.show(list_of_notices.this,"Loading","please wait",true);
         adapter.notifyData(mlist);
         isLoading=false;
-        //make api call change list accordingly and on response progressDialog.dismiss()
-    }
+        // confirm the url pattern
+        Log.d("","notice_request");
+        Call<notice_list> call=api_service.get_notices(base_url+mlist.size()+"/",getSharedPreferences("Noticeboard_data",0).getString("access token",null));
+        call.enqueue(new Callback<notice_list>() {
+            @Override
+            public void onResponse(Call<notice_list> call, Response<notice_list> response) {
+                for(int i=0;i<response.body().getNotices().size();++i)
+                {
+                    mlist.add(response.body().getNotices().get(i));
+                }
+                progressDialog.dismiss();
+                if(swipeContainer!=null) {
+                    swipeContainer.setRefreshing(false);
+                    Log.d("......",swipeContainer.isRefreshing()+"");
+                }
+                Log.d("f","onrespmpse"+mlist.size()+swipeContainer);
+                adapter.notifyData(mlist);
+            }
 
-    void notice_search()
+            @Override
+            public void onFailure(Call<notice_list> call, Throwable t) {
+                if(swipeContainer!=null)
+                    swipeContainer.setRefreshing(false);
+                Toast.makeText(list_of_notices.this, "connection error", Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
+
+            }
+        });
+        Log.d("","fad");
+        adapter.notifyData(mlist);
+
+    }
+/*
+    void notice_search(String search_query)
     {
-        view.requestFocus();
-        //progressDialog=ProgressDialog.show(list_of_notices.this,"Loading","please wait",true);
+        if(!search_query.equals(searched));
         mlist.clear();
-        for(int i=0;i<10;++i)
-            mlist.add(new notice_card());
+        if(swipeContainer!=null)
+            if(!swipeContainer.isRefreshing())
+                progressDialog=ProgressDialog.show(list_of_notices.this,"Loading","please wait",true);
         adapter.notifyData(mlist);
         isLoading=false;
-        //make api call change list accordingly and on response progressDialog.dismiss()
-    }
+        // confirm the url pattern
+        Log.d("","notice_request");
+        Call<notice_list> call=api_service.get_notices(base_url+mlist.size()+"/search/"+search_query,getSharedPreferences("Noticeboard_data",0).getString("access token",null));
+        call.enqueue(new Callback<notice_list>() {
+            @Override
+            public void onResponse(Call<notice_list> call, Response<notice_list> response) {
+                if(response.body()!=null)
+                for(int i=0;i<response.body().getNotices().size();++i)
+                {
+                    mlist.add(response.body().getNotices().get(i));
+                }
+                progressDialog.dismiss();
+                if(swipeContainer!=null) {
+                    swipeContainer.setRefreshing(false);
+                    Log.d("......",swipeContainer.isRefreshing()+"");
+                }
+                Log.d("f","onrespmpse"+mlist.size()+swipeContainer);
+                adapter.notifyData(mlist);
+            }
 
+            @Override
+            public void onFailure(Call<notice_list> call, Throwable t) {
+                if(swipeContainer!=null)
+                    swipeContainer.setRefreshing(false);
+                Toast.makeText(list_of_notices.this, "connection error", Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
+
+            }
+        });
+        Log.d("","fad");
+        adapter.notifyData(mlist);
+    }
+*/
     public class notices_list_adapter extends RecyclerView.Adapter<notices_list_adapter.notice_view_holder>
     {
 
@@ -125,12 +218,16 @@ public class list_of_notices extends AppCompatActivity {
         class notice_view_holder extends RecyclerView.ViewHolder
         {
             TextView subject;
-            Button star;
+            TextView banner;
+            TextView date;
+            ImageView star;
             notice_view_holder(View parent)
             {
                 super(parent);
                 this.subject=parent.findViewById(R.id.subject);
                 this.star=parent.findViewById(R.id.star);
+                this.banner=parent.findViewById(R.id.banner);
+                this.date=parent.findViewById(R.id.date);
             }
         }
 
@@ -155,7 +252,7 @@ public class list_of_notices extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(notice_view_holder holder, int position) {
-           holder.subject.setText(list.get(position).subject+"notice "+(position+1));
+           holder.subject.setText(list.get(position).getBanner());
            holder.subject.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -171,6 +268,8 @@ public class list_of_notices extends AppCompatActivity {
                    Toast.makeText(list_of_notices.this, "notice starred", Toast.LENGTH_SHORT).show();
                }
            });
+           holder.date.setText(list.get(position).getDatertimeModified());
+           holder.subject.setText(list.get(position).getTitle());
         }
 
         @Override

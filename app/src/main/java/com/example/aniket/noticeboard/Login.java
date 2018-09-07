@@ -51,7 +51,7 @@ public class Login extends AppCompatActivity {
         SubmitButton.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                api_service = getRetrofitInstance().create(api_interface.class);
+                api_service = functions.getRetrofitInstance(base_url,retrofit).create(api_interface.class);
                 login_credentials credentials=new login_credentials(UsernameText.getText().toString(),PasswordText.getText().toString());
                 Call<login_response> call= api_service.login(credentials);
                 call.enqueue(new Callback<login_response>() {
@@ -132,15 +132,6 @@ public class Login extends AppCompatActivity {
 
             }
         });
-    }
-    public static Retrofit getRetrofitInstance() {
-        if (retrofit == null) {
-            retrofit = new retrofit2.Retrofit.Builder()
-                    .baseUrl(base_url)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
-        }
-        return retrofit;
     }
 
 }
