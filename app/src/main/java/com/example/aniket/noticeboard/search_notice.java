@@ -37,6 +37,7 @@ public class search_notice extends AppCompatActivity {
     private boolean isLoading=false;
     ProgressDialog progressDialog;
     String base_url;
+    ImageView back_button;
     SwipeRefreshLayout swipeContainer;
     private search_notice.notices_list_adapter adapter;
     RecyclerView view;
@@ -50,6 +51,16 @@ public class search_notice extends AppCompatActivity {
         api_service = functions.getRetrofitInstance(base_url,retrofit).create(api_interface.class);
         view = findViewById(R.id.notice_list);
         view.requestFocus();
+        back_button=findViewById(R.id.back_button);
+        back_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                Log.d("f","click");
+                    finish();
+            }
+        });
         swipeContainer = findViewById(R.id.swipeContainer);
         // Setup refresh listener which triggers new data loading
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -67,7 +78,6 @@ public class search_notice extends AppCompatActivity {
         view.setLayoutManager(manager);
         adapter=new search_notice.notices_list_adapter(mlist);
         view.setAdapter(adapter);
-        notice_search(searched);
         EndlessRecyclerViewScrollListener mScrollListener = new EndlessRecyclerViewScrollListener(manager) {
             @Override
             public void onLoadMore(int page, final int totalItemsCount, RecyclerView view) {
@@ -96,7 +106,7 @@ public class search_notice extends AppCompatActivity {
 
             public boolean onQueryTextSubmit(String query) {
                 //Here u can get the value "query" which is entered in the search box.
-                Log.d("",query);
+                Log.d("/////////////////////",query);
                 notice_search(query);
                 searched=query;
                 return false;
@@ -133,6 +143,7 @@ public class search_notice extends AppCompatActivity {
                 {
                     mlist.add(response.body().getNotices().get(i));
                 }
+                if(progressDialog!=null)
                 progressDialog.dismiss();
                 if(swipeContainer!=null) {
                     swipeContainer.setRefreshing(false);
@@ -147,6 +158,7 @@ public class search_notice extends AppCompatActivity {
                 if(swipeContainer!=null)
                     swipeContainer.setRefreshing(false);
                 Toast.makeText(search_notice.this, "connection error", Toast.LENGTH_SHORT).show();
+                if(progressDialog!=null)
                 progressDialog.dismiss();
 
             }

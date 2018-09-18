@@ -54,7 +54,7 @@ public class list_of_notices extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent in =new Intent(list_of_notices.this,search_notice.class);
-                startActivity(in);
+                startActivityForResult(in,1);
             }
         });
         swipeContainer = findViewById(R.id.swipeContainer);

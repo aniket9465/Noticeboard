@@ -6,14 +6,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <SearchView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:id="@+id/search_bar"
+    <ImageView
+        android:id="@+id/back_button"
+        android:layout_width="37dp"
+        android:layout_height="33dp"
         android:layout_marginStart="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:padding="10dp"
+        android:src="@drawable/back_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <SearchView
+        android:id="@+id/search_bar"
+        android:layout_width="match_parent"
+        android:layout_height="33dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="@+id/back_button"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -21,7 +36,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/lay"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintTop_toBottomOf="@+id/search_bar"
         >
 
@@ -29,7 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/lay"
-            android:background="#d4cfcf"
+            android:background="#ffffff"
             android:clickable="true"
             android:focusable="true"
             android:onClick="focus_change">
