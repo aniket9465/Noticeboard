@@ -1,6 +1,7 @@
 package com.example.aniket.noticeboard;
 
 import android.accessibilityservice.AccessibilityService;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
@@ -82,7 +83,7 @@ public class list_of_notices extends AppCompatActivity {
         final LinearLayoutManager manager = new LinearLayoutManager(this.getApplicationContext());
         Log.d("tag", view + "");
         view.setLayoutManager(manager);
-        adapter = new notices_list_adapter(mlist,getApplicationContext());
+        adapter = new notices_list_adapter(mlist,list_of_notices.this);
         view.setAdapter(adapter);
         notice_request();
         EndlessRecyclerViewScrollListener mScrollListener = new EndlessRecyclerViewScrollListener(manager) {

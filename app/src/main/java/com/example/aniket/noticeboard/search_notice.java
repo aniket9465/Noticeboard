@@ -76,7 +76,7 @@ public class search_notice extends AppCompatActivity {
         final LinearLayoutManager manager = new LinearLayoutManager(this.getApplicationContext());
         Log.d("tag", view + "");
         view.setLayoutManager(manager);
-        adapter = new notices_list_adapter(mlist,getApplicationContext());
+        adapter = new notices_list_adapter(mlist,search_notice.this);
         view.setAdapter(adapter);
         EndlessRecyclerViewScrollListener mScrollListener = new EndlessRecyclerViewScrollListener(manager) {
             @Override
