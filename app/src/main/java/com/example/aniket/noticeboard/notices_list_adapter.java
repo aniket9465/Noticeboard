@@ -3,6 +3,7 @@ package com.example.aniket.noticeboard;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -52,7 +53,7 @@ public class notices_list_adapter extends RecyclerView.Adapter<notices_list_adap
     }
 
     @Override
-    public void onBindViewHolder(notices_list_adapter.notice_view_holder holder, final int position) {
+    public void onBindViewHolder(final notices_list_adapter.notice_view_holder holder, final int position) {
         holder.subject.setText(list.get(position).getBanner());
         holder.subject.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,6 +62,23 @@ public class notices_list_adapter extends RecyclerView.Adapter<notices_list_adap
                 //make call for read
                 Intent i = new Intent(context , notice_view.class);
                 ((Activity)context).startActivityForResult(i,0);
+                api_service = functions.getRetrofitInstance(base_url_read, retrofit_read).create(api_interface.class);
+                String access_token = context.getSharedPreferences("Noticeboard_data", 0).getString("access_token", null);
+                Call<Void> call = api_service.read(base_url_read , access_token,"{ notice_id : "+list.get(position).getId()+" }");
+                //Log.d("......", list.get(position).getId()+"////");
+                call.enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        Log.d("",response+"");
+                        if(response.code()==200)
+                           holder.card.setBackgroundColor(Color.parseColor("#4dc4c4c4"));
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+
+                    }
+                });
             }
         });
         holder.bookmark.setOnClickListener(new View.OnClickListener() {
@@ -92,7 +110,7 @@ public class notices_list_adapter extends RecyclerView.Adapter<notices_list_adap
 
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
-                        Toast.makeText(context, "network issue", Toast.LENGTH_SHORT).show();
+
                     }
                 });
 
@@ -101,6 +119,14 @@ public class notices_list_adapter extends RecyclerView.Adapter<notices_list_adap
         if(list.get(position).getBookmark())
         {
             holder.bookmark.setImageResource(R.drawable.bookmarked);
+        }
+        if(list.get(position).getRead())
+        {
+            holder.card.setBackgroundColor(Color.parseColor("#4dc4c4c4"));
+        }
+        else
+        {
+            holder.card.setBackgroundColor(Color.parseColor("#ffffff"));
         }
         holder.date.setText(list.get(position).getDatertimeModified());
         holder.subject.setText(list.get(position).getTitle());
@@ -116,9 +142,11 @@ public class notices_list_adapter extends RecyclerView.Adapter<notices_list_adap
         TextView banner;
         TextView date;
         ImageView bookmark;
+        View card;
 
         notice_view_holder(View parent) {
             super(parent);
+            this.card=parent;
             this.subject = parent.findViewById(R.id.subject);
             this.bookmark = parent.findViewById(R.id.bookmark);
             this.banner = parent.findViewById(R.id.banner);

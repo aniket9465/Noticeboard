@@ -18,8 +18,11 @@ public interface api_interface {
     Call<notice_list> get_notices(@Url String url, @Header("access_token") String access_token);
 
     @GET
-    Call<Void> search_notices(@Url String url, @Header("access_token") String access_token);
+    Call<notice_list> search_notices(@Url String url, @Header("access_token") String access_token);
 
     @POST
     Call<Void> bookmark(@Url String url, @Header("access_token") String access_token,@Body String notice_id);
+
+    @POST
+    Call<Void> read(@Url String url, @Header("access_token") String access_token,@Body String notice_id);
 }

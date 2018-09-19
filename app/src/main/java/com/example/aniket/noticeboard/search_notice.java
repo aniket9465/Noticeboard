@@ -132,7 +132,7 @@ public class search_notice extends AppCompatActivity {
         isLoading = false;
         // confirm the url pattern
         Log.d("", "notice_request");
-        Call<notice_list> call = api_service.get_notices(base_url, getSharedPreferences("Noticeboard_data", 0).getString("access token", null));
+        Call<notice_list> call = api_service.search_notices(base_url, getSharedPreferences("Noticeboard_data", 0).getString("access token", null));
         call.enqueue(new Callback<notice_list>() {
             @Override
             public void onResponse(Call<notice_list> call, Response<notice_list> response) {
