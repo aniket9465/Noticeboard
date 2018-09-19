@@ -19,10 +19,10 @@ public class notice_card {
     private String mainCategory;
     @SerializedName("read")
     @Expose
-    private Boolean read;
+    public Boolean read;
     @SerializedName("starred")
     @Expose
-    private Boolean starred;
+    public Boolean bookmark;
     @SerializedName("title")
     @Expose
     private String title;
@@ -67,12 +67,12 @@ public class notice_card {
         this.read = read;
     }
 
-    public Boolean getStarred() {
-        return starred;
+    public Boolean getBookmark() {
+        return bookmark;
     }
 
     public void setStarred(Boolean starred) {
-        this.starred = starred;
+        this.bookmark = bookmark;
     }
 
     public String getTitle() {

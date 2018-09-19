@@ -25,50 +25,48 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /*
 on successful login saving data in shared preferences in name : "Noticeboard_data"
 with refresh token with key "refresh_token"
-with access token with key "access token"
+with access token with key "access_token"
  */
 
 public class Login extends AppCompatActivity {
-    EditText UsernameText ;
-    EditText PasswordText ;
-    Button SubmitButton ;
-    static String base_url="http://127.0.0.1:8000";
+    static String base_url = "http://127.0.0.1:8000";
     static Retrofit retrofit;
     static api_interface api_service;
+    EditText UsernameText;
+    EditText PasswordText;
+    Button SubmitButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         findViewById(R.id.clear_focus).requestFocus();
-        TextView link= (TextView) findViewById(R.id.link);
+        TextView link = (TextView) findViewById(R.id.link);
         link.setMovementMethod(LinkMovementMethod.getInstance());
-        TextView img_love= (TextView) findViewById(R.id.made_with_love);
-        String text = "Made with <font color=#F50057>"+String.valueOf(Character.toChars(0x2764))+"</font> by IMG";
+        TextView img_love = (TextView) findViewById(R.id.made_with_love);
+        String text = "Made with <font color=#F50057>" + String.valueOf(Character.toChars(0x2764)) + "</font> by IMG";
         img_love.setText(Html.fromHtml(text));
-        UsernameText=findViewById(R.id.Username);
-        PasswordText=findViewById(R.id.Password);
-        SubmitButton=findViewById(R.id.Submit);
+        UsernameText = findViewById(R.id.Username);
+        PasswordText = findViewById(R.id.Password);
+        SubmitButton = findViewById(R.id.Submit);
         SubmitButton.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                api_service = functions.getRetrofitInstance(base_url,retrofit).create(api_interface.class);
-                login_credentials credentials=new login_credentials(UsernameText.getText().toString(),PasswordText.getText().toString());
-                Call<login_response> call= api_service.login(credentials);
+                api_service = functions.getRetrofitInstance(base_url, retrofit).create(api_interface.class);
+                login_credentials credentials = new login_credentials(UsernameText.getText().toString(), PasswordText.getText().toString());
+                Call<login_response> call = api_service.login(credentials);
                 call.enqueue(new Callback<login_response>() {
                     @Override
                     public void onResponse(Call<login_response> call, Response<login_response> response) {
-                        if(response.body()==null)
-                        {
+                        if (response.body() == null) {
                             Toast.makeText(Login.this, "wrong credentials :(", Toast.LENGTH_SHORT).show();
-                        }
-                        else
-                        {
-                            SharedPreferences pref= getApplicationContext().getSharedPreferences("Noticeboard_data",0);
-                            SharedPreferences.Editor edit=pref.edit();
-                            edit.putString("refresh_token",response.body().getRefresh());
-                            edit.putString("access_token",response.body().getAccess());
+                        } else {
+                            SharedPreferences pref = getApplicationContext().getSharedPreferences("Noticeboard_data", 0);
+                            SharedPreferences.Editor edit = pref.edit();
+                            edit.putString("refresh_token", response.body().getRefresh());
+                            edit.putString("access_token", response.body().getAccess());
                             edit.commit();
-                            Intent in=new Intent(Login.this,list_of_notices.class);
+                            Intent in = new Intent(Login.this, list_of_notices.class);
                             startActivity(in);
                             finish();
                             // new screen intent .......
@@ -80,7 +78,7 @@ public class Login extends AppCompatActivity {
                     public void onFailure(Call<login_response> call, Throwable t) {
                         Toast.makeText(Login.this, "connection issue", Toast.LENGTH_SHORT).show();
                         //remove this
-                        Intent in=new Intent(Login.this,list_of_notices.class);
+                        Intent in = new Intent(Login.this, list_of_notices.class);
                         startActivity(in);
                         finish();
                         ////

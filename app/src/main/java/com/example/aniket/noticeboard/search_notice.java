@@ -33,32 +33,32 @@ import static com.example.aniket.noticeboard.list_of_notices.retrofit;
 public class search_notice extends AppCompatActivity {
 
     ArrayList<notice_card> mlist;
-    String searched="";
-    private boolean isLoading=false;
+    String searched = "";
     ProgressDialog progressDialog;
     String base_url;
     ImageView back_button;
     SwipeRefreshLayout swipeContainer;
-    private search_notice.notices_list_adapter adapter;
     RecyclerView view;
+    private boolean isLoading = false;
+    private notices_list_adapter adapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_notice);
-        base_url="http://localhost:8000/get_notices/search_notices/2/";
-        mlist=new ArrayList<>();
-        api_service = functions.getRetrofitInstance(base_url,retrofit).create(api_interface.class);
+        base_url = "http://localhost:8000/get_notices/search_notices/2/";
+        mlist = new ArrayList<>();
+        api_service = functions.getRetrofitInstance(base_url, retrofit).create(api_interface.class);
         view = findViewById(R.id.notice_list);
         view.requestFocus();
-        back_button=findViewById(R.id.back_button);
+        back_button = findViewById(R.id.back_button);
         back_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                Log.d("f","click");
-                    finish();
+                Log.d("f", "click");
+                finish();
             }
         });
         swipeContainer = findViewById(R.id.swipeContainer);
@@ -73,16 +73,16 @@ public class search_notice extends AppCompatActivity {
         });
         swipeContainer.setColorScheme(android.R.color.holo_blue_dark,
                 android.R.color.holo_green_dark);
-        final LinearLayoutManager manager=new LinearLayoutManager(this.getApplicationContext());
-        Log.d("tag",view+"");
+        final LinearLayoutManager manager = new LinearLayoutManager(this.getApplicationContext());
+        Log.d("tag", view + "");
         view.setLayoutManager(manager);
-        adapter=new search_notice.notices_list_adapter(mlist);
+        adapter = new notices_list_adapter(mlist,getApplicationContext());
         view.setAdapter(adapter);
         EndlessRecyclerViewScrollListener mScrollListener = new EndlessRecyclerViewScrollListener(manager) {
             @Override
             public void onLoadMore(int page, final int totalItemsCount, RecyclerView view) {
-                if(totalItemsCount>0 && totalItemsCount<=mlist.size() ){
-                    Log.d("","onloadmore");
+                if (totalItemsCount > 0 && totalItemsCount <= mlist.size()) {
+                    Log.d("", "onloadmore");
                     notice_search(searched);
                 }
             }
@@ -96,144 +96,72 @@ public class search_notice extends AppCompatActivity {
                     .getSearchableInfo(getComponentName()));
             searchView.setIconifiedByDefault(false);
         }
-        Log.d("",searchView+"");
+        Log.d("", searchView + "");
         SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
             public boolean onQueryTextChange(String newText) {
                 // this is your adapter that will be filtered
-                Log.d(" ",newText);
+                Log.d(" ", newText);
                 return true;
             }
 
             public boolean onQueryTextSubmit(String query) {
                 //Here u can get the value "query" which is entered in the search box.
-                Log.d("/////////////////////",query);
+                Log.d("/////////////////////", query);
                 notice_search(query);
-                searched=query;
+                searched = query;
                 return false;
             }
         };
         searchView.setOnQueryTextListener(queryTextListener);
     }
 
-    public void focus_change(View v)
-    {
-        Log.d("","focus change"+view+view.requestFocus());
+    public void focus_change(View v) {
+        Log.d("", "focus change" + view + view.requestFocus());
         view.requestFocus();
-        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
-    void notice_search(String search_query)
-    {
-        if(!search_query.equals(searched));
+    void notice_search(String search_query) {
+        if (!search_query.equals(searched)) ;
         mlist.clear();
-        if(swipeContainer!=null)
-            if(!swipeContainer.isRefreshing())
-                progressDialog= ProgressDialog.show(search_notice.this,"Loading","please wait",true);
+        if (swipeContainer != null)
+            if (!swipeContainer.isRefreshing())
+                progressDialog = ProgressDialog.show(search_notice.this, "Loading", "please wait", true);
         adapter.notifyData(mlist);
-        isLoading=false;
+        isLoading = false;
         // confirm the url pattern
-        Log.d("","notice_request");
-        Call<notice_list> call=api_service.get_notices(base_url,getSharedPreferences("Noticeboard_data",0).getString("access token",null));
+        Log.d("", "notice_request");
+        Call<notice_list> call = api_service.get_notices(base_url, getSharedPreferences("Noticeboard_data", 0).getString("access token", null));
         call.enqueue(new Callback<notice_list>() {
             @Override
             public void onResponse(Call<notice_list> call, Response<notice_list> response) {
-                if(response.body()!=null)
-                for(int i=0;i<response.body().getNotices().size();++i)
-                {
-                    mlist.add(response.body().getNotices().get(i));
-                }
-                if(progressDialog!=null)
-                progressDialog.dismiss();
-                if(swipeContainer!=null) {
+                if (response.body() != null)
+                    for (int i = 0; i < response.body().getNotices().size(); ++i) {
+                        mlist.add(response.body().getNotices().get(i));
+                    }
+                if (progressDialog != null)
+                    progressDialog.dismiss();
+                if (swipeContainer != null) {
                     swipeContainer.setRefreshing(false);
-                    Log.d("......",swipeContainer.isRefreshing()+"");
+                    Log.d("......", swipeContainer.isRefreshing() + "");
                 }
-                Log.d("f","onrespmpse"+mlist.size()+swipeContainer);
+                Log.d("f", "onrespmpse" + mlist.size() + swipeContainer);
                 adapter.notifyData(mlist);
             }
 
             @Override
             public void onFailure(Call<notice_list> call, Throwable t) {
-                if(swipeContainer!=null)
+                if (swipeContainer != null)
                     swipeContainer.setRefreshing(false);
                 Toast.makeText(search_notice.this, "connection error", Toast.LENGTH_SHORT).show();
-                if(progressDialog!=null)
-                progressDialog.dismiss();
+                if (progressDialog != null)
+                    progressDialog.dismiss();
 
             }
         });
-        Log.d("","fad");
+        Log.d("", "fad");
         adapter.notifyData(mlist);
-    }
-
-    public class notices_list_adapter extends RecyclerView.Adapter<search_notice.notices_list_adapter.notice_view_holder>
-    {
-
-        private ArrayList<notice_card> list;
-
-        class notice_view_holder extends RecyclerView.ViewHolder
-        {
-            TextView subject;
-            TextView banner;
-            TextView date;
-            ImageView star;
-            notice_view_holder(View parent)
-            {
-                super(parent);
-                this.subject=parent.findViewById(R.id.subject);
-                this.star=parent.findViewById(R.id.star);
-                this.banner=parent.findViewById(R.id.banner);
-                this.date=parent.findViewById(R.id.date);
-            }
-        }
-
-        notices_list_adapter(ArrayList<notice_card> list)
-        {
-            this.list=list;
-        }
-
-        public void notifyData(ArrayList<notice_card> myList) {
-            this.list = myList;
-            notifyDataSetChanged();
-        }
-
-        @Override
-        public search_notice.notices_list_adapter.notice_view_holder onCreateViewHolder(ViewGroup parent,
-                                                                                          int viewType) {
-            View v = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.notice_card, parent, false);
-            search_notice.notices_list_adapter.notice_view_holder vh = new search_notice.notices_list_adapter.notice_view_holder(v);
-            return vh;
-        }
-
-        @Override
-        public void onBindViewHolder(search_notice.notices_list_adapter.notice_view_holder holder, int position) {
-            holder.subject.setText(list.get(position).getBanner());
-            holder.subject.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //send information of notice to next activity
-                    Intent i=new Intent( search_notice.this,notice_view.class);
-                    startActivity(i);
-                }
-            });
-            holder.star.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // make call for staring notice
-                    Toast.makeText(search_notice.this, "notice starred", Toast.LENGTH_SHORT).show();
-                }
-            });
-            holder.date.setText(list.get(position).getDatertimeModified());
-            holder.subject.setText(list.get(position).getTitle());
-        }
-
-        @Override
-        public int getItemCount() {
-            return list.size();
-        }
-
     }
 
 }

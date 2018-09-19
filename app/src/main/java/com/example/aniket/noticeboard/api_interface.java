@@ -15,8 +15,8 @@ public interface api_interface {
     Call<login_response> login(@Body login_credentials credentials);
 
     @GET
-    Call<notice_list> get_notices(@Url String url,@Header("access_token") String access_token);
+    Call<notice_list> get_notices(@Url String url, @Header("access_token") String access_token);
 
     @GET
-    Call<notice_list> search_notices(@Url String url,@Header("access_token") String access_token);
+    Call<notice_list> search_notices(@Url String url, @Header("access_token") String access_token);
 }
