@@ -4,7 +4,8 @@
     android:id="@+id/list_of_notices"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    tools:openDrawer="left">
 
     <FrameLayout
         android:id="@+id/content_frame"
@@ -45,6 +46,7 @@
                     android:textSize="20dp"
                     app:layout_constraintStart_toEndOf="@+id/drawer_opener"
                     app:layout_constraintTop_toTopOf="parent" />
+
                 <ImageView
                     android:id="@+id/search"
                     android:layout_width="wrap_content"
@@ -119,5 +121,331 @@
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_gravity="start" />
+        android:layout_gravity="start">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="30"
+                android:background="#78c4c4c4">
+
+            </android.support.constraint.ConstraintLayout>
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:background="#f3f3f3"
+                android:layout_weight="70">
+
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    >
+
+
+                    <android.support.constraint.ConstraintLayout
+                        android:id="@+id/nav_all"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <ImageView
+                            android:id="@+id/nav_view_all"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginTop="8dp"
+                            android:src="@drawable/nav_all_button"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginStart="56dp"
+                            android:layout_marginTop="8dp"
+                            android:text="All"
+                            android:textColor="#000000"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </android.support.constraint.ConstraintLayout>
+
+                    <android.support.constraint.ConstraintLayout
+                        android:id="@+id/nav_authorities"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@+id/nav_all">
+
+                        <ImageView
+                            android:id="@+id/nav_view_authorities"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginTop="8dp"
+                            android:src="@drawable/nav_authorities"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginStart="56dp"
+                            android:layout_marginTop="8dp"
+                            android:text="Authorities"
+                            android:textColor="#000000"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </android.support.constraint.ConstraintLayout>
+
+                    <android.support.constraint.ConstraintLayout
+                        android:id="@+id/nav_departments"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@+id/nav_authorities">
+
+                        <ImageView
+                            android:id="@+id/nav_view_departments"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginTop="8dp"
+                            android:src="@drawable/nav_departments"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginStart="56dp"
+                            android:layout_marginTop="8dp"
+                            android:text="Departments"
+                            android:textColor="#000000"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </android.support.constraint.ConstraintLayout>
+
+                    <android.support.constraint.ConstraintLayout
+                        android:id="@+id/nav_placement"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@+id/nav_departments">
+
+                        <ImageView
+                            android:id="@+id/nav_view_placement"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginTop="8dp"
+                            android:src="@drawable/nav_placement"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginStart="56dp"
+                            android:layout_marginTop="8dp"
+
+                            android:text="Placement Office"
+                            android:textColor="#000000"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </android.support.constraint.ConstraintLayout>
+
+                    <android.support.constraint.ConstraintLayout
+                        android:id="@+id/nav_expired"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@+id/nav_placement">
+
+                        <ImageView
+                            android:id="@+id/nav_view_expired"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginTop="8dp"
+                            android:src="@drawable/nav_expired"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginStart="56dp"
+                            android:layout_marginTop="8dp"
+                            android:text="Expired"
+                            android:textColor="#000000"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </android.support.constraint.ConstraintLayout>
+
+                    <android.support.constraint.ConstraintLayout
+                        android:id="@+id/nav_bookmarks"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@+id/nav_expired">
+
+                        <ImageView
+                            android:id="@+id/nav_view_bookmarks"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginTop="8dp"
+                            android:src="@drawable/nav_bookmarks"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginStart="56dp"
+                            android:layout_marginTop="8dp"
+                            android:text="Bookmarks"
+                            android:textColor="#000000"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </android.support.constraint.ConstraintLayout>
+
+                    <View
+                        android:id="@+id/view2"
+                        android:layout_width="fill_parent"
+                        android:layout_height="1px"
+                        android:layout_marginTop="8dp"
+                        android:background="#000"
+                        app:layout_constraintTop_toBottomOf="@+id/nav_bookmarks"
+                        />
+
+                    <android.support.constraint.ConstraintLayout
+                        android:id="@+id/nav_notification_settings"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        app:layout_constraintTop_toBottomOf="@+id/view2"
+                        >
+
+                        <ImageView
+                            android:id="@+id/nav_view_notification_settings"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginTop="8dp"
+                            android:src="@drawable/nav_notification_settings"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginStart="56dp"
+                            android:layout_marginTop="8dp"
+                            android:text="Notification settings"
+                            android:textColor="#000000"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </android.support.constraint.ConstraintLayout>
+
+                    <android.support.constraint.ConstraintLayout
+                        android:id="@+id/nav_feedback"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        app:layout_constraintTop_toBottomOf="@+id/nav_notification_settings"
+                        >
+
+                        <ImageView
+                            android:id="@+id/nav_view_feedback"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginTop="8dp"
+                            android:src="@drawable/nav_feedback"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginStart="56dp"
+                            android:layout_marginTop="8dp"
+                            android:text="Feedback"
+                            android:textColor="#000000"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </android.support.constraint.ConstraintLayout>
+
+                    <android.support.constraint.ConstraintLayout
+                        android:id="@+id/nav_logout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        app:layout_constraintTop_toBottomOf="@+id/nav_feedback"
+                        >
+
+                        <ImageView
+                            android:id="@+id/nav_view_logout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginTop="8dp"
+                            android:src="@drawable/nav_logout"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginStart="56dp"
+                            android:layout_marginTop="8dp"
+                            android:text="Logout"
+                            android:textColor="#000000"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </android.support.constraint.ConstraintLayout>
+
+
+                </android.support.constraint.ConstraintLayout>
+            </ScrollView>
+        </LinearLayout>
+    </android.support.design.widget.NavigationView>
 </android.support.v4.widget.DrawerLayout>
