@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Noticeboard</string>
+    <string name="base_url">http://127.0.0.1:8000/api/noticeboard/</string>
     <string name="title_activity_login">Login</string>
     <string name="contact_img">Having trouble signing in? <a href="http://img.channeli.in/contact/">Contact IMG</a></string>
 </resources>

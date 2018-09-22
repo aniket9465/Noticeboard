@@ -42,7 +42,7 @@ public class list_of_notices extends AppCompatActivity {
     ArrayList<notice_card> mlist = new ArrayList<>();
     ProgressDialog progressDialog;
     SwipeRefreshLayout swipeContainer;
-    String base_url = "http://localhost:8000/get_notices/";
+    String base_url ;
     RecyclerView view;
     private boolean isLoading = false;
     private notices_list_adapter adapter;
@@ -50,8 +50,10 @@ public class list_of_notices extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        api_service = functions.getRetrofitInstance(base_url, retrofit).create(api_interface.class);
         setContentView(R.layout.list_of_notices);
+        base_url = getResources().getString(R.string.base_url);
+        Log.d("........",base_url);
+        api_service = functions.getRetrofitInstance(base_url, retrofit).create(api_interface.class);
         view = findViewById(R.id.notice_list);
         view.requestFocus();
         findViewById(R.id.search).setOnClickListener(new View.OnClickListener() {
@@ -116,25 +118,30 @@ public class list_of_notices extends AppCompatActivity {
         // confirm the url pattern
         Log.d("", "notice_request");
         String access_token = getSharedPreferences("Noticeboard_data", 0).getString("access_token", null);
-        Call<notice_list> call = api_service.get_notices(base_url + mlist.size() + "/", access_token);
+        Call<notice_list> call = api_service.get_notices(base_url +"notices?"+ mlist.size() +"-"+(mlist.size()+9), access_token);
+        Log.d("tag",call.request().url()+"");
         Log.d("tag////////", call.request().header("access_token") + "" + access_token);
         call.enqueue(new Callback<notice_list>() {
             @Override
             public void onResponse(Call<notice_list> call, Response<notice_list> response) {
-                for (int i = 0; i < response.body().getNotices().size(); ++i) {
-                    mlist.add(response.body().getNotices().get(i));
+                if(response.body()!=null) {
+                    for (int i = 0; i < response.body().getNotices().size(); ++i) {
+                        mlist.add(response.body().getNotices().get(i));
+                    }
                 }
-                progressDialog.dismiss();
-                if (swipeContainer != null) {
-                    swipeContainer.setRefreshing(false);
-                    Log.d("......", swipeContainer.isRefreshing() + "");
-                }
-                Log.d("f", "onrespmpse" + mlist.size() + swipeContainer);
-                adapter.notifyData(mlist);
+                    progressDialog.dismiss();
+                    if (swipeContainer != null) {
+                        swipeContainer.setRefreshing(false);
+                        Log.d("......", swipeContainer.isRefreshing() + "");
+                    }
+                    Log.d("f", "onrespmpse" + mlist.size() + swipeContainer);
+                    adapter.notifyData(mlist);
+
             }
 
             @Override
             public void onFailure(Call<notice_list> call, Throwable t) {
+                Log.d("<<<<<<<<<",t+"");
                 if (swipeContainer != null)
                     swipeContainer.setRefreshing(false);
                 Toast.makeText(list_of_notices.this, "connection error", Toast.LENGTH_SHORT).show();

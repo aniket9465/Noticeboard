@@ -1,62 +1,69 @@
 package com.example.aniket.noticeboard;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class notice_card {
 
-    @SerializedName("banner")
-    @Expose
-    private String banner;
-    @SerializedName("datetime_modified")
-    @Expose
-    private String datetimeModified;
     @SerializedName("id")
     @Expose
-    private String id;
-    @SerializedName("main_category")
-    @Expose
-    private String mainCategory;
-    @SerializedName("read")
-    @Expose
-    public Boolean read;
-    @SerializedName("starred")
-    @Expose
-    public Boolean bookmark;
+    private Integer id;
     @SerializedName("title")
     @Expose
     private String title;
+    @SerializedName("banner")
+    @Expose
+    private Banner banner;
+    @SerializedName("datetimeModified")
+    @Expose
+    private String datetimeModified;
+    @SerializedName("isDraft")
+    @Expose
+    private Boolean isDraft;
+    @SerializedName("read")
+    @Expose
+    private Boolean read;
+    @SerializedName("bookmark")
+    @Expose
+    public Boolean bookmark;
 
-    public String getBanner() {
-        return banner;
-    }
-
-    public void setBanner(String banner) {
-        this.banner = banner;
-    }
-
-    public String getDatertimeModified() {
-        return datetimeModified;
-    }
-
-    public void setDatertimeModified(String datertimeModified) {
-        this.datetimeModified = datertimeModified;
-    }
-
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getMainCategory() {
-        return mainCategory;
+    public String getTitle() {
+        return title;
     }
 
-    public void setMainCategory(String mainCategory) {
-        this.mainCategory = mainCategory;
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public Banner getBanner() {
+        return banner;
+    }
+
+    public void setBanner(Banner banner) {
+        this.banner = banner;
+    }
+
+    public String getDatetimeModified() {
+        return datetimeModified;
+    }
+
+    public void setDatetimeModified(String datetimeModified) {
+        this.datetimeModified = datetimeModified;
+    }
+
+    public Boolean getIsDraft() {
+        return isDraft;
+    }
+
+    public void setIsDraft(Boolean isDraft) {
+        this.isDraft = isDraft;
     }
 
     public Boolean getRead() {
@@ -71,16 +78,8 @@ public class notice_card {
         return bookmark;
     }
 
-    public void setStarred(Boolean starred) {
+    public void setBookmark(Boolean bookmark) {
         this.bookmark = bookmark;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
 }

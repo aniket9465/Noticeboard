@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+<TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="25dp"
+    android:id="@+id/recent_search_text"
+    android:clickable="true"
+    android:paddingBottom="5dp"
+    android:paddingTop="5dp"
+    android:focusable="true"
+    />
+</android.support.constraint.ConstraintLayout>

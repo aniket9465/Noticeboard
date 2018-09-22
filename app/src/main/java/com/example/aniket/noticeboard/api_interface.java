@@ -2,6 +2,8 @@ package com.example.aniket.noticeboard;
 
 import android.content.SharedPreferences;
 
+import java.util.ArrayList;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -21,8 +23,8 @@ public interface api_interface {
     Call<notice_list> search_notices(@Url String url, @Header("access_token") String access_token);
 
     @POST
-    Call<Void> bookmark(@Url String url, @Header("access_token") String access_token,@Body String notice_id);
+    Call<Void> bookmark_read(@Url String url, @Header("access_token") String access_token, @Body bookmark_read_body body);
 
-    @POST
-    Call<Void> read(@Url String url, @Header("access_token") String access_token,@Body String notice_id);
+    @GET
+    Call<notice_content> notice_content(@Url String url,@Header("access_token") String access_token);
 }

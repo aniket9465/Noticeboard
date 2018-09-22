@@ -26,16 +26,13 @@ public class notices_list_adapter extends RecyclerView.Adapter<notices_list_adap
 
     private ArrayList<notice_card> list;
     private Context context;
-    private Retrofit retrofit_bookmark;
-    private Retrofit retrofit_read;
+    private Retrofit retrofit_bookmark_read;
     static api_interface api_service;
-    String base_url_bookmark="http://127.0.0.1:8000/bookmark_notice/";
-    String base_url_read="http://127.0.0.1:8000/read_notice/";
+    String base_url;
     notices_list_adapter(ArrayList<notice_card> list,Context c) {
         this.list = list;
         this.context=c;
-        retrofit_bookmark=functions.getRetrofitInstance(base_url_bookmark,this.retrofit_bookmark);
-        retrofit_read=functions.getRetrofitInstance(base_url_read,this.retrofit_read);
+
     }
 
     public void notifyData(ArrayList<notice_card> myList) {
@@ -54,17 +51,20 @@ public class notices_list_adapter extends RecyclerView.Adapter<notices_list_adap
 
     @Override
     public void onBindViewHolder(final notices_list_adapter.notice_view_holder holder, final int position) {
-        holder.subject.setText(list.get(position).getBanner());
-        holder.subject.setOnClickListener(new View.OnClickListener() {
+        holder.subject.setText(list.get(position).getBanner().getName());
+        View.OnClickListener open_notice = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //send information of notice to next activity
                 //make call for read
                 Intent i = new Intent(context , notice_view.class);
+                i.putExtra("id",list.get(position).getId()+"");
                 ((Activity)context).startActivityForResult(i,0);
-                api_service = functions.getRetrofitInstance(base_url_read, retrofit_read).create(api_interface.class);
+                base_url=context.getResources().getString(R.string.base_url)+"bookmark_read/";
+                retrofit_bookmark_read=functions.getRetrofitInstance(base_url,retrofit_bookmark_read);
+                api_service = functions.getRetrofitInstance(base_url, retrofit_bookmark_read).create(api_interface.class);
                 String access_token = context.getSharedPreferences("Noticeboard_data", 0).getString("access_token", null);
-                Call<Void> call = api_service.read(base_url_read , access_token,"{ notice_id : "+list.get(position).getId()+" }");
+                Call<Void> call = api_service.bookmark_read(base_url , access_token,new bookmark_read_body(list.get(position).getId()+"","read"));
                 //Log.d("......", list.get(position).getId()+"////");
                 call.enqueue(new Callback<Void>() {
                     @Override
@@ -80,14 +80,20 @@ public class notices_list_adapter extends RecyclerView.Adapter<notices_list_adap
                     }
                 });
             }
-        });
+        };
+        holder.card.setOnClickListener(open_notice);
+        holder.subject.setOnClickListener(open_notice);
+        holder.banner.setOnClickListener(open_notice);
+        holder.date.setOnClickListener(open_notice);
         holder.bookmark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
                 // make call for bookmarking notice
-                api_service = functions.getRetrofitInstance(base_url_bookmark, retrofit_bookmark).create(api_interface.class);
+                base_url=context.getResources().getString(R.string.base_url)+"bookmark_read/";
+                retrofit_bookmark_read=functions.getRetrofitInstance(base_url,retrofit_bookmark_read);
+                api_service = functions.getRetrofitInstance(base_url, retrofit_bookmark_read).create(api_interface.class);
                 String access_token = context.getSharedPreferences("Noticeboard_data", 0).getString("access_token", null);
-                Call<Void> call = api_service.bookmark(base_url_bookmark , access_token,"{ notice_id : "+list.get(position).getId()+" }");
+                Call<Void> call = api_service.bookmark_read(base_url , access_token,new bookmark_read_body(list.get(position).getId()+"","read"));
                 //Log.d("......", list.get(position).getId()+"////");
                 call.enqueue(new Callback<Void>() {
                     @Override
@@ -116,9 +122,14 @@ public class notices_list_adapter extends RecyclerView.Adapter<notices_list_adap
 
             }
         });
+        Log.d("///////////",position+" "+list+" "+(list.get(position).getBookmark()));
         if(list.get(position).getBookmark())
         {
             holder.bookmark.setImageResource(R.drawable.bookmarked);
+        }
+        else
+        {
+            holder.bookmark.setImageResource(R.drawable.bookmark);
         }
         if(list.get(position).getRead())
         {
@@ -128,7 +139,7 @@ public class notices_list_adapter extends RecyclerView.Adapter<notices_list_adap
         {
             holder.card.setBackgroundColor(Color.parseColor("#ffffff"));
         }
-        holder.date.setText(list.get(position).getDatertimeModified());
+        holder.date.setText(list.get(position).getDatetimeModified());
         holder.subject.setText(list.get(position).getTitle());
     }
 
