@@ -125,6 +125,7 @@ public class list_of_notices extends AppCompatActivity {
             @Override
             public void onResponse(Call<notice_list> call, Response<notice_list> response) {
                 if(response.body()!=null) {
+
                     for (int i = 0; i < response.body().getNotices().size(); ++i) {
                         mlist.add(response.body().getNotices().get(i));
                     }

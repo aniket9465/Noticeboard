@@ -6,6 +6,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -18,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -25,7 +27,9 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -46,7 +50,7 @@ public class search_notice extends AppCompatActivity {
     ListView search_list;
     SwipeRefreshLayout swipeContainer;
     ArrayAdapter<String> recent_adapter;
-    SearchView searchView;
+    android.support.v7.widget.SearchView searchView;
     RecyclerView view;
     private notices_list_adapter adapter;
 
@@ -125,14 +129,14 @@ public class search_notice extends AppCompatActivity {
 
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        searchView = (SearchView) findViewById(R.id.search_bar);
-        if (null != searchView) {
+        searchView = (android.support.v7.widget.SearchView) findViewById(R.id.search_bar);
+         if (null != searchView) {
             searchView.setSearchableInfo(searchManager
                     .getSearchableInfo(getComponentName()));
             searchView.setIconifiedByDefault(false);
         }
 
-        SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
+        android.support.v7.widget.SearchView.OnQueryTextListener queryTextListener = new android.support.v7.widget.SearchView.OnQueryTextListener() {
             public boolean onQueryTextChange(String newText) {
                 // this is your adapter that will be filtered
                 String recents = getSharedPreferences("Noticeboard_data", 0).getString("recent_searches", "");
@@ -151,6 +155,7 @@ public class search_notice extends AppCompatActivity {
             public boolean onQueryTextSubmit(String query) {
                 //Here u can get the value "query" which is entered in the search box.
                 Log.d("/////////////////////", query);
+                focus_change(findViewById(R.id.notice_list));
                 if (query.equals("")) {
                     recent_searches.setVisibility(View.VISIBLE);
                     swipeContainer.setVisibility(View.INVISIBLE);
@@ -160,12 +165,24 @@ public class search_notice extends AppCompatActivity {
                 SharedPreferences.Editor edit = pref.edit();
                 String recents = getSharedPreferences("Noticeboard_data", 0).getString("recent_searches", "");
                 String[] recent = recents.split(";;;");
-                String recent_string = query + ";;;";
-                for (int i = 0; i < 4 && i < recent.length; ++i) {
-                    recent_string += recent[i] + ";;;";
+                if(!Arrays.asList(recent).contains(query)) {
+                    String recent_string = query + ";;;";
+                    for (int i = 0; i < 4 && i < recent.length; ++i) {
+                        recent_string += recent[i] + ";;;";
+                    }
+                    edit.putString("recent_searches", recent_string);
+                    edit.commit();
                 }
-                edit.putString("recent_searches", recent_string);
-                edit.commit();
+                else
+                {
+                    String recent_string = query + ";;;";
+                    for (int i = 0; i < 5 && i < recent.length; ++i) {
+                        if (!recent[i].equals(query + ""))
+                            recent_string += recent[i] + ";;;";
+                    }
+                    edit.putString("recent_searches", recent_string);
+                    edit.commit();
+                }
                 recent_searches.setVisibility(View.INVISIBLE);
                 swipeContainer.setVisibility(View.VISIBLE);
                 notice_search(query);
@@ -259,6 +276,7 @@ public class search_notice extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     searchView.setQuery(titleText.getText() + "", false);
+                    focus_change(findViewById(R.id.notice_list));
                     SharedPreferences pref = getApplicationContext().getSharedPreferences("Noticeboard_data", 0);
                     SharedPreferences.Editor edit = pref.edit();
                     String recents = getSharedPreferences("Noticeboard_data", 0).getString("recent_searches", "");

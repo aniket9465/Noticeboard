@@ -60,6 +60,9 @@ public class Login extends AppCompatActivity {
                     public void onResponse(Call<login_response> call, Response<login_response> response) {
                         if (response.body() == null) {
                             Toast.makeText(Login.this, "wrong credentials :(", Toast.LENGTH_SHORT).show();
+                            Intent in = new Intent(Login.this, list_of_notices.class);
+                            startActivity(in);
+                            finish();
                         } else {
                             SharedPreferences pref = getApplicationContext().getSharedPreferences("Noticeboard_data", 0);
                             SharedPreferences.Editor edit = pref.edit();
