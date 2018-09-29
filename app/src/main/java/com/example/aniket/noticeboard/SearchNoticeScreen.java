@@ -4,9 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -19,15 +17,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.lang.reflect.Array;
+import com.example.aniket.noticeboard.ApiResponseClasses.NoticeCardResponse;
+import com.example.aniket.noticeboard.ApiResponseClasses.NoticeListResponse;
+import com.example.aniket.noticeboard.Utilities.ApiInterface;
+import com.example.aniket.noticeboard.Utilities.EndlessRecyclerViewScrollListener;
+import com.example.aniket.noticeboard.Utilities.UtilityFunctions;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -35,12 +35,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.example.aniket.noticeboard.list_of_notices.api_service;
-import static com.example.aniket.noticeboard.list_of_notices.retrofit;
+import static com.example.aniket.noticeboard.NoticeListScreen.api_service;
+import static com.example.aniket.noticeboard.NoticeListScreen.retrofit;
 
-public class search_notice extends AppCompatActivity {
+public class SearchNoticeScreen extends AppCompatActivity {
 
-    ArrayList<notice_card> mlist;
+    ArrayList<NoticeCardResponse> mlist;
     String searched = "";
     View recent_searches;
     ProgressDialog progressDialog;
@@ -52,7 +52,7 @@ public class search_notice extends AppCompatActivity {
     ArrayAdapter<String> recent_adapter;
     android.support.v7.widget.SearchView searchView;
     RecyclerView view;
-    private notices_list_adapter adapter;
+    private NoticeListAdapter adapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,8 +70,7 @@ public class search_notice extends AppCompatActivity {
         for (int i = 0; i < recent.length; ++i) {
             listItems.add(recent[i]);
         }
-        recent_adapter = new MyListAdapter(this,
-                listItems);
+        recent_adapter = new MyListAdapter(this, listItems);
         search_list.setAdapter(recent_adapter);
         recent_adapter.notifyDataSetChanged();
 
@@ -79,7 +78,7 @@ public class search_notice extends AppCompatActivity {
 
 
         base_url = getResources().getString(R.string.base_url);
-        api_service = functions.getRetrofitInstance(base_url, retrofit).create(api_interface.class);
+        api_service = UtilityFunctions.getRetrofitInstance(base_url, retrofit).create(ApiInterface.class);
 
 
         back_button = findViewById(R.id.back_button);
@@ -114,7 +113,7 @@ public class search_notice extends AppCompatActivity {
         view = findViewById(R.id.notice_list);
         Log.d("tag", view + "");
         view.setLayoutManager(manager);
-        adapter = new notices_list_adapter(mlist, search_notice.this);
+        adapter = new NoticeListAdapter(mlist, SearchNoticeScreen.this);
         view.setAdapter(adapter);
         EndlessRecyclerViewScrollListener mScrollListener = new EndlessRecyclerViewScrollListener(manager) {
             @Override
@@ -131,8 +130,13 @@ public class search_notice extends AppCompatActivity {
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         searchView = (android.support.v7.widget.SearchView) findViewById(R.id.search_bar);
          if (null != searchView) {
-            searchView.setSearchableInfo(searchManager
-                    .getSearchableInfo(getComponentName()));
+             try {
+                 searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+             }
+             catch (Exception e)
+             {
+                 Log.d("Exception",e.toString());
+             }
             searchView.setIconifiedByDefault(false);
         }
 
@@ -168,17 +172,17 @@ public class search_notice extends AppCompatActivity {
                 if(!Arrays.asList(recent).contains(query)) {
                     String recent_string = query + ";;;";
                     for (int i = 0; i < 4 && i < recent.length; ++i) {
-                        recent_string += recent[i] + ";;;";
+                        recent_string = recent_string.concat(recent[i] + ";;;");
                     }
                     edit.putString("recent_searches", recent_string);
-                    edit.commit();
+                    edit.apply();
                 }
                 else
                 {
                     String recent_string = query + ";;;";
                     for (int i = 0; i < 5 && i < recent.length; ++i) {
                         if (!recent[i].equals(query + ""))
-                            recent_string += recent[i] + ";;;";
+                            recent_string = recent_string.concat(recent[i] + ";;;");
                     }
                     edit.putString("recent_searches", recent_string);
                     edit.commit();
@@ -200,7 +204,7 @@ public class search_notice extends AppCompatActivity {
         mlist.clear();
         if (swipeContainer != null)
             if (!swipeContainer.isRefreshing())
-                progressDialog = ProgressDialog.show(search_notice.this, "Loading", "please wait", true);
+                progressDialog = ProgressDialog.show(SearchNoticeScreen.this, "Loading", "please wait", true);
         adapter.notifyData(mlist);
         if (search_query.equals("")) {
             if (swipeContainer != null)
@@ -211,11 +215,12 @@ public class search_notice extends AppCompatActivity {
         }
         // confirm the url pattern
         Log.d("", "notice_request");
-        Call<notice_list> call = api_service.search_notices(base_url + "search?keyword=" + search_query + "&" + mlist.size() + "-" + (mlist.size() + 9), getSharedPreferences("Noticeboard_data", 0).getString("access token", null));
-        call.enqueue(new Callback<notice_list>() {
+        Call<NoticeListResponse> call = api_service.search_notices(search_query, mlist.size()/10+"", getSharedPreferences("Noticeboard_data", 0).getString("access token", null));
+        call.enqueue(new Callback<NoticeListResponse>() {
             @Override
-            public void onResponse(Call<notice_list> call, Response<notice_list> response) {
+            public void onResponse(Call<NoticeListResponse> call, Response<NoticeListResponse> response) {
                 if (response.body() != null) {
+                    if(response.body().getNotices()!=null)
                     for (int i = 0; i < response.body().getNotices().size(); ++i) {
                         mlist.add(response.body().getNotices().get(i));
                     }
@@ -231,10 +236,10 @@ public class search_notice extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<notice_list> call, Throwable t) {
+            public void onFailure(Call<NoticeListResponse> call, Throwable t) {
                 if (swipeContainer != null)
                     swipeContainer.setRefreshing(false);
-                Toast.makeText(search_notice.this, "connection error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SearchNoticeScreen.this, "connection error", Toast.LENGTH_SHORT).show();
                 if (progressDialog != null)
                     progressDialog.dismiss();
 
@@ -258,7 +263,7 @@ public class search_notice extends AppCompatActivity {
         private Activity context;
         private ArrayList<String> maintitle;
 
-        public MyListAdapter(Activity context, ArrayList<String> maintitle) {
+        private MyListAdapter(Activity context, ArrayList<String> maintitle) {
             super(context, 0, maintitle);
             this.context = context;
             this.maintitle = new ArrayList<>();
@@ -284,10 +289,10 @@ public class search_notice extends AppCompatActivity {
                     String recent_string = titleText.getText() + ";;;";
                     for (int i = 0; i < 5 && i < recent.length; ++i) {
                         if (!recent[i].equals(titleText.getText() + ""))
-                            recent_string += recent[i] + ";;;";
+                            recent_string = recent_string.concat(recent[i] + ";;;");
                     }
                     edit.putString("recent_searches", recent_string);
-                    edit.commit();
+                    edit.apply();
                     recent_searches.setVisibility(View.INVISIBLE);
                     swipeContainer.setVisibility(View.VISIBLE);
                     searched = "";

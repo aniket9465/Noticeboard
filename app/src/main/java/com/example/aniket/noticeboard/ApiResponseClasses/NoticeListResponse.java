@@ -1,11 +1,12 @@
-package com.example.aniket.noticeboard;
+package com.example.aniket.noticeboard.ApiResponseClasses;
 
 import java.util.ArrayList;
-import java.util.List;
+
+import com.example.aniket.noticeboard.ApiResponseClasses.NoticeCardResponse;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class notice_list {
+public class NoticeListResponse {
 
     @SerializedName("count")
     @Expose
@@ -18,7 +19,7 @@ public class notice_list {
     private String previous;
     @SerializedName("results")
     @Expose
-    private ArrayList<notice_card> results = new ArrayList<>() ;
+    private ArrayList<NoticeCardResponse> results = new ArrayList<>() ;
 
     public Integer getCount() {
         return count;
@@ -44,11 +45,11 @@ public class notice_list {
         this.previous = previous;
     }
 
-    public ArrayList<notice_card> getNotices() {
+    public ArrayList<NoticeCardResponse> getNotices() {
         return results;
     }
 
-    public void setNotices(ArrayList<notice_card> results) {
+    public void setNotices(ArrayList<NoticeCardResponse> results) {
         this.results = results;
     }
 

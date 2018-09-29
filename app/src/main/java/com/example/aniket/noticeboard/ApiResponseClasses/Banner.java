@@ -1,4 +1,4 @@
-package com.example.aniket.noticeboard;
+package com.example.aniket.noticeboard.ApiResponseClasses;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

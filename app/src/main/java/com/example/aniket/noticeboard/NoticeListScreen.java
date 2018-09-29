@@ -1,9 +1,6 @@
 package com.example.aniket.noticeboard;
 
-import android.accessibilityservice.AccessibilityService;
-import android.app.Activity;
 import android.app.ProgressDialog;
-import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,39 +10,36 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.util.Log;
-import android.util.TimeUtils;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.SearchView;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.aniket.noticeboard.ApiResponseClasses.NoticeCardResponse;
+import com.example.aniket.noticeboard.ApiResponseClasses.NoticeListResponse;
+import com.example.aniket.noticeboard.Utilities.ApiInterface;
+import com.example.aniket.noticeboard.Utilities.EndlessRecyclerViewScrollListener;
+import com.example.aniket.noticeboard.Utilities.UtilityFunctions;
+
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
+import java.util.Collections;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class list_of_notices extends AppCompatActivity {
+public class NoticeListScreen extends AppCompatActivity {
 
     static Retrofit retrofit;
-    static api_interface api_service;
-    ArrayList<notice_card> mlist = new ArrayList<>();
+    static ApiInterface api_service;
+    ArrayList<NoticeCardResponse> mlist = new ArrayList<>();
     ProgressDialog progressDialog;
     SwipeRefreshLayout swipeContainer;
     String base_url ;
     RecyclerView view;
-    private boolean isLoading = false;
-    private notices_list_adapter adapter;
+    private NoticeListAdapter adapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,13 +47,14 @@ public class list_of_notices extends AppCompatActivity {
         setContentView(R.layout.list_of_notices);
         base_url = getResources().getString(R.string.base_url);
         Log.d("........",base_url);
-        api_service = functions.getRetrofitInstance(base_url, retrofit).create(api_interface.class);
+        retrofit=UtilityFunctions.getRetrofitInstance(getResources().getString(R.string.base_url), retrofit);
+        api_service = retrofit.create(ApiInterface.class);
         view = findViewById(R.id.notice_list);
         view.requestFocus();
         findViewById(R.id.search).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent in = new Intent(list_of_notices.this, search_notice.class);
+                Intent in = new Intent(NoticeListScreen.this, SearchNoticeScreen.class);
                 startActivityForResult(in, 1);
             }
         });
@@ -80,12 +75,12 @@ public class list_of_notices extends AppCompatActivity {
 
             }
         });
-        swipeContainer.setColorScheme(android.R.color.holo_blue_dark,
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_dark,
                 android.R.color.holo_green_dark);
         final LinearLayoutManager manager = new LinearLayoutManager(this.getApplicationContext());
         Log.d("tag", view + "");
         view.setLayoutManager(manager);
-        adapter = new notices_list_adapter(mlist,list_of_notices.this);
+        adapter = new NoticeListAdapter(mlist,NoticeListScreen.this);
         view.setAdapter(adapter);
         notice_request();
         EndlessRecyclerViewScrollListener mScrollListener = new EndlessRecyclerViewScrollListener(manager) {
@@ -97,7 +92,7 @@ public class list_of_notices extends AppCompatActivity {
                 }
             }
         };
-        view.setOnScrollListener(mScrollListener);
+        view.addOnScrollListener(mScrollListener);
 
     }
 
@@ -105,27 +100,31 @@ public class list_of_notices extends AppCompatActivity {
         Log.d("", "focus change" + view + view.requestFocus());
         view.requestFocus();
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        try{
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+        catch (Exception e)
+        {
+            Log.d("Exception",e.toString());
+        }
     }
 
 
     void notice_request() {
         if (swipeContainer != null)
             if (!swipeContainer.isRefreshing())
-                progressDialog = ProgressDialog.show(list_of_notices.this, "Loading", "please wait", true);
+                progressDialog = ProgressDialog.show(NoticeListScreen.this, "Loading", "please wait", true);
         adapter.notifyData(mlist);
-        isLoading = false;
         // confirm the url pattern
         Log.d("", "notice_request");
         String access_token = getSharedPreferences("Noticeboard_data", 0).getString("access_token", null);
-        Call<notice_list> call = api_service.get_notices(base_url +"notices?"+ mlist.size() +"-"+(mlist.size()+9), access_token);
+        Call<NoticeListResponse> call = api_service.get_notices( (mlist.size()/10)+"", access_token);
         Log.d("tag",call.request().url()+"");
         Log.d("tag////////", call.request().header("access_token") + "" + access_token);
-        call.enqueue(new Callback<notice_list>() {
+        call.enqueue(new Callback<NoticeListResponse>() {
             @Override
-            public void onResponse(Call<notice_list> call, Response<notice_list> response) {
+            public void onResponse(Call<NoticeListResponse> call, Response<NoticeListResponse> response) {
                 if(response.body()!=null) {
-
                     for (int i = 0; i < response.body().getNotices().size(); ++i) {
                         mlist.add(response.body().getNotices().get(i));
                     }
@@ -141,11 +140,11 @@ public class list_of_notices extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<notice_list> call, Throwable t) {
+            public void onFailure(Call<NoticeListResponse> call, Throwable t) {
                 Log.d("<<<<<<<<<",t+"");
                 if (swipeContainer != null)
                     swipeContainer.setRefreshing(false);
-                Toast.makeText(list_of_notices.this, "connection error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(NoticeListScreen.this, "connection error", Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
 
             }

@@ -1,9 +1,9 @@
-package com.example.aniket.noticeboard;
+package com.example.aniket.noticeboard.Utilities;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class functions {
+public class UtilityFunctions {
     public static Retrofit getRetrofitInstance(String base_url,Retrofit retrofit) {
        if (retrofit == null) {
             retrofit = new retrofit2.Retrofit.Builder()

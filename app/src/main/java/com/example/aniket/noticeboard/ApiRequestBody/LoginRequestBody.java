@@ -1,9 +1,9 @@
-package com.example.aniket.noticeboard;
+package com.example.aniket.noticeboard.ApiRequestBody;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class login_credentials {
+public class LoginRequestBody {
 
     @SerializedName("username")
     @Expose
@@ -15,7 +15,7 @@ public class login_credentials {
     public String getUsername() {
         return username;
     }
-    public login_credentials(String username,String password)
+    public LoginRequestBody(String username, String password)
     {
         this.username=username;
         this.password=password;

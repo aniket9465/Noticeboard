@@ -1,9 +1,9 @@
-package com.example.aniket.noticeboard;
+package com.example.aniket.noticeboard.ApiResponseClasses;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class login_response {
+public class LoginResponse {
 
     @SerializedName("refresh")
     @Expose

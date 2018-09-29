@@ -1,8 +1,9 @@
-package com.example.aniket.noticeboard;
+package com.example.aniket.noticeboard.ApiResponseClasses;
+import com.example.aniket.noticeboard.ApiResponseClasses.Banner;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class notice_card {
+public class NoticeCardResponse {
 
     @SerializedName("id")
     @Expose
