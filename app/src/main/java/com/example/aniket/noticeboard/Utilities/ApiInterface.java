@@ -2,6 +2,8 @@ package com.example.aniket.noticeboard.Utilities;
 
 import com.example.aniket.noticeboard.ApiRequestBody.BookmarkReadRequestBody;
 import com.example.aniket.noticeboard.ApiRequestBody.LoginRequestBody;
+import com.example.aniket.noticeboard.ApiResponseClasses.Filters;
+import com.example.aniket.noticeboard.ApiResponseClasses.FiltersList;
 import com.example.aniket.noticeboard.ApiResponseClasses.LoginResponse;
 import com.example.aniket.noticeboard.ApiResponseClasses.NoticeContentResponse;
 import com.example.aniket.noticeboard.ApiResponseClasses.NoticeListResponse;
@@ -30,5 +32,22 @@ public interface ApiInterface {
     Call<Void> bookmark_read(@Header("access_token") String access_token, @Body BookmarkReadRequestBody body);
 
     @GET("api/noticeboard/notice/{id}/")
-    Call<NoticeContentResponse> notice_content(@Path(value="id") String id, @Header("access_token") String access_token);
+    Call<NoticeContentResponse> noticeContent(@Path(value="id") String id, @Header("access_token") String access_token);
+
+    @GET("/api/noticeboard/filter_list/")
+    Call<FiltersList> getFilters(@Header("access_token") String access_token);
+
+    @GET("api/noticeboard/date_filter_view/")
+    Call<NoticeListResponse> dateFilter(@Query(value="start") String start,@Query(value = "end") String end,@Query(value = "page") String page,@Header("access_token") String access_token);
+
+    @GET("api/noticeboard/bookmarked_filter_view/{page}/")
+    Call<NoticeListResponse> bookmarkedNotices(@Path(value = "page") String page, @Header("access_token") String access_token);
+
+    @GET("api/noticeboard/expired_notices/{page}/")
+    Call<NoticeListResponse> expiredNotices(@Path(value = "page") String page, @Header("access_token") String access_token);
+
+    @GET("api/noticeboard/filter/")
+    Call<NoticeListResponse> filteredNotices(@Query(value = "banner") String banner,@Query(value = "page") String page, @Header("access_token") String access_token);
+
+
 }

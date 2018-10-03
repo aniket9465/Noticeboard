@@ -51,8 +51,14 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.no
     }
 
     @Override
+    public int getItemCount() {
+        return list.size();
+    }
+
+
+    @Override
     public void onBindViewHolder(@NonNull final NoticeListAdapter.notice_view_holder holder, final int position) {
-        holder.subject.setText(list.get(position).getBanner().getName());
+
         View.OnClickListener open_notice = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,24 +88,28 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.no
                 });
             }
         };
+
         holder.card.setOnClickListener(open_notice);
         holder.subject.setOnClickListener(open_notice);
         holder.banner.setOnClickListener(open_notice);
         holder.date.setOnClickListener(open_notice);
+
+
+
         holder.bookmark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
+
                 // make call for bookmarking notice
                 ApiInterface api_service;
                 retrofit=UtilityFunctions.getRetrofitInstance(context.getResources().getString(R.string.base_url),retrofit);
                 api_service = retrofit.create(ApiInterface.class);
                 String access_token = context.getSharedPreferences("Noticeboard_data", 0).getString("access_token", null);
-                Call<Void> call = api_service.bookmark_read(access_token,new BookmarkReadRequestBody(list.get(position).getId()+"","read"));
-                //Log.d("......", list.get(position).getId()+"////");
+                Call<Void> call = api_service.bookmark_read(access_token,new BookmarkReadRequestBody(list.get(position).getId().toString(),"read"));
                 call.enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
-                        Log.d("",response+"");
+
                         if(response.code()==200)
                         if(list.get(position).getBookmark())
                         {
@@ -113,17 +123,22 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.no
                             list.get(position).bookmark=!list.get(position).getBookmark();
                             Toast.makeText(context, "notice bookmarked", Toast.LENGTH_SHORT).show();
                         }
+                        else
+                        {
+                            Toast.makeText(context, "connection error", Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
-
+                        Toast.makeText(context, "connection error", Toast.LENGTH_SHORT).show();
                     }
                 });
 
             }
         });
-        Log.d("///////////",position+" "+list+" "+(list.get(position).getBookmark()));
+
+
         if(list.get(position).getBookmark())
         {
             holder.bookmark.setImageResource(R.drawable.bookmarked);
@@ -132,6 +147,8 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.no
         {
             holder.bookmark.setImageResource(R.drawable.bookmark);
         }
+
+
         if(list.get(position).getRead())
         {
             holder.card.setBackgroundColor(Color.parseColor("#4dc4c4c4"));
@@ -140,13 +157,13 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.no
         {
             holder.card.setBackgroundColor(Color.parseColor("#ffffff"));
         }
-        holder.date.setText(list.get(position).getDatetimeModified());
-        holder.subject.setText(list.get(position).getTitle());
-    }
 
-    @Override
-    public int getItemCount() {
-        return list.size();
+
+        holder.date.setText(list.get(position).getDatetimeModified());
+
+        holder.subject.setText(list.get(position).getBanner().getName());
+
+        holder.subject.setText(list.get(position).getTitle());
     }
 
     class notice_view_holder extends RecyclerView.ViewHolder {
