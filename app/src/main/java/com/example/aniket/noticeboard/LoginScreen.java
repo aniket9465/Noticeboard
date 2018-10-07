@@ -42,6 +42,15 @@ public class LoginScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
+
+
+        Intent in = new Intent(LoginScreen.this, NoticeListScreen.class);
+        startActivity(in);
+        finish();
+
+
+
         setContentView(R.layout.activity_login);
         findViewById(R.id.clear_focus).requestFocus();
 

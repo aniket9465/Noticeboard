@@ -1,8 +1,10 @@
 package com.example.aniket.noticeboard;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,13 +16,17 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.aniket.noticeboard.ApiResponseClasses.Banner;
 import com.example.aniket.noticeboard.ApiResponseClasses.Filters;
 import com.example.aniket.noticeboard.ApiResponseClasses.FiltersList;
 import com.example.aniket.noticeboard.ApiResponseClasses.NoticeCardResponse;
@@ -51,8 +57,10 @@ public class NoticeListScreen extends AppCompatActivity {
     private NoticeListAdapter adapter;
     private String filter,subfilter;
     private String filterValue;
+    private ArrayList<Banner> subfilterListItems;
     private ArrayList<Filters> filters;
-    private int filterid;
+    private MyListAdapter subfilterAdapter;
+    private String filterid;
     static ProgressDialog progressDialog;
 
     @Override
@@ -65,6 +73,14 @@ public class NoticeListScreen extends AppCompatActivity {
         filters=new ArrayList<>();
         filterValue=null;
         progressDialog=new ProgressDialog(this);
+
+
+        subfilterListItems = new ArrayList<>();
+        subfilterAdapter = new NoticeListScreen.MyListAdapter(this, subfilterListItems);
+        ListView subfilterList = findViewById(R.id.subfilters);
+        subfilterList.setAdapter(subfilterAdapter);
+        subfilterAdapter.notifyDataSetChanged();
+
 
         findViewById(R.id.nav_complete_menu).setVisibility(View.VISIBLE);
         findViewById(R.id.drawer_subfilters).setVisibility(View.INVISIBLE);
@@ -373,7 +389,7 @@ public class NoticeListScreen extends AppCompatActivity {
                 String heading="Placement Notices";
                 ((TextView)findViewById(R.id.heading)).setText(heading);
                 mlist.clear();
-                filterid=-1;
+                filterid="-1";
                 for(int i=0;i<filters.size();++i)
                 {
                     if(filters.get(i).getName().equals("placement"))
@@ -397,19 +413,41 @@ public class NoticeListScreen extends AppCompatActivity {
         findViewById(R.id.nav_authorities).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                filter="placement";
+                filter="authorities";
                 findViewById(R.id.nav_complete_menu).setVisibility(View.INVISIBLE);
                 findViewById(R.id.drawer_subfilters).setVisibility(View.VISIBLE);
                 ((TextView)findViewById(R.id.main_filter)).setText("Authorities");
+                subfilterListItems.clear();
+                for(int i=0;i<filters.size();++i)
+                {
+                    if(filters.get(i).getName().equals("Authorities")) {
+
+                        for (int j = 0; j < filters.get(i).getBanner().size(); ++j) {
+                            subfilterListItems.add(filters.get(i).getBanner().get(j));
+                        }
+                    }
+                }
+                subfilterAdapter.notifyDataSetChanged();
             }
         });
         findViewById(R.id.nav_departments).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                filter="placement";
+                filter="departments";
                 findViewById(R.id.nav_complete_menu).setVisibility(View.INVISIBLE);
                 findViewById(R.id.drawer_subfilters).setVisibility(View.VISIBLE);
                 ((TextView)findViewById(R.id.main_filter)).setText("Departments");
+                subfilterListItems.clear();
+                for(int i=0;i<filters.size();++i)
+                {
+                    if(filters.get(i).getName().equals("Departments")) {
+
+                        for (int j = 0; j < filters.get(i).getBanner().size(); ++j) {
+                            subfilterListItems.add(filters.get(i).getBanner().get(j));
+                        }
+                    }
+                }
+                subfilterAdapter.notifyDataSetChanged();
             }
         });
         findViewById(R.id.back_button).setOnClickListener(new View.OnClickListener() {
@@ -435,6 +473,45 @@ public class NoticeListScreen extends AppCompatActivity {
         catch (Exception e)
         {
             Log.d("Exception",e.toString());
+        }
+    }
+
+
+    public class MyListAdapter extends ArrayAdapter<Banner> {
+
+        private Activity context;
+        private ArrayList<Banner> list;
+
+        private MyListAdapter(Activity context, ArrayList<Banner> subfilters) {
+            super(context, 0, subfilters);
+            this.context = context;
+            this.list=new ArrayList<>();
+            list=subfilters;
+        }
+
+        public View getView(final int position, View view, ViewGroup parent) {
+            LayoutInflater inflater = context.getLayoutInflater();
+            View rowView = inflater.inflate(R.layout.recent_search_view, null, true);
+
+            final TextView titleText = (TextView) rowView.findViewById(R.id.recent_search_text);
+            titleText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    filterid=list.get(position).getId();
+                    RelativeLayout.LayoutParams params= new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+                    params.addRule(RelativeLayout.BELOW, R.id.lay);
+                    findViewById(R.id.swipeContainer).setLayoutParams(params);
+                    String heading=list.get(position).getName();
+                    ((TextView)findViewById(R.id.heading)).setText(heading);
+                    findViewById(R.id.date_time_bar).setVisibility(View.INVISIBLE);
+                    mlist.clear();
+                    ((DrawerLayout)findViewById(R.id.list_of_notices)).closeDrawer(Gravity.LEFT);
+                    noticeRequest();
+                }
+            });
+            titleText.setText(list.get(position).getName());
+            return rowView;
+
         }
     }
 
