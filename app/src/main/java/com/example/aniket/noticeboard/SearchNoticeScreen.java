@@ -134,6 +134,8 @@ public class SearchNoticeScreen extends AppCompatActivity {
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         searchView = (android.support.v7.widget.SearchView) findViewById(R.id.search_bar);
+        View v = searchView.findViewById(android.support.v7.appcompat.R.id.search_plate);
+        v.setBackgroundColor(Color.parseColor("#5288DA"));
         EditText editText = ((EditText) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text));
         editText.setHintTextColor(getResources().getColor(R.color.white));
         editText.setTextColor(getResources().getColor(R.color.white));

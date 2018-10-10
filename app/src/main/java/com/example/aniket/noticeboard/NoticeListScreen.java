@@ -19,6 +19,9 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.ScaleAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -61,6 +64,7 @@ public class NoticeListScreen extends AppCompatActivity {
     private ArrayList<Filters> filters;
     private MyListAdapter subfilterAdapter;
     private String filterid;
+    private Animation animShow, animHide ,animShowSubFilters,animHideSubFilters;
     static ProgressDialog progressDialog;
 
     @Override
@@ -73,6 +77,13 @@ public class NoticeListScreen extends AppCompatActivity {
         filters=new ArrayList<>();
         filterValue=null;
         progressDialog=new ProgressDialog(this);
+
+        animShow = AnimationUtils.loadAnimation( this, R.anim.view_show);
+        animHide = AnimationUtils.loadAnimation( this, R.anim.view_hide);
+        animShowSubFilters = new ScaleAnimation(0.0f, 1.0f, 1.0f, 1.0f, Animation.RELATIVE_TO_SELF,0.0f, Animation.RELATIVE_TO_SELF, 0.0f);
+        animShowSubFilters.setDuration(200);
+        animHideSubFilters = new ScaleAnimation(0.0f, 1.0f, 1.0f, 1.0f, Animation.RELATIVE_TO_SELF,1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
+        animShowSubFilters.setDuration(200);
 
 
         subfilterListItems = new ArrayList<>();
@@ -294,6 +305,7 @@ public class NoticeListScreen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d("tag","cover view");
+                findViewById(R.id.date_time_filter).startAnimation(animHide);
                 findViewById(R.id.date_time_filter).setVisibility(View.INVISIBLE);
                 findViewById(R.id.cover_view).setVisibility(View.INVISIBLE);
             }
@@ -302,6 +314,7 @@ public class NoticeListScreen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 findViewById(R.id.date_time_filter).setVisibility(View.VISIBLE);
+                findViewById(R.id.date_time_filter).startAnimation(animShow);
                 findViewById(R.id.cover_view).setVisibility(View.VISIBLE);
             }
         });
@@ -318,6 +331,7 @@ public class NoticeListScreen extends AppCompatActivity {
                 v.setBackgroundColor(Color.parseColor("#EDF4FF"));
                 ((TextView)findViewById(R.id.textView)).setText(subfilter);
                 findViewById(R.id.cover_view).setVisibility(View.INVISIBLE);
+                findViewById(R.id.date_time_filter).startAnimation(animHide);
                 findViewById(R.id.date_time_filter).setVisibility(View.INVISIBLE);
                 mlist.clear();
                 adapter.notifyData(mlist);
@@ -414,8 +428,10 @@ public class NoticeListScreen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 filter="authorities";
+                findViewById(R.id.nav_complete_menu).startAnimation(animHideSubFilters);
                 findViewById(R.id.nav_complete_menu).setVisibility(View.INVISIBLE);
                 findViewById(R.id.drawer_subfilters).setVisibility(View.VISIBLE);
+                findViewById(R.id.drawer_subfilters).startAnimation(animShowSubFilters);
                 ((TextView)findViewById(R.id.main_filter)).setText("Authorities");
                 subfilterListItems.clear();
                 for(int i=0;i<filters.size();++i)
@@ -434,8 +450,10 @@ public class NoticeListScreen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 filter="departments";
+                findViewById(R.id.nav_complete_menu).startAnimation(animHideSubFilters);
                 findViewById(R.id.nav_complete_menu).setVisibility(View.INVISIBLE);
                 findViewById(R.id.drawer_subfilters).setVisibility(View.VISIBLE);
+                findViewById(R.id.drawer_subfilters).startAnimation(animShowSubFilters);
                 ((TextView)findViewById(R.id.main_filter)).setText("Departments");
                 subfilterListItems.clear();
                 for(int i=0;i<filters.size();++i)
@@ -454,7 +472,10 @@ public class NoticeListScreen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 findViewById(R.id.nav_complete_menu).setVisibility(View.VISIBLE);
+                findViewById(R.id.nav_complete_menu).startAnimation(animShowSubFilters);
+                findViewById(R.id.drawer_subfilters).startAnimation(animHideSubFilters);
                 findViewById(R.id.drawer_subfilters).setVisibility(View.INVISIBLE);
+
             }
         });
 

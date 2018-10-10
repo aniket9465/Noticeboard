@@ -23,7 +23,7 @@
             android:clickable="true"
             android:focusable="true"
             android:padding="5dp"
-            android:src="@drawable/back_white"
+            app:srcCompat="@drawable/back_white"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

@@ -22,7 +22,7 @@
             android:clickable="true"
             android:focusable="true"
             android:padding="5dp"
-            android:src="@drawable/back_white"
+            app:srcCompat="@drawable/back_white"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -91,7 +91,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="60dp"
-            android:src="@drawable/share"
+            app:srcCompat="@drawable/share"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -100,7 +100,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginStart="24dp"
-            android:src="@drawable/download"
+            app:srcCompat="@drawable/download"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageView" />
 
