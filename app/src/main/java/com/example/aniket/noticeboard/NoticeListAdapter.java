@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -89,7 +90,7 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.no
             }
         };
 
-        holder.card.setOnClickListener(open_notice);
+        holder.open.setOnClickListener(open_notice);
         holder.subject.setOnClickListener(open_notice);
         holder.banner.setOnClickListener(open_notice);
         holder.date.setOnClickListener(open_notice);
@@ -110,18 +111,16 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.no
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
 
-                        if(response.code()==200)
-                        if(list.get(position).getBookmark())
-                        {
-                            ((ImageView)v).setImageResource(R.drawable.bookmark);
-                            list.get(position).bookmark=!list.get(position).getBookmark();
-                            Toast.makeText(context, "notice unmarked", Toast.LENGTH_SHORT).show();
-                        }
-                        else
-                        {
-                            ((ImageView)v).setImageResource(R.drawable.bookmarked);
-                            list.get(position).bookmark=!list.get(position).getBookmark();
-                            Toast.makeText(context, "notice bookmarked", Toast.LENGTH_SHORT).show();
+                        if(response.code()==200) {
+                            if (list.get(position).getBookmark()) {
+                                ((ImageView) v).setImageResource(R.drawable.bookmark);
+                                list.get(position).bookmark = !list.get(position).getBookmark();
+                                Toast.makeText(context, "notice unmarked", Toast.LENGTH_SHORT).show();
+                            } else {
+                                ((ImageView) v).setImageResource(R.drawable.bookmarked);
+                                list.get(position).bookmark = !list.get(position).getBookmark();
+                                Toast.makeText(context, "notice bookmarked", Toast.LENGTH_SHORT).show();
+                            }
                         }
                         else
                         {
@@ -170,12 +169,15 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.no
         TextView subject;
         TextView banner;
         TextView date;
+        LinearLayout open;
         ImageView bookmark;
         View card;
 
         notice_view_holder(View parent) {
             super(parent);
             this.card=parent;
+            this.open=parent.findViewById(R.id.open);
+
             this.subject = parent.findViewById(R.id.subject);
             this.bookmark = parent.findViewById(R.id.bookmark);
             this.banner = parent.findViewById(R.id.banner);

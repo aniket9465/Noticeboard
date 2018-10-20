@@ -78,6 +78,7 @@ public class NoticeListScreen extends AppCompatActivity {
         filterValue=null;
         progressDialog=new ProgressDialog(this);
 
+
         animShow = AnimationUtils.loadAnimation( this, R.anim.view_show);
         animHide = AnimationUtils.loadAnimation( this, R.anim.view_hide);
         animShowSubFilters = new ScaleAnimation(0.0f, 1.0f, 1.0f, 1.0f, Animation.RELATIVE_TO_SELF,0.0f, Animation.RELATIVE_TO_SELF, 0.0f);
@@ -86,21 +87,18 @@ public class NoticeListScreen extends AppCompatActivity {
         animShowSubFilters.setDuration(200);
 
 
-        subfilterListItems = new ArrayList<>();
+        /*subfilterListItems = new ArrayList<>();
         subfilterAdapter = new NoticeListScreen.MyListAdapter(this, subfilterListItems);
         ListView subfilterList = findViewById(R.id.subfilters);
         subfilterList.setAdapter(subfilterAdapter);
         subfilterAdapter.notifyDataSetChanged();
-
+        */
 
         findViewById(R.id.nav_complete_menu).setVisibility(View.VISIBLE);
-        findViewById(R.id.drawer_subfilters).setVisibility(View.INVISIBLE);
 
         view = findViewById(R.id.notice_list);
         view.requestFocus();
-        findViewById(R.id.date_time_filter).setVisibility(View.INVISIBLE);
-        findViewById(R.id.cover_view).setVisibility(View.INVISIBLE);
-        setUpFilters();
+        setUpDrawer();
 
 
         findViewById(R.id.search).setOnClickListener(new View.OnClickListener() {
@@ -299,64 +297,18 @@ public class NoticeListScreen extends AppCompatActivity {
 
     }
 
-    private void setUpFilters()
+    private void setUpDrawer()
     {
-        findViewById(R.id.cover_view).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("tag","cover view");
-                findViewById(R.id.date_time_filter).startAnimation(animHide);
-                findViewById(R.id.date_time_filter).setVisibility(View.INVISIBLE);
-                findViewById(R.id.cover_view).setVisibility(View.INVISIBLE);
-            }
-        });
-        findViewById(R.id.time_filter_spinner).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                findViewById(R.id.date_time_filter).setVisibility(View.VISIBLE);
-                findViewById(R.id.date_time_filter).startAnimation(animShow);
-                findViewById(R.id.cover_view).setVisibility(View.VISIBLE);
-            }
-        });
-        View.OnClickListener dateSelected=new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                filter="Date_filter";
-                subfilter=((TextView)v).getText().toString();
-                findViewById(R.id.recent_first).setBackgroundColor(Color.parseColor("#ffffff"));
-                findViewById(R.id.a_week_ago).setBackgroundColor(Color.parseColor("#ffffff"));
-                findViewById(R.id.a_month_ago).setBackgroundColor(Color.parseColor("#ffffff"));
-                findViewById(R.id.more_than_month).setBackgroundColor(Color.parseColor("#ffffff"));
-                findViewById(R.id.two_week_ago).setBackgroundColor(Color.parseColor("#ffffff"));
-                v.setBackgroundColor(Color.parseColor("#EDF4FF"));
-                ((TextView)findViewById(R.id.textView)).setText(subfilter);
-                findViewById(R.id.cover_view).setVisibility(View.INVISIBLE);
-                findViewById(R.id.date_time_filter).startAnimation(animHide);
-                findViewById(R.id.date_time_filter).setVisibility(View.INVISIBLE);
-                mlist.clear();
-                adapter.notifyData(mlist);
-                noticeRequest();
-            }
-        };
-        findViewById(R.id.recent_first).setOnClickListener(dateSelected);
-        findViewById(R.id.a_week_ago).setOnClickListener(dateSelected);
-        findViewById(R.id.two_week_ago).setOnClickListener(dateSelected);
-        findViewById(R.id.a_month_ago).setOnClickListener(dateSelected);
-        findViewById(R.id.more_than_month).setOnClickListener(dateSelected);
 
         findViewById(R.id.nav_all).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 filter="All";
-                RelativeLayout.LayoutParams params= new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
-                params.addRule(RelativeLayout.BELOW, R.id.date_time_bar);
-                findViewById(R.id.swipeContainer).setLayoutParams(params);
                 String heading="All Notices";
                 ((TextView)findViewById(R.id.heading)).setText(heading);
-                findViewById(R.id.date_time_bar).setVisibility(View.VISIBLE);
                 mlist.clear();
                 ((DrawerLayout)findViewById(R.id.list_of_notices)).closeDrawer(Gravity.LEFT);
-                findViewById(R.id.recent_first).callOnClick();
+                noticeRequest();
             }
         });
 
@@ -364,14 +316,31 @@ public class NoticeListScreen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 filter="expired";
-                RelativeLayout.LayoutParams params= new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
-                params.addRule(RelativeLayout.BELOW, R.id.lay);
-                findViewById(R.id.swipeContainer).setLayoutParams(params);
                 String heading="Expired Notices";
+                findViewById(R.id.back).setVisibility(View.VISIBLE);
+                findViewById(R.id.filter_button).setVisibility(View.INVISIBLE);
+                findViewById(R.id.search).setVisibility(View.INVISIBLE);
+                findViewById(R.id.drawer_opener).setVisibility(View.INVISIBLE);
                 ((TextView)findViewById(R.id.heading)).setText(heading);
-                findViewById(R.id.date_time_bar).setVisibility(View.INVISIBLE);
                 mlist.clear();
                 ((DrawerLayout)findViewById(R.id.list_of_notices)).closeDrawer(Gravity.LEFT);
+                noticeRequest();
+            }
+        });
+
+        findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filter="All";
+                String heading="All Notices";
+                ((TextView)findViewById(R.id.heading)).setText(heading);
+                mlist.clear();
+                findViewById(R.id.back).setVisibility(View.INVISIBLE);
+                findViewById(R.id.filter_button).setVisibility(View.VISIBLE);
+                findViewById(R.id.content_frame).startAnimation(animHideSubFilters);
+                findViewById(R.id.content_frame).startAnimation(animShowSubFilters);
+                findViewById(R.id.search).setVisibility(View.VISIBLE);
+                findViewById(R.id.drawer_opener).setVisibility(View.VISIBLE);
                 noticeRequest();
             }
         });
@@ -380,17 +349,19 @@ public class NoticeListScreen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 filter="bookmarks";
-                RelativeLayout.LayoutParams params= new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
-                params.addRule(RelativeLayout.BELOW, R.id.lay);
-                findViewById(R.id.swipeContainer).setLayoutParams(params);
                 String heading="Bookmarked Notices";
+                findViewById(R.id.back).setVisibility(View.VISIBLE);
+                findViewById(R.id.filter_button).setVisibility(View.INVISIBLE);
+                findViewById(R.id.search).setVisibility(View.INVISIBLE);
+                findViewById(R.id.drawer_opener).setVisibility(View.INVISIBLE);
                 ((TextView)findViewById(R.id.heading)).setText(heading);
-                findViewById(R.id.date_time_bar).setVisibility(View.INVISIBLE);
                 mlist.clear();
                 ((DrawerLayout)findViewById(R.id.list_of_notices)).closeDrawer(Gravity.LEFT);
                 noticeRequest();
             }
         });
+
+        /*
 
         findViewById(R.id.nav_placement).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -428,6 +399,70 @@ public class NoticeListScreen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 filter="authorities";
+                RelativeLayout.LayoutParams params= new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.addRule(RelativeLayout.BELOW, R.id.lay);
+                findViewById(R.id.swipeContainer).setLayoutParams(params);
+                findViewById(R.id.date_time_bar).setVisibility(View.INVISIBLE);
+                String heading="Authorities Notices";
+                ((TextView)findViewById(R.id.heading)).setText(heading);
+                mlist.clear();
+                filterid="-1";
+                for(int i=0;i<filters.size();++i)
+                {
+                    if(filters.get(i).getName().equals("authorities"))
+                    {
+                        filterid=filters.get(i).getId();
+                        break;
+                    }
+                    for(int j=0;j<filters.get(i).getBanner().size();++j)
+                    {
+                        if(filters.get(i).getBanner().get(j).getName().equals("authorities"))
+                        {
+                            filterid=filters.get(i).getBanner().get(j).getId();
+                        }
+                    }
+                }
+                ((DrawerLayout)findViewById(R.id.list_of_notices)).closeDrawer(Gravity.LEFT);
+                noticeRequest();
+            }
+        });
+
+        findViewById(R.id.nav_departments).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filter="departments";
+                RelativeLayout.LayoutParams params= new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.addRule(RelativeLayout.BELOW, R.id.lay);
+                findViewById(R.id.swipeContainer).setLayoutParams(params);
+                findViewById(R.id.date_time_bar).setVisibility(View.INVISIBLE);
+                String heading="Departments Notices";
+                ((TextView)findViewById(R.id.heading)).setText(heading);
+                mlist.clear();
+                filterid="-1";
+                for(int i=0;i<filters.size();++i)
+                {
+                    if(filters.get(i).getName().equals("departments"))
+                    {
+                        filterid=filters.get(i).getId();
+                        break;
+                    }
+                    for(int j=0;j<filters.get(i).getBanner().size();++j)
+                    {
+                        if(filters.get(i).getBanner().get(j).getName().equals("departments"))
+                        {
+                            filterid=filters.get(i).getBanner().get(j).getId();
+                        }
+                    }
+                }
+                ((DrawerLayout)findViewById(R.id.list_of_notices)).closeDrawer(Gravity.LEFT);
+                noticeRequest();
+            }
+        });
+
+        findViewById(R.id.authorities_subfilter).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filter="authorities";
                 findViewById(R.id.nav_complete_menu).startAnimation(animHideSubFilters);
                 findViewById(R.id.nav_complete_menu).setVisibility(View.INVISIBLE);
                 findViewById(R.id.drawer_subfilters).setVisibility(View.VISIBLE);
@@ -446,7 +481,7 @@ public class NoticeListScreen extends AppCompatActivity {
                 subfilterAdapter.notifyDataSetChanged();
             }
         });
-        findViewById(R.id.nav_departments).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.departments_subfilter).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 filter="departments";
@@ -479,7 +514,7 @@ public class NoticeListScreen extends AppCompatActivity {
             }
         });
 
-
+    */
 
     }
 
@@ -518,16 +553,7 @@ public class NoticeListScreen extends AppCompatActivity {
             titleText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    filterid=list.get(position).getId();
-                    RelativeLayout.LayoutParams params= new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
-                    params.addRule(RelativeLayout.BELOW, R.id.lay);
-                    findViewById(R.id.swipeContainer).setLayoutParams(params);
-                    String heading=list.get(position).getName();
-                    ((TextView)findViewById(R.id.heading)).setText(heading);
-                    findViewById(R.id.date_time_bar).setVisibility(View.INVISIBLE);
-                    mlist.clear();
-                    ((DrawerLayout)findViewById(R.id.list_of_notices)).closeDrawer(Gravity.LEFT);
-                    noticeRequest();
+
                 }
             });
             titleText.setText(list.get(position).getName());
