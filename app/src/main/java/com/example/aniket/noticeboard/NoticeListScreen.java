@@ -36,6 +36,7 @@ import com.example.aniket.noticeboard.ApiResponseClasses.NoticeCardResponse;
 import com.example.aniket.noticeboard.ApiResponseClasses.NoticeListResponse;
 import com.example.aniket.noticeboard.Utilities.ApiInterface;
 import com.example.aniket.noticeboard.Utilities.EndlessRecyclerViewScrollListener;
+import com.example.aniket.noticeboard.Utilities.FilterDialog;
 import com.example.aniket.noticeboard.Utilities.UtilityFunctions;
 
 import java.nio.file.Path;
@@ -62,6 +63,7 @@ public class NoticeListScreen extends AppCompatActivity {
     private String filterValue;
     private ArrayList<Banner> subfilterListItems;
     private ArrayList<Filters> filters;
+    private FilterDialog filterDialog;
     private MyListAdapter subfilterAdapter;
     private String filterid;
     private Animation animShow, animHide ,animShowSubFilters,animHideSubFilters;
@@ -77,6 +79,8 @@ public class NoticeListScreen extends AppCompatActivity {
         filters=new ArrayList<>();
         filterValue=null;
         progressDialog=new ProgressDialog(this);
+
+
 
 
         animShow = AnimationUtils.loadAnimation( this, R.anim.view_show);
@@ -98,7 +102,7 @@ public class NoticeListScreen extends AppCompatActivity {
 
         view = findViewById(R.id.notice_list);
         view.requestFocus();
-        setUpDrawer();
+        setUpOnClicks();
 
 
         findViewById(R.id.search).setOnClickListener(new View.OnClickListener() {
@@ -148,6 +152,7 @@ public class NoticeListScreen extends AppCompatActivity {
         view.addOnScrollListener(mScrollListener);
 
         noticeRequest();
+
 
     }
 
@@ -282,8 +287,9 @@ public class NoticeListScreen extends AppCompatActivity {
                 if(response.body()!=null) {
 
                     filters=response.body().getResult();
-
+                    filterDialog=new FilterDialog(filters,NoticeListScreen.this);
                 }
+                filterDialog=new FilterDialog(filters,NoticeListScreen.this);
 
             }
 
@@ -291,13 +297,13 @@ public class NoticeListScreen extends AppCompatActivity {
             public void onFailure(Call<FiltersList> call, Throwable t) {
 
                 Toast.makeText(NoticeListScreen.this, "connection error", Toast.LENGTH_SHORT).show();
-
+                filterDialog=new FilterDialog(filters,NoticeListScreen.this);
             }
         });
 
     }
 
-    private void setUpDrawer()
+    private void setUpOnClicks()
     {
 
         findViewById(R.id.nav_all).setOnClickListener(new View.OnClickListener() {
@@ -309,6 +315,25 @@ public class NoticeListScreen extends AppCompatActivity {
                 mlist.clear();
                 ((DrawerLayout)findViewById(R.id.list_of_notices)).closeDrawer(Gravity.LEFT);
                 noticeRequest();
+
+
+                findViewById(R.id.filter_menu).setVisibility(View.INVISIBLE);
+            }
+        });
+
+        findViewById(R.id.filter_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(findViewById(R.id.filter_menu).getVisibility()==View.INVISIBLE) {
+                    findViewById(R.id.filter_menu).setVisibility(View.VISIBLE);
+                    findViewById(R.id.filter_menu).startAnimation(animShow);
+                }
+                else
+                {
+
+                    findViewById(R.id.filter_menu).setVisibility(View.INVISIBLE);
+                    findViewById(R.id.filter_menu).startAnimation(animHide);
+                }
             }
         });
 
@@ -325,6 +350,8 @@ public class NoticeListScreen extends AppCompatActivity {
                 mlist.clear();
                 ((DrawerLayout)findViewById(R.id.list_of_notices)).closeDrawer(Gravity.LEFT);
                 noticeRequest();
+
+                findViewById(R.id.filter_menu).setVisibility(View.INVISIBLE);
             }
         });
 
@@ -342,6 +369,8 @@ public class NoticeListScreen extends AppCompatActivity {
                 findViewById(R.id.search).setVisibility(View.VISIBLE);
                 findViewById(R.id.drawer_opener).setVisibility(View.VISIBLE);
                 noticeRequest();
+
+                findViewById(R.id.filter_menu).setVisibility(View.INVISIBLE);
             }
         });
 
@@ -358,6 +387,9 @@ public class NoticeListScreen extends AppCompatActivity {
                 mlist.clear();
                 ((DrawerLayout)findViewById(R.id.list_of_notices)).closeDrawer(Gravity.LEFT);
                 noticeRequest();
+
+
+                findViewById(R.id.filter_menu).setVisibility(View.INVISIBLE);
             }
         });
 

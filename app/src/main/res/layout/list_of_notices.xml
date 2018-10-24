@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:openDrawer="left"
     >
 
     <FrameLayout
@@ -22,7 +21,6 @@
             android:id="@+id/relative_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/lay"
                 android:layout_width="match_parent"
@@ -117,6 +115,306 @@
             </android.support.v4.widget.SwipeRefreshLayout>
 
 
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_below="@id/lay"
+                android:id="@+id/filter_menu"
+                android:background="#EDF4FF"
+                android:visibility="invisible"
+                android:layout_height="match_parent">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:id="@+id/filter_text"
+                    android:text="Filters"
+                    android:textColor="#000"
+                    android:textSize="14dp"
+                    android:paddingLeft="19dp"
+                    android:paddingTop="12dp"
+                    />
+                <View
+                    android:id="@+id/view4"
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:background="#999999"
+                    app:layout_constraintTop_toBottomOf="@+id/filter_text"
+                    />
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="153dp"
+                    android:layout_height="0dp"
+                    android:id="@+id/filter_main_category"
+                    android:layout_marginBottom="48dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/filter_text">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:textSize="14dp"
+                        android:textColor="#000"
+                        android:layout_marginStart="16dp"
+                        android:text="Categories"
+                        app:layout_constraintBottom_toTopOf="@+id/view"
+                        app:layout_constraintStart_toStartOf="parent" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:textSize="12dp"
+                        android:textColor="#5288DA"
+                        android:layout_marginEnd="8dp"
+                        android:text="Reset"
+                        app:layout_constraintBottom_toTopOf="@+id/view"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
+                    <View
+                        android:id="@+id/view"
+                        android:layout_width="123dp"
+                        android:layout_height="1dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="54dp"
+                        android:background="#000"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="114dp"
+                        android:orientation="vertical"
+                        android:id="@+id/sub_c"
+                        app:layout_constraintBottom_toTopOf="@+id/view5"
+                        app:layout_constraintStart_toStartOf="parent" >
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:id="@+id/authority"
+                            android:layout_height="36dp"
+                            android:orientation="horizontal">
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="13dp"
+                                android:layout_marginStart="15dp"
+                                app:srcCompat="@drawable/blue_check"
+                                />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:paddingLeft="8dp"
+                                android:gravity="center"
+                                android:text="Authorities"
+                                />
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="36dp"
+                            android:id="@+id/departments"
+                            android:orientation="horizontal">
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="13dp"
+                                android:layout_marginStart="15dp"
+                                app:srcCompat="@drawable/blue_check"
+                                />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:paddingLeft="8dp"
+                                android:gravity="center"
+                                android:text="Departments"
+                                />
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="36dp"
+                            android:id="@+id/placements"
+                            android:orientation="horizontal">
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="13dp"
+                                android:layout_marginStart="15dp"
+                                app:srcCompat="@drawable/blue_check"
+                                />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:paddingLeft="8dp"
+                                android:gravity="center"
+                                android:text="Placement Office"
+                                />
+                        </LinearLayout>
+                    </LinearLayout>
+                    <View
+                        android:id="@+id/view5"
+                        android:layout_width="123dp"
+                        android:layout_height="1dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="142dp"
+                        android:background="#000"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/view" />
+
+                    <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="1dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:background="#999999"
+                        />
+
+                    <TextView
+                        android:id="@+id/date_filter_not_set"
+                        android:layout_width="wrap_content"
+                        android:layout_height="16dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp"
+                        android:text="Date"
+                        android:textColor="#000"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:textSize="14dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/view5" />
+
+                    <android.support.constraint.ConstraintLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="invisible"
+                        android:id="@+id/date_filter_set"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="20dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/sub_c">
+
+                        <TextView
+                            android:id="@+id/starting_date"
+                            android:layout_width="wrap_content"
+                            android:textColor="#5288DA"
+                            android:textSize="12dp"
+                            android:layout_height="wrap_content"
+                            android:text="11-12-12" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="|"
+                            android:textColor="#5288DA"
+                            android:paddingBottom="2dp"
+                            app:layout_constraintTop_toBottomOf="@id/starting_date"
+                            />
+                        <TextView
+                            android:id="@+id/ending_date"
+                            android:textColor="#5288DA"
+                            android:textSize="12dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:text="12-12-12"
+                            app:layout_constraintTop_toBottomOf="@id/starting_date" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Reset Date filter"
+                            android:textSize="12dp"
+                            android:layout_marginTop="12dp"
+                            android:textColor="#999999"
+                            app:layout_constraintTop_toBottomOf="@id/ending_date"
+                            />
+
+                    </android.support.constraint.ConstraintLayout>
+
+                </android.support.constraint.ConstraintLayout>
+
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="#fff"
+                    android:layout_marginTop="2px"
+                    android:layout_marginBottom="48dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/filter_main_category"
+                    app:layout_constraintTop_toBottomOf="@+id/filter_text">
+
+                    <LinearLayout
+                        android:id="@+id/all"
+                        android:layout_width="match_parent"
+                        android:layout_height="36dp"
+                        android:layout_marginStart="10dp"
+                        android:orientation="horizontal"
+                        app:layout_constraintBottom_toTopOf="@+id/view6"
+                        app:layout_constraintStart_toStartOf="parent">
+
+                        <RadioButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:scaleX="0.5"
+                            android:scaleY="0.5" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:paddingLeft="2dp"
+                            android:text="ALL" />
+                    </LinearLayout>
+
+                    <View
+                        android:id="@+id/view6"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginEnd="23dp"
+                        android:layout_marginStart="23dp"
+                        android:layout_marginTop="54dp"
+                        android:background="#999999"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                    <ScrollView
+                        android:layout_width="wrap_content"
+                        android:layout_marginTop="55dp"
+                        android:layout_height="match_parent">
+                    <ListView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        />
+                    </ScrollView>
+
+                    <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="1dp"
+                        android:background="#999999"
+                        app:layout_constraintBottom_toBottomOf="parent" />
+                </android.support.constraint.ConstraintLayout>
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="153dp"
+                    android:layout_height="48dp"
+                    android:gravity="center"
+                    android:text="Cancel"
+                    android:textAlignment="center"
+                    android:textColor="#5288DA"
+                    android:textSize="16dp"
+                    app:layout_constraintBottom_toBottomOf="parent" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:background="#5288DA"
+                    android:gravity="center"
+                    android:text="Apply"
+                    android:textAlignment="center"
+                    android:textColor="#fff"
+                    android:textSize="16dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/textView" />
+            </android.support.constraint.ConstraintLayout>
         </RelativeLayout>
         </android.support.constraint.ConstraintLayout>
     </FrameLayout>
