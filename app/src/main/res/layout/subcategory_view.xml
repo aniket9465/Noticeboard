@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="52dp"
+    android:clickable="true"
+    android:focusable="true"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RadioButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="false"
+        android:id="@+id/subcategory_bullet"
+        android:gravity="center"
+        android:scaleX="0.5"
+        android:scaleY="0.5"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:id="@+id/subcategory_text"
+        android:clickable="true"
+        app:layout_constraintStart_toEndOf="@id/subcategory_bullet"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:text="sample"
+        android:focusable="true"
+        />
+</android.support.constraint.ConstraintLayout>

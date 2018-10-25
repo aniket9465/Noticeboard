@@ -59,12 +59,9 @@ public class NoticeListScreen extends AppCompatActivity {
     private SwipeRefreshLayout swipeContainer;
     private RecyclerView view;
     private NoticeListAdapter adapter;
-    private String filter,subfilter;
-    private String filterValue;
-    private ArrayList<Banner> subfilterListItems;
+    private String category;
     private ArrayList<Filters> filters;
     private FilterDialog filterDialog;
-    private MyListAdapter subfilterAdapter;
     private String filterid;
     private Animation animShow, animHide ,animShowSubFilters,animHideSubFilters;
     static ProgressDialog progressDialog;
@@ -74,10 +71,9 @@ public class NoticeListScreen extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_of_notices);
-        getFilters();
-        filter="All";
         filters=new ArrayList<>();
-        filterValue=null;
+        getFilters();
+        category="All";
         progressDialog=new ProgressDialog(this);
 
 
@@ -108,6 +104,8 @@ public class NoticeListScreen extends AppCompatActivity {
         findViewById(R.id.search).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                findViewById(R.id.filter_menu).setVisibility(View.INVISIBLE);
+                cancelFilters(v);
                 Intent in = new Intent(NoticeListScreen.this, SearchNoticeScreen.class);
                 startActivityForResult(in, 1);
             }
@@ -174,10 +172,10 @@ public class NoticeListScreen extends AppCompatActivity {
 
 
         Call<NoticeListResponse> call = api_service.get_notices( (mlist.size()/10)+"", access_token);
-        if(filter.equals("All"))
-            call = api_service.get_notices( (mlist.size()/10)+"", access_token);
-        else {
-            if (filter.equals("Date_filter")) {
+        if(category.equals("All")) {
+            call = api_service.get_notices((mlist.size() / 10) + "", access_token);
+
+            /*if (filter.equals("Date_filter")) {
                 Calendar c = Calendar.getInstance();
                 SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
                 String formattedDateStart = "";
@@ -211,26 +209,27 @@ public class NoticeListScreen extends AppCompatActivity {
                 else
                     call = api_service.dateFilter(formattedDateStart, formattedDateEnd, (mlist.size() / 10) + "", access_token);
 
+            }*/
+        }
+        else {
+
+            if(category.equals("bookmarks"))
+            {
+                    call = api_service.bookmarkedNotices( (mlist.size()/10)+"", access_token);
             }
             else
-            {
-                if(filter.equals("bookmarks"))
                 {
-                    call = api_service.bookmarkedNotices( (mlist.size()/10)+"", access_token);
-                }
-                else
-                {
-                    if(filter.equals("expired"))
+                    if(category.equals("expired"))
                     {
                         call = api_service.expiredNotices( (mlist.size()/10)+"", access_token);
                     }
                     else
                     {
-                        call = api_service.filteredNotices( filterid+"",(mlist.size()/10)+"", access_token);
+                        call = api_service.get_notices((mlist.size() / 10) + "", access_token);
                     }
                 }
-            }
         }
+
 
 
 
@@ -309,7 +308,7 @@ public class NoticeListScreen extends AppCompatActivity {
         findViewById(R.id.nav_all).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                filter="All";
+                category="All";
                 String heading="All Notices";
                 ((TextView)findViewById(R.id.heading)).setText(heading);
                 mlist.clear();
@@ -318,6 +317,8 @@ public class NoticeListScreen extends AppCompatActivity {
 
 
                 findViewById(R.id.filter_menu).setVisibility(View.INVISIBLE);
+                findViewById(R.id.swipeContainer).setVisibility(View.VISIBLE);
+                cancelFilters(v);
             }
         });
 
@@ -325,14 +326,17 @@ public class NoticeListScreen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(findViewById(R.id.filter_menu).getVisibility()==View.INVISIBLE) {
+                    findViewById(R.id.swipeContainer).setVisibility(View.INVISIBLE);
                     findViewById(R.id.filter_menu).setVisibility(View.VISIBLE);
                     findViewById(R.id.filter_menu).startAnimation(animShow);
                 }
                 else
                 {
 
+                    findViewById(R.id.swipeContainer).setVisibility(View.VISIBLE);
                     findViewById(R.id.filter_menu).setVisibility(View.INVISIBLE);
                     findViewById(R.id.filter_menu).startAnimation(animHide);
+                    cancelFilters(v);
                 }
             }
         });
@@ -340,7 +344,7 @@ public class NoticeListScreen extends AppCompatActivity {
         findViewById(R.id.nav_expired).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                filter="expired";
+                category="expired";
                 String heading="Expired Notices";
                 findViewById(R.id.back).setVisibility(View.VISIBLE);
                 findViewById(R.id.filter_button).setVisibility(View.INVISIBLE);
@@ -352,13 +356,15 @@ public class NoticeListScreen extends AppCompatActivity {
                 noticeRequest();
 
                 findViewById(R.id.filter_menu).setVisibility(View.INVISIBLE);
+                findViewById(R.id.swipeContainer).setVisibility(View.VISIBLE);
+                cancelFilters(v);
             }
         });
 
         findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                filter="All";
+                category="All";
                 String heading="All Notices";
                 ((TextView)findViewById(R.id.heading)).setText(heading);
                 mlist.clear();
@@ -371,13 +377,15 @@ public class NoticeListScreen extends AppCompatActivity {
                 noticeRequest();
 
                 findViewById(R.id.filter_menu).setVisibility(View.INVISIBLE);
+                findViewById(R.id.swipeContainer).setVisibility(View.VISIBLE);
+                cancelFilters(v);
             }
         });
 
         findViewById(R.id.nav_bookmarks).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                filter="bookmarks";
+                category="bookmarks";
                 String heading="Bookmarked Notices";
                 findViewById(R.id.back).setVisibility(View.VISIBLE);
                 findViewById(R.id.filter_button).setVisibility(View.INVISIBLE);
@@ -390,6 +398,8 @@ public class NoticeListScreen extends AppCompatActivity {
 
 
                 findViewById(R.id.filter_menu).setVisibility(View.INVISIBLE);
+                findViewById(R.id.swipeContainer).setVisibility(View.VISIBLE);
+                cancelFilters(v);
             }
         });
 
@@ -550,6 +560,26 @@ public class NoticeListScreen extends AppCompatActivity {
 
     }
 
+    public void applyFilters(View v)
+    {
+        filterDialog.setNew();
+        findViewById(R.id.swipeContainer).setVisibility(View.VISIBLE);
+        findViewById(R.id.filter_menu).setVisibility(View.INVISIBLE);
+        findViewById(R.id.filter_menu).startAnimation(animHide);
+
+    }
+
+    public void cancelFilters(View v)
+    {
+        filterDialog.setOriginal();
+        findViewById(R.id.swipeContainer).setVisibility(View.VISIBLE);
+        if(findViewById(R.id.filter_menu).getVisibility()==View.VISIBLE) {
+            findViewById(R.id.filter_menu).setVisibility(View.INVISIBLE);
+            findViewById(R.id.filter_menu).startAnimation(animHide);
+        }
+
+    }
+
 
     public void focus_change(View v) {
         Log.d("", "focus change" + view + view.requestFocus());
@@ -564,35 +594,6 @@ public class NoticeListScreen extends AppCompatActivity {
         }
     }
 
-
-    public class MyListAdapter extends ArrayAdapter<Banner> {
-
-        private Activity context;
-        private ArrayList<Banner> list;
-
-        private MyListAdapter(Activity context, ArrayList<Banner> subfilters) {
-            super(context, 0, subfilters);
-            this.context = context;
-            this.list=new ArrayList<>();
-            list=subfilters;
-        }
-
-        public View getView(final int position, View view, ViewGroup parent) {
-            LayoutInflater inflater = context.getLayoutInflater();
-            View rowView = inflater.inflate(R.layout.recent_search_view, null, true);
-
-            final TextView titleText = (TextView) rowView.findViewById(R.id.recent_search_text);
-            titleText.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                }
-            });
-            titleText.setText(list.get(position).getName());
-            return rowView;
-
-        }
-    }
 
 
 }

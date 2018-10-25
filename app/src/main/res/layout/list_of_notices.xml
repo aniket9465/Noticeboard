@@ -120,7 +120,6 @@
                 android:layout_below="@id/lay"
                 android:id="@+id/filter_menu"
                 android:background="#EDF4FF"
-                android:visibility="invisible"
                 android:layout_height="match_parent">
                 <TextView
                     android:layout_width="match_parent"
@@ -181,7 +180,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="114dp"
                         android:orientation="vertical"
                         android:id="@+id/sub_c"
@@ -191,6 +190,7 @@
                             android:layout_width="match_parent"
                             android:id="@+id/authority"
                             android:layout_height="36dp"
+                            android:background="#fff"
                             android:orientation="horizontal">
                             <ImageView
                                 android:layout_width="wrap_content"
@@ -270,8 +270,10 @@
                     <TextView
                         android:id="@+id/date_filter_not_set"
                         android:layout_width="wrap_content"
-                        android:layout_height="16dp"
+                        android:layout_height="24dp"
                         android:layout_marginStart="16dp"
+                        android:paddingRight="32dp"
+                        android:paddingBottom="8dp"
                         android:layout_marginTop="8dp"
                         android:text="Date"
                         android:textColor="#000"
@@ -318,6 +320,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:id="@+id/reset_date_filter"
                             android:text="Reset Date filter"
                             android:textSize="12dp"
                             android:layout_marginTop="12dp"
@@ -339,19 +342,20 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/filter_main_category"
                     app:layout_constraintTop_toBottomOf="@+id/filter_text">
-
                     <LinearLayout
-                        android:id="@+id/all"
                         android:layout_width="match_parent"
+                        android:id="@+id/all_subcategories"
                         android:layout_height="36dp"
                         android:layout_marginStart="10dp"
-                        android:orientation="horizontal"
-                        app:layout_constraintBottom_toTopOf="@+id/view6"
-                        app:layout_constraintStart_toStartOf="parent">
+                        android:layout_marginTop="18dp"
+                        app:layout_constraintBottom_toTopOf="@id/view6"
+                        android:orientation="horizontal">
 
                         <RadioButton
                             android:layout_width="wrap_content"
+                            android:id="@+id/all_subcategories_bullet"
                             android:layout_height="wrap_content"
+                            android:clickable="false"
                             android:scaleX="0.5"
                             android:scaleY="0.5" />
 
@@ -369,21 +373,21 @@
                         android:layout_height="1dp"
                         android:layout_marginEnd="23dp"
                         android:layout_marginStart="23dp"
-                        android:layout_marginTop="54dp"
                         android:background="#999999"
+                        android:layout_marginTop="54dp"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
-                    <ScrollView
-                        android:layout_width="wrap_content"
-                        android:layout_marginTop="55dp"
-                        android:layout_height="match_parent">
-                    <ListView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        />
-                    </ScrollView>
 
+                    <ListView
+                        android:id="@+id/subfilters"
+                        android:layout_width="match_parent"
+                        android:layout_height="479dp"
+                        android:layout_marginStart="10dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/view6"
+                        app:layout_constraintTop_toTopOf="@id/view6" />
                     <View
                         android:layout_width="fill_parent"
                         android:layout_height="1dp"
@@ -397,6 +401,9 @@
                     android:layout_height="48dp"
                     android:gravity="center"
                     android:text="Cancel"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:onClick="cancelFilters"
                     android:textAlignment="center"
                     android:textColor="#5288DA"
                     android:textSize="16dp"
@@ -408,6 +415,9 @@
                     android:background="#5288DA"
                     android:gravity="center"
                     android:text="Apply"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:onClick="applyFilters"
                     android:textAlignment="center"
                     android:textColor="#fff"
                     android:textSize="16dp"
