@@ -97,20 +97,16 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/lay">
 
-                <ScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="#ffffff"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:onClick="focus_change">
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/notice_list"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="match_parent"
+                        android:background="#ffffff"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:onClick="focus_change" />
 
-                </ScrollView>
 
             </android.support.v4.widget.SwipeRefreshLayout>
 
@@ -119,6 +115,7 @@
                 android:layout_width="match_parent"
                 android:layout_below="@id/lay"
                 android:id="@+id/filter_menu"
+                android:visibility="invisible"
                 android:background="#EDF4FF"
                 android:layout_height="match_parent">
                 <TextView
@@ -161,6 +158,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
                         android:textSize="12dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:id="@+id/filter_reset"
                         android:textColor="#5288DA"
                         android:layout_marginEnd="8dp"
                         android:text="Reset"
@@ -194,7 +194,9 @@
                             android:orientation="horizontal">
                             <ImageView
                                 android:layout_width="wrap_content"
+                                android:visibility="invisible"
                                 android:layout_height="wrap_content"
+                                android:id="@+id/authority_bullet"
                                 android:layout_marginTop="13dp"
                                 android:layout_marginStart="15dp"
                                 app:srcCompat="@drawable/blue_check"
@@ -214,9 +216,11 @@
                             android:orientation="horizontal">
                             <ImageView
                                 android:layout_width="wrap_content"
+                                android:visibility="invisible"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="13dp"
                                 android:layout_marginStart="15dp"
+                                android:id="@+id/departments_bullet"
                                 app:srcCompat="@drawable/blue_check"
                                 />
                             <TextView
@@ -235,6 +239,8 @@
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:id="@+id/placements_bullet"
+                                android:visibility="invisible"
                                 android:layout_marginTop="13dp"
                                 android:layout_marginStart="15dp"
                                 app:srcCompat="@drawable/blue_check"

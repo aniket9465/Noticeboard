@@ -16,6 +16,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.ScaleAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -24,10 +27,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.aniket.noticeboard.ApiResponseClasses.Filters;
+import com.example.aniket.noticeboard.ApiResponseClasses.FiltersList;
 import com.example.aniket.noticeboard.ApiResponseClasses.NoticeCardResponse;
 import com.example.aniket.noticeboard.ApiResponseClasses.NoticeListResponse;
 import com.example.aniket.noticeboard.Utilities.ApiInterface;
 import com.example.aniket.noticeboard.Utilities.EndlessRecyclerViewScrollListener;
+import com.example.aniket.noticeboard.Utilities.FilterDialog;
 import com.example.aniket.noticeboard.Utilities.UtilityFunctions;
 
 import java.lang.reflect.Field;
@@ -48,9 +54,12 @@ public class SearchNoticeScreen extends AppCompatActivity {
     ProgressDialog progressDialog;
     ArrayList<String> listItems = new ArrayList<String>();
     ListView search_list;
+    private FilterDialog filterDialog;
+    private ArrayList<Filters> filters;
     SwipeRefreshLayout swipeContainer;
     ArrayAdapter<String> recent_adapter;
     android.support.v7.widget.SearchView searchView;
+    private Animation animShow, animHide ,animShowSubFilters,animHideSubFilters;
     RecyclerView view;
     private NoticeListAdapter adapter;
 
@@ -67,6 +76,36 @@ public class SearchNoticeScreen extends AppCompatActivity {
         swipeContainer = findViewById(R.id.swipeContainer);
         recent_searches.setVisibility(View.VISIBLE);
         swipeContainer.setVisibility(View.INVISIBLE);
+        filters=new ArrayList<>();
+        getFilters();
+
+
+        animShow = AnimationUtils.loadAnimation( this, R.anim.view_show);
+        animHide = AnimationUtils.loadAnimation( this, R.anim.view_hide);
+        animShowSubFilters = new ScaleAnimation(0.0f, 1.0f, 1.0f, 1.0f, Animation.RELATIVE_TO_SELF,0.0f, Animation.RELATIVE_TO_SELF, 0.0f);
+        animShowSubFilters.setDuration(200);
+        animHideSubFilters = new ScaleAnimation(0.0f, 1.0f, 1.0f, 1.0f, Animation.RELATIVE_TO_SELF,1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
+        animShowSubFilters.setDuration(200);
+
+
+        findViewById(R.id.filter_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(findViewById(R.id.filter_menu).getVisibility()==View.INVISIBLE) {
+                    findViewById(R.id.swipeContainer).setVisibility(View.INVISIBLE);
+                    findViewById(R.id.filter_menu).setVisibility(View.VISIBLE);
+                    findViewById(R.id.filter_menu).startAnimation(animShow);
+                }
+                else
+                {
+
+                    findViewById(R.id.swipeContainer).setVisibility(View.VISIBLE);
+                    findViewById(R.id.filter_menu).setVisibility(View.INVISIBLE);
+                    findViewById(R.id.filter_menu).startAnimation(animHide);
+                    cancelFilters(v);
+                }
+            }
+        });
 
 
         listItems = new ArrayList<>();
@@ -161,6 +200,7 @@ public class SearchNoticeScreen extends AppCompatActivity {
 
             public boolean onQueryTextChange(String newText) {
                 // this is your adapter that will be filtered
+                cancelFilters(findViewById(R.id.filter_menu));
                 String recents = getSharedPreferences("Noticeboard_data", 0).getString("recent_searches", "");
                 String[] recent = recents.split(";;;");
                 listItems.clear();
@@ -219,7 +259,6 @@ public class SearchNoticeScreen extends AppCompatActivity {
         searchView.setOnQueryTextListener(queryTextListener);
     }
 
-
     void notice_search(String search_query) {
 
         if (!search_query.equals(searched))
@@ -238,7 +277,7 @@ public class SearchNoticeScreen extends AppCompatActivity {
 
         ApiInterface api_service;
         api_service = UtilityFunctions.getRetrofitInstance(getResources().getString(R.string.base_url), retrofit).create(ApiInterface.class);
-        Call<NoticeListResponse> call = api_service.search_notices(search_query, mlist.size() / 10 + "", getSharedPreferences("Noticeboard_data", 0).getString("access token", null));
+        Call<NoticeListResponse> call = api_service.search_notices(search_query, (mlist.size() / 10+1) + "", getSharedPreferences("Noticeboard_data", 0).getString("access token", null));
 
         call.enqueue(new Callback<NoticeListResponse>() {
             @Override
@@ -275,6 +314,27 @@ public class SearchNoticeScreen extends AppCompatActivity {
                 adapter.notifyData(mlist);
             }
         });
+    }
+
+    public void applyFilters(View v)
+    {
+        mlist.clear();
+        filterDialog.setNew();
+        findViewById(R.id.swipeContainer).setVisibility(View.VISIBLE);
+        findViewById(R.id.filter_menu).setVisibility(View.INVISIBLE);
+        findViewById(R.id.filter_menu).startAnimation(animHide);
+        notice_search(searched);
+    }
+
+    public void cancelFilters(View v)
+    {
+        filterDialog.setOriginal();
+        findViewById(R.id.swipeContainer).setVisibility(View.VISIBLE);
+        if(findViewById(R.id.filter_menu).getVisibility()==View.VISIBLE) {
+            findViewById(R.id.filter_menu).setVisibility(View.INVISIBLE);
+            findViewById(R.id.filter_menu).startAnimation(animHide);
+        }
+
     }
 
     private void focus_change(View v) {
@@ -329,5 +389,40 @@ public class SearchNoticeScreen extends AppCompatActivity {
 
         }
     }
+
+
+
+        private void getFilters()
+        {
+            String access_token = getSharedPreferences("Noticeboard_data", 0).getString("access_token", null);
+            retrofit=UtilityFunctions.getRetrofitInstance(getResources().getString(R.string.base_url),retrofit);
+            ApiInterface api_service = retrofit.create(ApiInterface.class);
+
+            Call<FiltersList> call = api_service.getFilters( access_token);
+            call = api_service.getFilters( access_token);
+
+            call.enqueue(new Callback<FiltersList>() {
+                @Override
+                public void onResponse(Call<FiltersList> call, Response<FiltersList> response) {
+
+                    if(response.body()!=null) {
+
+                        filters=response.body().getResult();
+                        filterDialog=new FilterDialog(filters,SearchNoticeScreen.this);
+                    }
+                    filterDialog=new FilterDialog(filters,SearchNoticeScreen.this);
+
+                }
+
+                @Override
+                public void onFailure(Call<FiltersList> call, Throwable t) {
+
+                    Toast.makeText(SearchNoticeScreen.this, "connection error", Toast.LENGTH_SHORT).show();
+                    filterDialog=new FilterDialog(filters,SearchNoticeScreen.this);
+                }
+            });
+
+        }
+
 
 }

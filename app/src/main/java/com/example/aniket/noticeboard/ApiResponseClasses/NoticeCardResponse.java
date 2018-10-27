@@ -23,7 +23,7 @@ public class NoticeCardResponse {
     @SerializedName("read")
     @Expose
     private Boolean read;
-    @SerializedName("bookmark")
+    @SerializedName("starred")
     @Expose
     public Boolean bookmark;
 

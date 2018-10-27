@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.borax12.materialdaterangepicker.date.DatePickerDialog;
 import com.example.aniket.noticeboard.ApiResponseClasses.Banner;
@@ -23,25 +24,28 @@ import java.util.Calendar;
 public class FilterDialog implements DatePickerDialog.OnDateSetListener{
 
     boolean filterSelected=false;
-    boolean dateFilterSelected=false;
-    String startDate;
-    String endDate;
-    String mainFilter;
-    String filterId;
-    String subFilter;
+    public boolean dateFilterSelected=false;
+    String startDate="";
+    String endDate="";
+    String mainFilter="";
+    String filterId="";
+    String subFilter="";
 
+    RadioButton checked;
     RadioButton pchecked;
 
     ArrayList<Filters> filters;
     Activity activity;
 
+    String currmainFilter="";
+
     boolean tmpfilterSelected=false;
     boolean tmpdateFilterSelected=false;
-    String tmpstartDate;
-    String tmpendDate;
-    String tmpmainFilter;
-    String tmpfilterId;
-    String tmpsubFilter;
+    String tmpstartDate="";
+    String tmpendDate="";
+    String tmpmainFilter="";
+    String tmpfilterId="";
+    String tmpsubFilter="";
 
     private MyListAdapter subfilterAdapter;
     private ArrayList<Banner> subfilterListItems;
@@ -50,6 +54,9 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
     {
          this.filters=filters;
          this.activity=activity;
+         currmainFilter="Authorities";
+         tmpmainFilter="";
+         tmpsubFilter="";
          setUpOnClicks();
         subfilterListItems = new ArrayList<>();
         subfilterAdapter = new MyListAdapter(activity, subfilterListItems);
@@ -99,6 +106,19 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
         activity.findViewById(R.id.authority).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(!currmainFilter.equals("Authorities"))
+                {
+                    ((RadioButton)activity.findViewById(R.id.all_subcategories_bullet)).setChecked(false);
+                }
+                if(tmpmainFilter.equals("Authorities"))
+                {
+                    if(tmpsubFilter.equals("All"))
+                    {
+                        ((RadioButton)activity.findViewById(R.id.all_subcategories_bullet)).setChecked(true);
+                    }
+
+                }
+                currmainFilter="Authorities";
                 activity.findViewById(R.id.authority).setBackgroundColor(Color.parseColor("#EDF4FF"));
                 activity.findViewById(R.id.departments).setBackgroundColor(Color.parseColor("#EDF4FF"));
                 activity.findViewById(R.id.placements).setBackgroundColor(Color.parseColor("#EDF4FF"));
@@ -120,6 +140,19 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
         activity.findViewById(R.id.departments).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(!currmainFilter.equals("Departments"))
+                {
+                    ((RadioButton)activity.findViewById(R.id.all_subcategories_bullet)).setChecked(false);
+                }
+                if(tmpmainFilter.equals("Departments"))
+                {
+                    if(tmpsubFilter.equals("All"))
+                    {
+                        ((RadioButton)activity.findViewById(R.id.all_subcategories_bullet)).setChecked(true);
+                    }
+
+                }
+                currmainFilter="Departments";
                 activity.findViewById(R.id.authority).setBackgroundColor(Color.parseColor("#EDF4FF"));
                 activity.findViewById(R.id.departments).setBackgroundColor(Color.parseColor("#EDF4FF"));
                 activity.findViewById(R.id.placements).setBackgroundColor(Color.parseColor("#EDF4FF"));
@@ -141,6 +174,19 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
         activity.findViewById(R.id.placements).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(!currmainFilter.equals("Placements"))
+                {
+                    ((RadioButton)activity.findViewById(R.id.all_subcategories_bullet)).setChecked(false);
+                }
+                if(tmpmainFilter.equals("Placements"))
+                {
+                    if(tmpsubFilter.equals("All"))
+                    {
+                        ((RadioButton)activity.findViewById(R.id.all_subcategories_bullet)).setChecked(true);
+                    }
+
+                }
+                currmainFilter="Placements";
                 activity.findViewById(R.id.authority).setBackgroundColor(Color.parseColor("#EDF4FF"));
                 activity.findViewById(R.id.departments).setBackgroundColor(Color.parseColor("#EDF4FF"));
                 activity.findViewById(R.id.placements).setBackgroundColor(Color.parseColor("#EDF4FF"));
@@ -166,8 +212,39 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
                 {
                     pchecked.setChecked(false);
                 }
+                activity.findViewById(R.id.authority_bullet).setVisibility(View.INVISIBLE);
+                activity.findViewById(R.id.placements_bullet).setVisibility(View.INVISIBLE);
+                activity.findViewById(R.id.departments_bullet).setVisibility(View.INVISIBLE);
+                tmpsubFilter="All";
+                tmpmainFilter=currmainFilter;
+                if(tmpmainFilter.equals("Authorities"))
+                {
+                    activity.findViewById(R.id.authority_bullet).setVisibility(View.VISIBLE);
+                }
+                if(tmpmainFilter.equals("Placements"))
+                {
+                    activity.findViewById(R.id.placements_bullet).setVisibility(View.VISIBLE);
+                }
+                if(tmpmainFilter.equals("Departments"))
+                {
+                    activity.findViewById(R.id.departments_bullet).setVisibility(View.VISIBLE);
+                }
                 ((RadioButton)v.findViewById(R.id.all_subcategories_bullet)).setChecked(true);
                 pchecked=((RadioButton)v.findViewById(R.id.all_subcategories_bullet));
+
+            }
+        });
+        activity.findViewById(R.id.filter_reset).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tmpmainFilter="";
+                tmpsubFilter="";
+                if(pchecked!=null)
+                pchecked.setChecked(false);
+                pchecked=null;
+                activity.findViewById(R.id.authority_bullet).setVisibility(View.INVISIBLE);
+                activity.findViewById(R.id.placements_bullet).setVisibility(View.INVISIBLE);
+                activity.findViewById(R.id.departments_bullet).setVisibility(View.INVISIBLE);
 
             }
         });
@@ -185,18 +262,49 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
     }
 
     public void setOriginal() {
+        Toast.makeText(activity, ""+mainFilter, Toast.LENGTH_SHORT).show();
         if(dateFilterSelected)
         {
             activity.findViewById(R.id.date_filter_not_set).setVisibility(View.INVISIBLE);
             activity.findViewById(R.id.date_filter_set).setVisibility(View.VISIBLE);
         }
-        else
-        {
+        else {
             activity.findViewById(R.id.date_filter_not_set).setVisibility(View.VISIBLE);
             activity.findViewById(R.id.date_filter_set).setVisibility(View.INVISIBLE);
-            ((TextView)activity.findViewById(R.id.starting_date)).setText(startDate);
-            ((TextView)activity.findViewById(R.id.ending_date)).setText(endDate);
+            ((TextView) activity.findViewById(R.id.starting_date)).setText(startDate);
+            ((TextView) activity.findViewById(R.id.ending_date)).setText(endDate);
         }
+            tmpsubFilter=subFilter;
+            tmpmainFilter=mainFilter;
+            currmainFilter=mainFilter;
+            if(mainFilter.equals("Authorities"))
+            {
+                activity.findViewById(R.id.authority).callOnClick();
+            }
+            if(mainFilter.equals("Departments"))
+            {
+                activity.findViewById(R.id.departments).callOnClick();
+            }
+            if(mainFilter.equals("Placements"))
+            {
+                activity.findViewById(R.id.placements).callOnClick();
+            }
+            activity.findViewById(R.id.authority_bullet).setVisibility(View.INVISIBLE);
+            activity.findViewById(R.id.placements_bullet).setVisibility(View.INVISIBLE);
+            activity.findViewById(R.id.departments_bullet).setVisibility(View.INVISIBLE);
+            if(mainFilter.equals("Authorities"))
+            {
+                activity.findViewById(R.id.authority_bullet).setVisibility(View.VISIBLE);
+            }
+            if(mainFilter.equals("Placements"))
+            {
+                activity.findViewById(R.id.placements_bullet).setVisibility(View.VISIBLE);
+            }
+            if(mainFilter.equals("Departments"))
+            {
+                activity.findViewById(R.id.departments_bullet).setVisibility(View.VISIBLE);
+            }
+
     }
 
     public void setNew()
@@ -204,6 +312,9 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
         startDate=tmpstartDate;
         endDate=tmpendDate;
         dateFilterSelected=tmpdateFilterSelected;
+        mainFilter=tmpmainFilter;
+        currmainFilter=mainFilter;
+        subFilter=tmpsubFilter;
     }
 
     public class MyListAdapter extends ArrayAdapter<Banner> {
@@ -227,18 +338,134 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
                 @Override
                 public void onClick(View v) {
                     Log.d("////////////////",""+v);
+                    Toast.makeText(context, pchecked+"", Toast.LENGTH_SHORT).show();
                     if(pchecked!=null)
                     {
                         pchecked.setChecked(false);
                     }
                     ((RadioButton)v.findViewById(R.id.subcategory_bullet)).setChecked(true);
                     pchecked=((RadioButton)v.findViewById(R.id.subcategory_bullet));
+
+                    activity.findViewById(R.id.authority_bullet).setVisibility(View.INVISIBLE);
+                    activity.findViewById(R.id.placements_bullet).setVisibility(View.INVISIBLE);
+                    activity.findViewById(R.id.departments_bullet).setVisibility(View.INVISIBLE);
+                    if(currmainFilter.equals("Authorities"))
+                    {
+                        activity.findViewById(R.id.authority_bullet).setVisibility(View.VISIBLE);
+                    }
+                    if(currmainFilter.equals("Placements"))
+                    {
+                        activity.findViewById(R.id.placements_bullet).setVisibility(View.VISIBLE);
+                    }
+                    if(currmainFilter.equals("Departments"))
+                    {
+                        activity.findViewById(R.id.departments_bullet).setVisibility(View.VISIBLE);
+                    }
+                    tmpmainFilter=currmainFilter;
+                    tmpsubFilter=list.get(position).getName();
                 }
             });
+            if(tmpsubFilter.equals(list.get(position).getName()))
+            {
+                ((RadioButton)rowView.findViewById(R.id.subcategory_bullet)).setChecked(true);
+                pchecked=((RadioButton)rowView.findViewById(R.id.subcategory_bullet));
+            }
             titleText.setText(list.get(position).getName());
             return rowView;
 
         }
     }
+
+    public String getFilterId()
+    {
+        String filterID="-1";
+        if(mainFilter.equals("")) {
+            return "-1";
+        }
+        if(mainFilter.equals("Placements"))
+        {
+            if(subFilter.equals("All"))
+            {
+                for(int i=0;i<filters.size();++i)
+                {
+                    if(filters.get(i).getName().equals("Placements"))
+                    {
+                        filterID=filters.get(i).getId();
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                for(int i=0;i<filters.size();++i)
+                {
+                    for(int j=0;j<filters.get(i).getBanner().size();++j)
+                    {
+                        if(filters.get(i).getBanner().get(j).getName().equals(subFilter))
+                        {
+                            filterID=filters.get(i).getBanner().get(j).getId();
+                        }
+                    }
+                }
+            }
+        }
+        if(mainFilter.equals("Authorities"))
+        {
+            if(subFilter.equals("All"))
+            {
+                for(int i=0;i<filters.size();++i)
+                {
+                    if(filters.get(i).getName().equals("Authorities"))
+                    {
+                        filterID=filters.get(i).getId();
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                for(int i=0;i<filters.size();++i)
+                {
+                    for(int j=0;j<filters.get(i).getBanner().size();++j)
+                    {
+                        if(filters.get(i).getBanner().get(j).getName().equals(subFilter))
+                        {
+                            filterID=filters.get(i).getBanner().get(j).getId();
+                        }
+                    }
+                }
+            }
+        }
+        if(mainFilter.equals("Departments"))
+        {
+            if(subFilter.equals("All"))
+            {
+                for(int i=0;i<filters.size();++i)
+                {
+                    if(filters.get(i).getName().equals("Departments"))
+                    {
+                        filterID=filters.get(i).getId();
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                for(int i=0;i<filters.size();++i)
+                {
+                    for(int j=0;j<filters.get(i).getBanner().size();++j)
+                    {
+                        if(filters.get(i).getBanner().get(j).getName().equals(subFilter))
+                        {
+                            filterID=filters.get(i).getBanner().get(j).getId();
+                        }
+                    }
+                }
+            }
+        }
+        return filterID;
+
+    }
+
 
 }

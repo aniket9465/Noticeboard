@@ -62,7 +62,7 @@ public class NoticeListScreen extends AppCompatActivity {
     private String category;
     private ArrayList<Filters> filters;
     private FilterDialog filterDialog;
-    private String filterid;
+    private EndlessRecyclerViewScrollListener mScrollListener;
     private Animation animShow, animHide ,animShowSubFilters,animHideSubFilters;
     static ProgressDialog progressDialog;
 
@@ -73,6 +73,7 @@ public class NoticeListScreen extends AppCompatActivity {
         setContentView(R.layout.list_of_notices);
         filters=new ArrayList<>();
         getFilters();
+        Log.d("/......////",""+filterDialog);
         category="All";
         progressDialog=new ProgressDialog(this);
 
@@ -126,6 +127,7 @@ public class NoticeListScreen extends AppCompatActivity {
             public void onRefresh() {
                 noticeRequest();
                 mlist.clear();
+                mScrollListener.resetState();
 
             }
         });
@@ -133,7 +135,7 @@ public class NoticeListScreen extends AppCompatActivity {
                 android.R.color.holo_green_dark);
 
         final LinearLayoutManager manager = new LinearLayoutManager(this.getApplicationContext());
-        EndlessRecyclerViewScrollListener mScrollListener = new EndlessRecyclerViewScrollListener(manager) {
+         mScrollListener = new EndlessRecyclerViewScrollListener(manager) {
             @Override
             public void onLoadMore(int page, final int totalItemsCount, RecyclerView view) {
                 if (totalItemsCount > 0 && totalItemsCount <= mlist.size()) {
@@ -149,7 +151,6 @@ public class NoticeListScreen extends AppCompatActivity {
         view.setAdapter(adapter);
         view.addOnScrollListener(mScrollListener);
 
-        noticeRequest();
 
 
     }
@@ -173,8 +174,14 @@ public class NoticeListScreen extends AppCompatActivity {
 
         Call<NoticeListResponse> call = api_service.get_notices( (mlist.size()/10)+"", access_token);
         if(category.equals("All")) {
-            call = api_service.get_notices((mlist.size() / 10) + "", access_token);
+            String filterid=filterDialog.getFilterId();
+            if(filterid.equals("-1")&&(!filterDialog.dateFilterSelected)) {
+                call = api_service.get_notices((mlist.size() / 10 + 1) + "", access_token);
+            }
+            else
+            {
 
+            }
             /*if (filter.equals("Date_filter")) {
                 Calendar c = Calendar.getInstance();
                 SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
@@ -215,17 +222,13 @@ public class NoticeListScreen extends AppCompatActivity {
 
             if(category.equals("bookmarks"))
             {
-                    call = api_service.bookmarkedNotices( (mlist.size()/10)+"", access_token);
+                    call = api_service.bookmarkedNotices( (mlist.size()/10+1)+"", access_token);
             }
             else
                 {
                     if(category.equals("expired"))
                     {
-                        call = api_service.expiredNotices( (mlist.size()/10)+"", access_token);
-                    }
-                    else
-                    {
-                        call = api_service.get_notices((mlist.size() / 10) + "", access_token);
+                        call = api_service.expiredNotices( (mlist.size()/10+1)+"", access_token);
                     }
                 }
         }
@@ -270,38 +273,6 @@ public class NoticeListScreen extends AppCompatActivity {
 
     }
 
-    private void getFilters()
-    {
-        String access_token = getSharedPreferences("Noticeboard_data", 0).getString("access_token", null);
-        retrofit=UtilityFunctions.getRetrofitInstance(getResources().getString(R.string.base_url),retrofit);
-        ApiInterface api_service = retrofit.create(ApiInterface.class);
-
-        Call<FiltersList> call = api_service.getFilters( access_token);
-        call = api_service.getFilters( access_token);
-
-        call.enqueue(new Callback<FiltersList>() {
-            @Override
-            public void onResponse(Call<FiltersList> call, Response<FiltersList> response) {
-
-                if(response.body()!=null) {
-
-                    filters=response.body().getResult();
-                    filterDialog=new FilterDialog(filters,NoticeListScreen.this);
-                }
-                filterDialog=new FilterDialog(filters,NoticeListScreen.this);
-
-            }
-
-            @Override
-            public void onFailure(Call<FiltersList> call, Throwable t) {
-
-                Toast.makeText(NoticeListScreen.this, "connection error", Toast.LENGTH_SHORT).show();
-                filterDialog=new FilterDialog(filters,NoticeListScreen.this);
-            }
-        });
-
-    }
-
     private void setUpOnClicks()
     {
 
@@ -312,6 +283,7 @@ public class NoticeListScreen extends AppCompatActivity {
                 String heading="All Notices";
                 ((TextView)findViewById(R.id.heading)).setText(heading);
                 mlist.clear();
+                mScrollListener.resetState();
                 ((DrawerLayout)findViewById(R.id.list_of_notices)).closeDrawer(Gravity.LEFT);
                 noticeRequest();
 
@@ -352,6 +324,7 @@ public class NoticeListScreen extends AppCompatActivity {
                 findViewById(R.id.drawer_opener).setVisibility(View.INVISIBLE);
                 ((TextView)findViewById(R.id.heading)).setText(heading);
                 mlist.clear();
+                mScrollListener.resetState();
                 ((DrawerLayout)findViewById(R.id.list_of_notices)).closeDrawer(Gravity.LEFT);
                 noticeRequest();
 
@@ -368,6 +341,7 @@ public class NoticeListScreen extends AppCompatActivity {
                 String heading="All Notices";
                 ((TextView)findViewById(R.id.heading)).setText(heading);
                 mlist.clear();
+                mScrollListener.resetState();
                 findViewById(R.id.back).setVisibility(View.INVISIBLE);
                 findViewById(R.id.filter_button).setVisibility(View.VISIBLE);
                 findViewById(R.id.content_frame).startAnimation(animHideSubFilters);
@@ -393,6 +367,7 @@ public class NoticeListScreen extends AppCompatActivity {
                 findViewById(R.id.drawer_opener).setVisibility(View.INVISIBLE);
                 ((TextView)findViewById(R.id.heading)).setText(heading);
                 mlist.clear();
+                mScrollListener.resetState();
                 ((DrawerLayout)findViewById(R.id.list_of_notices)).closeDrawer(Gravity.LEFT);
                 noticeRequest();
 
@@ -562,11 +537,12 @@ public class NoticeListScreen extends AppCompatActivity {
 
     public void applyFilters(View v)
     {
+        mlist.clear();
         filterDialog.setNew();
         findViewById(R.id.swipeContainer).setVisibility(View.VISIBLE);
         findViewById(R.id.filter_menu).setVisibility(View.INVISIBLE);
         findViewById(R.id.filter_menu).startAnimation(animHide);
-
+        noticeRequest();
     }
 
     public void cancelFilters(View v)
@@ -595,5 +571,38 @@ public class NoticeListScreen extends AppCompatActivity {
     }
 
 
+
+    private void getFilters()
+    {
+        String access_token = getSharedPreferences("Noticeboard_data", 0).getString("access_token", null);
+        retrofit=UtilityFunctions.getRetrofitInstance(getResources().getString(R.string.base_url),retrofit);
+        ApiInterface api_service = retrofit.create(ApiInterface.class);
+
+        Call<FiltersList> call = api_service.getFilters( access_token);
+        call = api_service.getFilters( access_token);
+
+        call.enqueue(new Callback<FiltersList>() {
+            @Override
+            public void onResponse(Call<FiltersList> call, Response<FiltersList> response) {
+
+                filterDialog=new FilterDialog(filters,NoticeListScreen.this);
+                if(response.body()!=null) {
+
+                    filters=response.body().getResult();
+                    filterDialog=new FilterDialog(filters,NoticeListScreen.this);
+                }
+                noticeRequest();
+            }
+
+            @Override
+            public void onFailure(Call<FiltersList> call, Throwable t) {
+
+                Toast.makeText(NoticeListScreen.this, "connection error", Toast.LENGTH_SHORT).show();
+                filterDialog=new FilterDialog(filters,NoticeListScreen.this);
+                noticeRequest();
+            }
+        });
+
+    }
 
 }

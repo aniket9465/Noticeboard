@@ -33,6 +33,8 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.no
     private static Retrofit retrofit;
 
     NoticeListAdapter(ArrayList<NoticeCardResponse> list, Context c) {
+        this.list=new ArrayList<>();
+        if(list!=null)
         this.list = list;
         this.context=c;
 
@@ -137,7 +139,7 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.no
             }
         });
 
-
+        Log.d("////",list.get(position)+"");
         if(list.get(position).getBookmark())
         {
             holder.bookmark.setImageResource(R.drawable.bookmarked);
