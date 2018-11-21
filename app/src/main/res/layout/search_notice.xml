@@ -30,11 +30,13 @@
 
         <android.support.v7.widget.SearchView
             android:id="@+id/search_bar"
-            android:layout_width="312dp"
+            android:layout_width="0dp"
             android:layout_height="33dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:clickable="true"
+            android:focusable="true"
             android:queryBackground="@android:color/transparent"
             android:queryHint="Search for notices"
             app:iconifiedByDefault="false"
@@ -109,11 +111,11 @@
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/filter_menu"
-        android:visibility="invisible"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#EDF4FF"
         android:layout_marginTop="48dp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/constraintLayout">
 
@@ -275,23 +277,35 @@
                 android:layout_height="1dp"
                 android:background="#999999"
                 app:layout_constraintBottom_toBottomOf="parent" />
-
-            <TextView
+            <android.support.constraint.ConstraintLayout
                 android:id="@+id/date_filter_not_set"
                 android:layout_width="wrap_content"
-                android:layout_height="24dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:paddingBottom="8dp"
-                android:paddingRight="32dp"
-                android:text="Date"
-                android:textColor="#000"
-                android:textSize="14dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view5" />
+                app:layout_constraintTop_toBottomOf="@+id/view5" >
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:id="@+id/Date"
+                    android:layout_height="24dp"
+                    android:paddingBottom="8dp"
+                    android:paddingRight="32dp"
+                    android:text="Date"
+                    android:textColor="#000"
+                    android:textSize="14dp"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    app:srcCompat="@drawable/date_range"
+                    app:layout_constraintStart_toEndOf="@+id/Date" />
+
+        </android.support.constraint.ConstraintLayout>
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/date_filter_set"
                 android:layout_width="wrap_content"

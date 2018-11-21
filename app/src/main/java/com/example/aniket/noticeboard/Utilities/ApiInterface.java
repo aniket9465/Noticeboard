@@ -25,9 +25,6 @@ public interface ApiInterface {
     @GET("api/noticeboard/notice_list/{page}/")
     Call<NoticeListResponse> get_notices(@Path(value = "page") String page, @Header("access_token") String access_token);
 
-    @GET("api/noticeboard/search/")
-    Call<NoticeListResponse> search_notices(@Query(value = "search") String search,@Query(value = "page") String page, @Header("access_token") String access_token);
-
     @POST("api/noticeboard/bookmark_read/")
     Call<Void> bookmark_read(@Header("access_token") String access_token, @Body BookmarkReadRequestBody body);
 
@@ -49,5 +46,19 @@ public interface ApiInterface {
     @GET("api/noticeboard/filter/")
     Call<NoticeListResponse> filteredNotices(@Query(value = "banner") String banner,@Query(value = "page") String page, @Header("access_token") String access_token);
 
+    @GET("api/noticeboard/filter/")
+    Call<NoticeListResponse> filterAndDateFilterNotices(@Query(value="start") String start,@Query(value = "end") String end,@Query(value = "banner") String banner,@Query(value = "page") String page, @Header("access_token") String access_token);
+
+    @GET("api/noticeboard/search/")
+    Call<NoticeListResponse> search_notices(@Query(value = "search") String search,@Query(value = "page") String page, @Header("access_token") String access_token);
+
+    @GET("api/noticeboard/search/")
+    Call<NoticeListResponse> searchAndFilteredNotices(@Query(value = "search") String search,@Query(value = "banner") String banner,@Query(value = "page") String page, @Header("access_token") String access_token);
+
+    @GET("api/noticeboard/search/")
+    Call<NoticeListResponse> searchAndFilterAndDateFilterNotices(@Query(value = "search") String search,@Query(value="start") String start,@Query(value = "end") String end,@Query(value = "banner") String banner,@Query(value = "page") String page, @Header("access_token") String access_token);
+
+    @GET("api/noticeboard/search/")
+    Call<NoticeListResponse> searchAndDateFilter(@Query(value = "search") String search,@Query(value="start") String start,@Query(value = "end") String end,@Query(value = "page") String page, @Header("access_token") String access_token);
 
 }

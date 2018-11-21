@@ -20,6 +20,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
+/*
+    implement download button and shareable link button
+*/
+
 public class NoticeViewScreen extends AppCompatActivity {
     static Retrofit retrofit;
 

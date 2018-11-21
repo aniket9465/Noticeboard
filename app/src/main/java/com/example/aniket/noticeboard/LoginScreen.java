@@ -44,12 +44,13 @@ public class LoginScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
 
+        /// remove this
 
         Intent in = new Intent(LoginScreen.this, NoticeListScreen.class);
         startActivity(in);
         finish();
 
-
+        ////
 
         setContentView(R.layout.activity_login);
         findViewById(R.id.clear_focus).requestFocus();
@@ -76,13 +77,6 @@ public class LoginScreen extends AppCompatActivity {
                         if (response.body() == null) {
                             Toast.makeText(LoginScreen.this, "wrong credentials :(", Toast.LENGTH_SHORT).show();
 
-                            /////// remove this
-
-                            Intent in = new Intent(LoginScreen.this, NoticeListScreen.class);
-                            startActivity(in);
-                            finish();
-
-                            ///////
 
                         } else {
 
@@ -103,17 +97,6 @@ public class LoginScreen extends AppCompatActivity {
                     public void onFailure(Call<LoginResponse> call, Throwable t) {
 
                         Toast.makeText(LoginScreen.this, "connection issue", Toast.LENGTH_SHORT).show();
-
-
-                        ///////////   remove this
-
-
-                        Intent in = new Intent(LoginScreen.this, NoticeListScreen.class);
-                        startActivity(in);
-                        finish();
-
-
-                        ///////////
 
                     }
                 });

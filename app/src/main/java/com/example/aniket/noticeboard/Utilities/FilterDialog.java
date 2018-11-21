@@ -25,27 +25,27 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
 
     boolean filterSelected=false;
     public boolean dateFilterSelected=false;
-    String startDate="";
-    String endDate="";
-    String mainFilter="";
-    String filterId="";
-    String subFilter="";
+    public String startDate="";
+    public String endDate="";
+    private String mainFilter="";
+    private String filterId="";
+    private String subFilter="";
 
-    RadioButton checked;
-    RadioButton pchecked;
+    private RadioButton checked;
+    private RadioButton pchecked;
 
-    ArrayList<Filters> filters;
-    Activity activity;
+    private ArrayList<Filters> filters;
+    private Activity activity;
 
-    String currmainFilter="";
+    private String currmainFilter="";
 
     boolean tmpfilterSelected=false;
-    boolean tmpdateFilterSelected=false;
-    String tmpstartDate="";
-    String tmpendDate="";
-    String tmpmainFilter="";
+    private boolean tmpdateFilterSelected=false;
+    private String tmpstartDate="";
+    private String tmpendDate="";
+    private String tmpmainFilter="";
     String tmpfilterId="";
-    String tmpsubFilter="";
+    private String tmpsubFilter="";
 
     private MyListAdapter subfilterAdapter;
     private ArrayList<Banner> subfilterListItems;
@@ -262,7 +262,6 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
     }
 
     public void setOriginal() {
-        Toast.makeText(activity, ""+mainFilter, Toast.LENGTH_SHORT).show();
         if(dateFilterSelected)
         {
             activity.findViewById(R.id.date_filter_not_set).setVisibility(View.INVISIBLE);
@@ -276,7 +275,13 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
         }
             tmpsubFilter=subFilter;
             tmpmainFilter=mainFilter;
-            currmainFilter=mainFilter;
+            if(pchecked!=checked)
+            {
+                if(pchecked!=null)
+                    pchecked.setChecked(false);
+                if(checked!=null)
+                checked.setChecked(true);
+            }
             if(mainFilter.equals("Authorities"))
             {
                 activity.findViewById(R.id.authority).callOnClick();
@@ -337,8 +342,6 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
             rowView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d("////////////////",""+v);
-                    Toast.makeText(context, pchecked+"", Toast.LENGTH_SHORT).show();
                     if(pchecked!=null)
                     {
                         pchecked.setChecked(false);

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
@@ -51,7 +52,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-
+/*
+    setup logout button onclick
+*/
 public class NoticeListScreen extends AppCompatActivity {
 
     static Retrofit retrofit;
@@ -88,12 +91,6 @@ public class NoticeListScreen extends AppCompatActivity {
         animShowSubFilters.setDuration(200);
 
 
-        /*subfilterListItems = new ArrayList<>();
-        subfilterAdapter = new NoticeListScreen.MyListAdapter(this, subfilterListItems);
-        ListView subfilterList = findViewById(R.id.subfilters);
-        subfilterList.setAdapter(subfilterAdapter);
-        subfilterAdapter.notifyDataSetChanged();
-        */
 
         findViewById(R.id.nav_complete_menu).setVisibility(View.VISIBLE);
 
@@ -178,45 +175,17 @@ public class NoticeListScreen extends AppCompatActivity {
             if(filterid.equals("-1")&&(!filterDialog.dateFilterSelected)) {
                 call = api_service.get_notices((mlist.size() / 10 + 1) + "", access_token);
             }
-            else
-            {
-
+            else {
+                if (filterid.equals("-1")) {
+                    call = api_service.dateFilter(filterDialog.startDate, filterDialog.endDate, (mlist.size() / 10) + "", access_token);
+                } else {
+                    if (!filterDialog.dateFilterSelected) {
+                        call = api_service.filteredNotices(filterid, (mlist.size() / 10) + "", access_token);
+                    } else {
+                        call = api_service.filterAndDateFilterNotices(filterDialog.startDate, filterDialog.endDate, filterid, (mlist.size() / 10) + "", access_token);
+                    }
+                }
             }
-            /*if (filter.equals("Date_filter")) {
-                Calendar c = Calendar.getInstance();
-                SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
-                String formattedDateStart = "";
-                String formattedDateEnd = "";
-                if (subfilter.equals("A week ago")) {
-                    c.add(Calendar.DAY_OF_YEAR, -7);
-                    formattedDateStart = sd.format(c.getTime());
-                    c.add(Calendar.DAY_OF_YEAR, -14);
-                    formattedDateEnd = sd.format(c.getTime());
-                }
-                if (subfilter.equals("Two week ago")) {
-                    c.add(Calendar.DAY_OF_YEAR, -14);
-                    formattedDateStart = sd.format(c.getTime());
-                    c.add(Calendar.DAY_OF_YEAR, -21);
-                    formattedDateEnd = sd.format(c.getTime());
-                }
-                if (subfilter.equals("A month ago")) {
-                    c.add(Calendar.DAY_OF_YEAR, -21);
-                    formattedDateStart = sd.format(c.getTime());
-                    c.add(Calendar.DAY_OF_YEAR, -31);
-                    formattedDateEnd = sd.format(c.getTime());
-                }
-                if (subfilter.equals("More than a month ago")) {
-                    c.add(Calendar.DAY_OF_YEAR, -31);
-                    formattedDateStart = sd.format(c.getTime());
-                    c.add(Calendar.DAY_OF_YEAR, -365);
-                    formattedDateEnd = sd.format(c.getTime());
-                }
-                if(subfilter.equals("Recent First"))
-                    call = api_service.get_notices( (mlist.size()/10)+"", access_token);
-                else
-                    call = api_service.dateFilter(formattedDateStart, formattedDateEnd, (mlist.size() / 10) + "", access_token);
-
-            }*/
         }
         else {
 
@@ -378,160 +347,21 @@ public class NoticeListScreen extends AppCompatActivity {
             }
         });
 
-        /*
-
-        findViewById(R.id.nav_placement).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.nav_feedback).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                filter="placement";
-                RelativeLayout.LayoutParams params= new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
-                params.addRule(RelativeLayout.BELOW, R.id.lay);
-                findViewById(R.id.swipeContainer).setLayoutParams(params);
-                findViewById(R.id.date_time_bar).setVisibility(View.INVISIBLE);
-                String heading="Placement Notices";
-                ((TextView)findViewById(R.id.heading)).setText(heading);
-                mlist.clear();
-                filterid="-1";
-                for(int i=0;i<filters.size();++i)
-                {
-                    if(filters.get(i).getName().equals("placement"))
-                    {
-                        filterid=filters.get(i).getId();
-                        break;
-                    }
-                    for(int j=0;j<filters.get(i).getBanner().size();++j)
-                    {
-                        if(filters.get(i).getBanner().get(j).getName().equals("placement"))
-                        {
-                            filterid=filters.get(i).getBanner().get(j).getId();
-                        }
-                    }
-                }
-                ((DrawerLayout)findViewById(R.id.list_of_notices)).closeDrawer(Gravity.LEFT);
-                noticeRequest();
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("market://details?id=com.channeli.noticeboard"));
+                startActivity(intent);
             }
         });
 
-        findViewById(R.id.nav_authorities).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.nav_logout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                filter="authorities";
-                RelativeLayout.LayoutParams params= new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
-                params.addRule(RelativeLayout.BELOW, R.id.lay);
-                findViewById(R.id.swipeContainer).setLayoutParams(params);
-                findViewById(R.id.date_time_bar).setVisibility(View.INVISIBLE);
-                String heading="Authorities Notices";
-                ((TextView)findViewById(R.id.heading)).setText(heading);
-                mlist.clear();
-                filterid="-1";
-                for(int i=0;i<filters.size();++i)
-                {
-                    if(filters.get(i).getName().equals("authorities"))
-                    {
-                        filterid=filters.get(i).getId();
-                        break;
-                    }
-                    for(int j=0;j<filters.get(i).getBanner().size();++j)
-                    {
-                        if(filters.get(i).getBanner().get(j).getName().equals("authorities"))
-                        {
-                            filterid=filters.get(i).getBanner().get(j).getId();
-                        }
-                    }
-                }
-                ((DrawerLayout)findViewById(R.id.list_of_notices)).closeDrawer(Gravity.LEFT);
-                noticeRequest();
-            }
-        });
-
-        findViewById(R.id.nav_departments).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                filter="departments";
-                RelativeLayout.LayoutParams params= new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
-                params.addRule(RelativeLayout.BELOW, R.id.lay);
-                findViewById(R.id.swipeContainer).setLayoutParams(params);
-                findViewById(R.id.date_time_bar).setVisibility(View.INVISIBLE);
-                String heading="Departments Notices";
-                ((TextView)findViewById(R.id.heading)).setText(heading);
-                mlist.clear();
-                filterid="-1";
-                for(int i=0;i<filters.size();++i)
-                {
-                    if(filters.get(i).getName().equals("departments"))
-                    {
-                        filterid=filters.get(i).getId();
-                        break;
-                    }
-                    for(int j=0;j<filters.get(i).getBanner().size();++j)
-                    {
-                        if(filters.get(i).getBanner().get(j).getName().equals("departments"))
-                        {
-                            filterid=filters.get(i).getBanner().get(j).getId();
-                        }
-                    }
-                }
-                ((DrawerLayout)findViewById(R.id.list_of_notices)).closeDrawer(Gravity.LEFT);
-                noticeRequest();
-            }
-        });
-
-        findViewById(R.id.authorities_subfilter).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                filter="authorities";
-                findViewById(R.id.nav_complete_menu).startAnimation(animHideSubFilters);
-                findViewById(R.id.nav_complete_menu).setVisibility(View.INVISIBLE);
-                findViewById(R.id.drawer_subfilters).setVisibility(View.VISIBLE);
-                findViewById(R.id.drawer_subfilters).startAnimation(animShowSubFilters);
-                ((TextView)findViewById(R.id.main_filter)).setText("Authorities");
-                subfilterListItems.clear();
-                for(int i=0;i<filters.size();++i)
-                {
-                    if(filters.get(i).getName().equals("Authorities")) {
-
-                        for (int j = 0; j < filters.get(i).getBanner().size(); ++j) {
-                            subfilterListItems.add(filters.get(i).getBanner().get(j));
-                        }
-                    }
-                }
-                subfilterAdapter.notifyDataSetChanged();
-            }
-        });
-        findViewById(R.id.departments_subfilter).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                filter="departments";
-                findViewById(R.id.nav_complete_menu).startAnimation(animHideSubFilters);
-                findViewById(R.id.nav_complete_menu).setVisibility(View.INVISIBLE);
-                findViewById(R.id.drawer_subfilters).setVisibility(View.VISIBLE);
-                findViewById(R.id.drawer_subfilters).startAnimation(animShowSubFilters);
-                ((TextView)findViewById(R.id.main_filter)).setText("Departments");
-                subfilterListItems.clear();
-                for(int i=0;i<filters.size();++i)
-                {
-                    if(filters.get(i).getName().equals("Departments")) {
-
-                        for (int j = 0; j < filters.get(i).getBanner().size(); ++j) {
-                            subfilterListItems.add(filters.get(i).getBanner().get(j));
-                        }
-                    }
-                }
-                subfilterAdapter.notifyDataSetChanged();
-            }
-        });
-        findViewById(R.id.back_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                findViewById(R.id.nav_complete_menu).setVisibility(View.VISIBLE);
-                findViewById(R.id.nav_complete_menu).startAnimation(animShowSubFilters);
-                findViewById(R.id.drawer_subfilters).startAnimation(animHideSubFilters);
-                findViewById(R.id.drawer_subfilters).setVisibility(View.INVISIBLE);
 
             }
         });
-
-    */
 
     }
 

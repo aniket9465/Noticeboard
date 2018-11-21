@@ -23,7 +23,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,7 +47,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.example.aniket.noticeboard.NoticeListScreen.retrofit;
-
+/*
+    set up calls for filters
+*/
 public class SearchNoticeScreen extends AppCompatActivity {
 
     ArrayList<NoticeCardResponse> mlist;
@@ -77,6 +81,7 @@ public class SearchNoticeScreen extends AppCompatActivity {
         recent_searches.setVisibility(View.VISIBLE);
         swipeContainer.setVisibility(View.INVISIBLE);
         filters=new ArrayList<>();
+        filterDialog=new FilterDialog(filters,SearchNoticeScreen.this);
         getFilters();
 
 
@@ -91,17 +96,23 @@ public class SearchNoticeScreen extends AppCompatActivity {
         findViewById(R.id.filter_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                v.requestFocus();
                 if(findViewById(R.id.filter_menu).getVisibility()==View.INVISIBLE) {
-                    findViewById(R.id.swipeContainer).setVisibility(View.INVISIBLE);
+                    SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+                    searchView = (android.support.v7.widget.SearchView) findViewById(R.id.search_bar);
+                    searchView.clearFocus();
+
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                     findViewById(R.id.filter_menu).setVisibility(View.VISIBLE);
                     findViewById(R.id.filter_menu).startAnimation(animShow);
+                    findViewById(R.id.swipeContainer).setVisibility(View.INVISIBLE);
                 }
                 else
                 {
 
-                    findViewById(R.id.swipeContainer).setVisibility(View.VISIBLE);
-                    findViewById(R.id.filter_menu).setVisibility(View.INVISIBLE);
-                    findViewById(R.id.filter_menu).startAnimation(animHide);
                     cancelFilters(v);
                 }
             }
@@ -173,7 +184,21 @@ public class SearchNoticeScreen extends AppCompatActivity {
         searchView = (android.support.v7.widget.SearchView) findViewById(R.id.search_bar);
         View v = searchView.findViewById(android.support.v7.appcompat.R.id.search_plate);
         v.setBackgroundColor(Color.parseColor("#5288DA"));
-        EditText editText = ((EditText) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text));
+        final EditText editText = ((EditText) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text));
+
+        editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                Log.d("a","/////////////////");
+                filterDialog.setOriginal();
+                findViewById(R.id.recent_searches).setVisibility(View.VISIBLE);
+                if(findViewById(R.id.filter_menu).getVisibility()==View.VISIBLE) {
+                    findViewById(R.id.filter_menu).setVisibility(View.INVISIBLE);
+                    findViewById(R.id.filter_menu).startAnimation(animHide);
+                }
+            }
+        });
+
         editText.setHintTextColor(getResources().getColor(R.color.white));
         editText.setTextColor(getResources().getColor(R.color.white));
         try {
@@ -249,6 +274,7 @@ public class SearchNoticeScreen extends AppCompatActivity {
 
                 recent_searches.setVisibility(View.INVISIBLE);
                 swipeContainer.setVisibility(View.VISIBLE);
+                mlist.clear();
                 notice_search(query);
                 searched = query;
 
@@ -259,10 +285,13 @@ public class SearchNoticeScreen extends AppCompatActivity {
         searchView.setOnQueryTextListener(queryTextListener);
     }
 
+
+
     void notice_search(String search_query) {
 
         if (!search_query.equals(searched))
             mlist.clear();
+        searched = search_query;
         if (swipeContainer != null)
             if (!swipeContainer.isRefreshing())
                 progressDialog = ProgressDialog.show(SearchNoticeScreen.this, "Loading", "please wait", true);
@@ -277,7 +306,28 @@ public class SearchNoticeScreen extends AppCompatActivity {
 
         ApiInterface api_service;
         api_service = UtilityFunctions.getRetrofitInstance(getResources().getString(R.string.base_url), retrofit).create(ApiInterface.class);
-        Call<NoticeListResponse> call = api_service.search_notices(search_query, (mlist.size() / 10+1) + "", getSharedPreferences("Noticeboard_data", 0).getString("access token", null));
+        String access_token=getSharedPreferences("Noticeboard_data", 0).getString("access token", null);
+
+
+        Call<NoticeListResponse> call;
+        String filterid=filterDialog.getFilterId();
+        if(filterid.equals("-1")&&(!filterDialog.dateFilterSelected)) {
+            call = api_service.search_notices(search_query,(mlist.size() / 10 + 1) + "", access_token);
+        }
+        else {
+            if (filterid.equals("-1")) {
+                call = api_service.searchAndDateFilter(search_query,filterDialog.startDate, filterDialog.endDate, (mlist.size() / 10) + "", access_token);
+            }
+            else {
+                if (!filterDialog.dateFilterSelected) {
+                    call = api_service.searchAndFilteredNotices(search_query,filterid, (mlist.size() / 10) + "", access_token);
+                }
+                else {
+                    call = api_service.searchAndFilterAndDateFilterNotices(search_query,filterDialog.startDate, filterDialog.endDate, filterid, (mlist.size() / 10) + "", access_token);
+                }
+            }
+        }
+
 
         call.enqueue(new Callback<NoticeListResponse>() {
             @Override
@@ -320,16 +370,23 @@ public class SearchNoticeScreen extends AppCompatActivity {
     {
         mlist.clear();
         filterDialog.setNew();
-        findViewById(R.id.swipeContainer).setVisibility(View.VISIBLE);
+        if(searched.equals(""))
+            findViewById(R.id.recent_searches).setVisibility(View.VISIBLE);
+        else
+            findViewById(R.id.swipeContainer).setVisibility(View.VISIBLE);
         findViewById(R.id.filter_menu).setVisibility(View.INVISIBLE);
         findViewById(R.id.filter_menu).startAnimation(animHide);
-        notice_search(searched);
+        if(!searched.equals(""))
+            notice_search(searched);
     }
 
     public void cancelFilters(View v)
     {
         filterDialog.setOriginal();
-        findViewById(R.id.swipeContainer).setVisibility(View.VISIBLE);
+        if(searched.equals(""))
+            findViewById(R.id.recent_searches).setVisibility(View.VISIBLE);
+        else
+            findViewById(R.id.swipeContainer).setVisibility(View.VISIBLE);
         if(findViewById(R.id.filter_menu).getVisibility()==View.VISIBLE) {
             findViewById(R.id.filter_menu).setVisibility(View.INVISIBLE);
             findViewById(R.id.filter_menu).startAnimation(animHide);
@@ -392,37 +449,36 @@ public class SearchNoticeScreen extends AppCompatActivity {
 
 
 
-        private void getFilters()
-        {
-            String access_token = getSharedPreferences("Noticeboard_data", 0).getString("access_token", null);
-            retrofit=UtilityFunctions.getRetrofitInstance(getResources().getString(R.string.base_url),retrofit);
-            ApiInterface api_service = retrofit.create(ApiInterface.class);
+    private void getFilters()
+    {
+        String access_token = getSharedPreferences("Noticeboard_data", 0).getString("access_token", null);
+        retrofit=UtilityFunctions.getRetrofitInstance(getResources().getString(R.string.base_url),retrofit);
+        ApiInterface api_service = retrofit.create(ApiInterface.class);
 
-            Call<FiltersList> call = api_service.getFilters( access_token);
-            call = api_service.getFilters( access_token);
+        Call<FiltersList> call = api_service.getFilters( access_token);
+        call = api_service.getFilters( access_token);
 
-            call.enqueue(new Callback<FiltersList>() {
-                @Override
-                public void onResponse(Call<FiltersList> call, Response<FiltersList> response) {
+        call.enqueue(new Callback<FiltersList>() {
+            @Override
+            public void onResponse(Call<FiltersList> call, Response<FiltersList> response) {
 
-                    if(response.body()!=null) {
+                filterDialog=new FilterDialog(filters,SearchNoticeScreen.this);
+                if(response.body()!=null) {
 
-                        filters=response.body().getResult();
-                        filterDialog=new FilterDialog(filters,SearchNoticeScreen.this);
-                    }
-                    filterDialog=new FilterDialog(filters,SearchNoticeScreen.this);
-
-                }
-
-                @Override
-                public void onFailure(Call<FiltersList> call, Throwable t) {
-
-                    Toast.makeText(SearchNoticeScreen.this, "connection error", Toast.LENGTH_SHORT).show();
+                    filters=response.body().getResult();
                     filterDialog=new FilterDialog(filters,SearchNoticeScreen.this);
                 }
-            });
+            }
 
-        }
+            @Override
+            public void onFailure(Call<FiltersList> call, Throwable t) {
+
+                Toast.makeText(SearchNoticeScreen.this, "connection error", Toast.LENGTH_SHORT).show();
+                filterDialog=new FilterDialog(filters,SearchNoticeScreen.this);
+            }
+        });
+
+    }
 
 
 }
