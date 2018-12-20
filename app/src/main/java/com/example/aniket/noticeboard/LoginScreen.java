@@ -8,6 +8,7 @@ import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,6 +19,11 @@ import com.example.aniket.noticeboard.Utilities.ApiInterface;
 import com.example.aniket.noticeboard.ApiRequestBody.LoginRequestBody;
 import com.example.aniket.noticeboard.ApiResponseClasses.LoginResponse;
 import com.example.aniket.noticeboard.Utilities.UtilityFunctions;
+
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -42,15 +48,6 @@ public class LoginScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-
-
-        /// remove this
-
-        Intent in = new Intent(LoginScreen.this, NoticeListScreen.class);
-        startActivity(in);
-        finish();
-
-        ////
 
         setContentView(R.layout.activity_login);
         findViewById(R.id.clear_focus).requestFocus();
@@ -82,10 +79,12 @@ public class LoginScreen extends AppCompatActivity {
 
                             SharedPreferences pref = getApplicationContext().getSharedPreferences("Noticeboard_data", 0);
                             SharedPreferences.Editor edit = pref.edit();
+                            SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy HH:mm:ss");
                             edit.putString("refresh_token", response.body().getRefresh());
                             edit.putString("access_token", response.body().getAccess());
+                            edit.putString("token_time", sdf.format(Calendar.getInstance().getTime()));
+                            edit.putString("login_time", sdf.format(Calendar.getInstance().getTime()));
                             edit.apply();
-
                             Intent in = new Intent(LoginScreen.this, NoticeListScreen.class);
                             startActivity(in);
                             finish();

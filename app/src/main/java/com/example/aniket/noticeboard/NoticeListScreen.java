@@ -359,7 +359,10 @@ public class NoticeListScreen extends AppCompatActivity {
         findViewById(R.id.nav_logout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                UtilityFunctions.logout(NoticeListScreen.this);
+                Intent i = new Intent(NoticeListScreen.this,LoginScreen.class);
+                startActivity(i);
+                finish();
             }
         });
 
