@@ -9,7 +9,7 @@ import android.util.Log;
 public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnScrollListener {
     // The minimum amount of items to have below your current scroll position
     // before loading more.
-    private int visibleThreshold = 5;
+    private int visibleThreshold = 2;
     // The current offset index of data you have loaded
     private int currentPage = 0;
     // The total number of items in the dataset after the last load
@@ -23,15 +23,7 @@ public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnS
         this.mLayoutManager = layoutManager;
     }
 
-    public EndlessRecyclerViewScrollListener(GridLayoutManager layoutManager) {
-        this.mLayoutManager = layoutManager;
-        visibleThreshold = visibleThreshold * layoutManager.getSpanCount();
-    }
 
-    public EndlessRecyclerViewScrollListener(StaggeredGridLayoutManager layoutManager) {
-        this.mLayoutManager = layoutManager;
-        visibleThreshold = visibleThreshold * layoutManager.getSpanCount();
-    }
 
     private int getLastVisibleItem(int[] lastVisibleItemPositions) {
         int maxSize = 0;
@@ -53,26 +45,21 @@ public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnS
     public void onScrolled(RecyclerView view, int dx, int dy) {
         int lastVisibleItemPosition = 0;
         int totalItemCount = mLayoutManager.getItemCount();
-        if (mLayoutManager instanceof StaggeredGridLayoutManager) {
-            int[] lastVisibleItemPositions = ((StaggeredGridLayoutManager) mLayoutManager).findLastVisibleItemPositions(null);
-            // get maximum element within the list
-            lastVisibleItemPosition = getLastVisibleItem(lastVisibleItemPositions);
-        } else if (mLayoutManager instanceof GridLayoutManager) {
-            lastVisibleItemPosition = ((GridLayoutManager) mLayoutManager).findLastVisibleItemPosition();
-        } else if (mLayoutManager instanceof LinearLayoutManager) {
+        if (mLayoutManager instanceof LinearLayoutManager) {
             lastVisibleItemPosition = ((LinearLayoutManager) mLayoutManager).findLastVisibleItemPosition();
         }
-        Log.d("",lastVisibleItemPosition+" "+previousTotalItemCount);
+        Log.d("",totalItemCount+" "+lastVisibleItemPosition+" "+previousTotalItemCount);
         if (loading && (totalItemCount > previousTotalItemCount)) {
             loading = false;
             previousTotalItemCount = totalItemCount;
         }
-
-        if (!loading && (lastVisibleItemPosition + visibleThreshold) > totalItemCount&&totalItemCount>visibleThreshold) {
+        else if (!loading && previousTotalItemCount%10==0 && (lastVisibleItemPosition + visibleThreshold) > totalItemCount&&totalItemCount>visibleThreshold) {
             currentPage++;
             onLoadMore(currentPage, totalItemCount, view);
             loading = true;
         }
+        Log.d("",totalItemCount+" "+lastVisibleItemPosition+" "+previousTotalItemCount);
+
     }
 
     // Call this method whenever performing new searches

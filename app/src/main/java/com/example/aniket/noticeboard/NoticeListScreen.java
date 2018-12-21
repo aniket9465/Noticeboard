@@ -76,12 +76,10 @@ public class NoticeListScreen extends AppCompatActivity {
         setContentView(R.layout.list_of_notices);
         filters=new ArrayList<>();
         getFilters();
-        Log.d("/......////",""+filterDialog);
         category="All";
         progressDialog=new ProgressDialog(this);
 
-
-
+        UtilityFunctions.tokenRefresh(this);
 
         animShow = AnimationUtils.loadAnimation( this, R.anim.view_show);
         animHide = AnimationUtils.loadAnimation( this, R.anim.view_hide);
@@ -122,9 +120,10 @@ public class NoticeListScreen extends AppCompatActivity {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                noticeRequest();
                 mlist.clear();
+                Log.d("..........","///////////,,,,,,,,,");
                 mScrollListener.resetState();
+                noticeRequest();
 
             }
         });
@@ -136,7 +135,7 @@ public class NoticeListScreen extends AppCompatActivity {
             @Override
             public void onLoadMore(int page, final int totalItemsCount, RecyclerView view) {
                 if (totalItemsCount > 0 && totalItemsCount <= mlist.size()) {
-                    Log.d("", "onloadmore");
+                    Log.d("", "onloadmore"+totalItemsCount+" "+mlist.size());
                     noticeRequest();
                 }
             }
@@ -155,6 +154,7 @@ public class NoticeListScreen extends AppCompatActivity {
 
     void noticeRequest() {
 
+        UtilityFunctions.tokenRefresh(this);
 
         if (swipeContainer != null)
             if (!swipeContainer.isRefreshing()) {
@@ -169,7 +169,7 @@ public class NoticeListScreen extends AppCompatActivity {
 
 
 
-        Call<NoticeListResponse> call = api_service.get_notices( (mlist.size()/10)+"", access_token);
+        Call<NoticeListResponse> call = api_service.get_notices( (mlist.size()/10 + 1)+"", access_token);
         if(category.equals("All")) {
             String filterid=filterDialog.getFilterId();
             if(filterid.equals("-1")&&(!filterDialog.dateFilterSelected)) {
@@ -180,7 +180,7 @@ public class NoticeListScreen extends AppCompatActivity {
                     call = api_service.dateFilter(filterDialog.startDate, filterDialog.endDate, (mlist.size() / 10) + "", access_token);
                 } else {
                     if (!filterDialog.dateFilterSelected) {
-                        call = api_service.filteredNotices(filterid, (mlist.size() / 10) + "", access_token);
+                        call = api_service.filteredNotices(filterid, (mlist.size() / 10 + 1) + "", access_token);
                     } else {
                         call = api_service.filterAndDateFilterNotices(filterDialog.startDate, filterDialog.endDate, filterid, (mlist.size() / 10) + "", access_token);
                     }

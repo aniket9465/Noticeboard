@@ -2,11 +2,13 @@ package com.example.aniket.noticeboard.Utilities;
 
 import com.example.aniket.noticeboard.ApiRequestBody.BookmarkReadRequestBody;
 import com.example.aniket.noticeboard.ApiRequestBody.LoginRequestBody;
+import com.example.aniket.noticeboard.ApiRequestBody.RefreshTokenBody;
 import com.example.aniket.noticeboard.ApiResponseClasses.Filters;
 import com.example.aniket.noticeboard.ApiResponseClasses.FiltersList;
 import com.example.aniket.noticeboard.ApiResponseClasses.LoginResponse;
 import com.example.aniket.noticeboard.ApiResponseClasses.NoticeContentResponse;
 import com.example.aniket.noticeboard.ApiResponseClasses.NoticeListResponse;
+import com.example.aniket.noticeboard.ApiResponseClasses.accessToken;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -21,6 +23,9 @@ public interface ApiInterface {
 
     @POST("api/noticeboard/token_auth/obtain_pair/")
     Call<LoginResponse> login(@Body LoginRequestBody credentials);
+
+    @POST("api/noticeboard/token_auth/refresh/")
+    Call<accessToken> refreshToken(@Body RefreshTokenBody refreshToken);
 
     @GET("api/noticeboard/notice_list/{page}/")
     Call<NoticeListResponse> get_notices(@Path(value = "page") String page, @Header("access_token") String access_token);

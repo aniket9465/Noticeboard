@@ -74,6 +74,7 @@ public class SearchNoticeScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_notice);
 
+        UtilityFunctions.tokenRefresh(this);
 
         search_list = findViewById(R.id.recent_searches_list);
         recent_searches = findViewById(R.id.recent_searches);
@@ -288,6 +289,8 @@ public class SearchNoticeScreen extends AppCompatActivity {
 
 
     void notice_search(String search_query) {
+
+        UtilityFunctions.tokenRefresh(this);
 
         if (!search_query.equals(searched))
             mlist.clear();
