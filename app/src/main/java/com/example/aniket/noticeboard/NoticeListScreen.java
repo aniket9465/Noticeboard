@@ -52,9 +52,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-/*
-    setup logout button onclick
-*/
+
 public class NoticeListScreen extends AppCompatActivity {
 
     static Retrofit retrofit;
@@ -121,7 +119,6 @@ public class NoticeListScreen extends AppCompatActivity {
             @Override
             public void onRefresh() {
                 mlist.clear();
-                Log.d("..........","///////////,,,,,,,,,");
                 mScrollListener.resetState();
                 noticeRequest();
 
@@ -135,7 +132,6 @@ public class NoticeListScreen extends AppCompatActivity {
             @Override
             public void onLoadMore(int page, final int totalItemsCount, RecyclerView view) {
                 if (totalItemsCount > 0 && totalItemsCount <= mlist.size()) {
-                    Log.d("", "onloadmore"+totalItemsCount+" "+mlist.size());
                     noticeRequest();
                 }
             }
@@ -352,6 +348,14 @@ public class NoticeListScreen extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(Uri.parse("market://details?id=com.channeli.noticeboard"));
+                startActivity(intent);
+            }
+        });
+
+        findViewById(R.id.nav_notification_settings).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(NoticeListScreen.this,NotificationSettings.class);
                 startActivity(intent);
             }
         });

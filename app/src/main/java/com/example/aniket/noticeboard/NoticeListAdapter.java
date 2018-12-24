@@ -65,8 +65,7 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.no
         View.OnClickListener open_notice = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //send information of notice to next activity
-                //make call for read
+
                 Intent i = new Intent(context , NoticeViewScreen.class);
                 i.putExtra("id",list.get(position).getId()+"");
                 ((Activity)context).startActivityForResult(i,0);
@@ -139,7 +138,7 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.no
             }
         });
 
-        Log.d("////",list.get(position)+"");
+
         if(list.get(position).getBookmark())
         {
             holder.bookmark.setImageResource(R.drawable.bookmarked);

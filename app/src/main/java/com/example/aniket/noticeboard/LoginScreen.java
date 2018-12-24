@@ -30,11 +30,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-/*
-on successful login saving data in shared preferences in name : "Noticeboard_data"
-with refresh token with key "refresh_token"
-with access token with key "access_token"
- */
+
 
 public class LoginScreen extends AppCompatActivity {
 
@@ -84,6 +80,7 @@ public class LoginScreen extends AppCompatActivity {
                             edit.putString("access_token", response.body().getAccess());
                             edit.putString("token_time", sdf.format(Calendar.getInstance().getTime()));
                             edit.putString("login_time", sdf.format(Calendar.getInstance().getTime()));
+                            edit.putString("Subscription", "111");
                             edit.apply();
                             Intent in = new Intent(LoginScreen.this, NoticeListScreen.class);
                             startActivity(in);

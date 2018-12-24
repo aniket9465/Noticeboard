@@ -96,6 +96,7 @@ public class UtilityFunctions {
         editor.remove("token_time");
         editor.remove("access_token");
         editor.remove("refresh_token");
+        editor.remove("Subscription");
         editor.apply();
     }
 }
