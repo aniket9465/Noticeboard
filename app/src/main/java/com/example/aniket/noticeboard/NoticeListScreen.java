@@ -199,10 +199,6 @@ public class NoticeListScreen extends AppCompatActivity {
         }
 
 
-
-
-
-
         call.enqueue(new Callback<NoticeListResponse>() {
             @Override
             public void onResponse(Call<NoticeListResponse> call, Response<NoticeListResponse> response) {
@@ -246,22 +242,28 @@ public class NoticeListScreen extends AppCompatActivity {
             public void onClick(View v) {
                 category="All";
                 String heading="All Notices";
+                if(findViewById(R.id.swipeContainer).getVisibility()==View.INVISIBLE)
+                findViewById(R.id.swipeContainer).setVisibility(View.VISIBLE);
+                findViewById(R.id.filter_menu).setVisibility(View.INVISIBLE);
+                cancelFilters(v);
+
                 ((TextView)findViewById(R.id.heading)).setText(heading);
                 mlist.clear();
                 mScrollListener.resetState();
-                ((DrawerLayout)findViewById(R.id.list_of_notices)).closeDrawer(Gravity.LEFT);
-                noticeRequest();
+                ((DrawerLayout)findViewById(R.id.list_of_notices)).closeDrawer(Gravity.START);
 
 
-                findViewById(R.id.filter_menu).setVisibility(View.INVISIBLE);
-                findViewById(R.id.swipeContainer).setVisibility(View.VISIBLE);
-                cancelFilters(v);
+
+                filterDialog.resetFilters();
+                applyFilters(v);
+
             }
         });
 
         findViewById(R.id.filter_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                filterDialog.setOriginal();
                 if(findViewById(R.id.filter_menu).getVisibility()==View.INVISIBLE) {
                     findViewById(R.id.swipeContainer).setVisibility(View.INVISIBLE);
                     findViewById(R.id.filter_menu).setVisibility(View.VISIBLE);
@@ -318,6 +320,7 @@ public class NoticeListScreen extends AppCompatActivity {
                 findViewById(R.id.filter_menu).setVisibility(View.INVISIBLE);
                 findViewById(R.id.swipeContainer).setVisibility(View.VISIBLE);
                 cancelFilters(v);
+
             }
         });
 
@@ -377,15 +380,18 @@ public class NoticeListScreen extends AppCompatActivity {
         mlist.clear();
         filterDialog.setNew();
         findViewById(R.id.swipeContainer).setVisibility(View.VISIBLE);
-        findViewById(R.id.filter_menu).setVisibility(View.INVISIBLE);
-        findViewById(R.id.filter_menu).startAnimation(animHide);
+        if(findViewById(R.id.filter_menu).getVisibility()==View.VISIBLE) {
+            findViewById(R.id.filter_menu).setVisibility(View.INVISIBLE);
+            findViewById(R.id.filter_menu).startAnimation(animHide);
+        }
         noticeRequest();
     }
 
     public void cancelFilters(View v)
     {
-        filterDialog.setOriginal();
-        findViewById(R.id.swipeContainer).setVisibility(View.VISIBLE);
+        if(findViewById(R.id.swipeContainer).getVisibility()==View.INVISIBLE) {
+            findViewById(R.id.swipeContainer).setVisibility(View.VISIBLE);
+        }
         if(findViewById(R.id.filter_menu).getVisibility()==View.VISIBLE) {
             findViewById(R.id.filter_menu).setVisibility(View.INVISIBLE);
             findViewById(R.id.filter_menu).startAnimation(animHide);

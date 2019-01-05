@@ -319,14 +319,14 @@ public class SearchNoticeScreen extends AppCompatActivity {
         }
         else {
             if (filterid.equals("-1")) {
-                call = api_service.searchAndDateFilter(search_query,filterDialog.startDate, filterDialog.endDate, (mlist.size() / 10) + "", access_token);
+                call = api_service.searchAndDateFilter(search_query,filterDialog.startDate, filterDialog.endDate, (mlist.size() / 10 + 1 ) + "", access_token);
             }
             else {
                 if (!filterDialog.dateFilterSelected) {
-                    call = api_service.searchAndFilteredNotices(search_query,filterid, (mlist.size() / 10) + "", access_token);
+                    call = api_service.searchAndFilteredNotices(search_query,filterid, (mlist.size() / 10 + 1 ) + "", access_token);
                 }
                 else {
-                    call = api_service.searchAndFilterAndDateFilterNotices(search_query,filterDialog.startDate, filterDialog.endDate, filterid, (mlist.size() / 10) + "", access_token);
+                    call = api_service.searchAndFilterAndDateFilterNotices(search_query,filterDialog.startDate, filterDialog.endDate, filterid, (mlist.size() / 10 + 1 ) + "", access_token);
                 }
             }
         }

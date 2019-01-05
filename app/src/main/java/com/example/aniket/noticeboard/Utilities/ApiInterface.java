@@ -42,7 +42,7 @@ public interface ApiInterface {
     @GET("api/noticeboard/date_filter_view/")
     Call<NoticeListResponse> dateFilter(@Query(value="start") String start,@Query(value = "end") String end,@Query(value = "page") String page,@Header("access_token") String access_token);
 
-    @GET("api/noticeboard/bookmarked_filter_view/{page}/")
+    @GET("api/noticeboard/bookmarked_notices/{page}/")
     Call<NoticeListResponse> bookmarkedNotices(@Path(value = "page") String page, @Header("access_token") String access_token);
 
     @GET("api/noticeboard/expired_notices/{page}/")

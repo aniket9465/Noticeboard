@@ -194,7 +194,7 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
                 subfilterListItems.clear();
                 for(int i=0;i<filters.size();++i)
                 {
-                    if(filters.get(i).getName().equals("Placement")) {
+                    if(filters.get(i).getName().equals("Placements")) {
 
                         for (int j = 0; j < filters.get(i).getBanner().size(); ++j) {
                             subfilterListItems.add(filters.get(i).getBanner().get(j));
@@ -262,6 +262,7 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
     }
 
     public void setOriginal() {
+
         if(dateFilterSelected)
         {
             activity.findViewById(R.id.date_filter_not_set).setVisibility(View.INVISIBLE);
@@ -273,8 +274,13 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
             ((TextView) activity.findViewById(R.id.starting_date)).setText(startDate);
             ((TextView) activity.findViewById(R.id.ending_date)).setText(endDate);
         }
+
+            tmpdateFilterSelected=dateFilterSelected;
+            tmpstartDate=startDate;
+            tmpendDate=endDate;
             tmpsubFilter=subFilter;
             tmpmainFilter=mainFilter;
+
             if(pchecked!=checked)
             {
                 if(pchecked!=null)
@@ -470,5 +476,20 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
 
     }
 
+    public void resetFilters()
+    {
+        tmpdateFilterSelected=false;
+        activity.findViewById(R.id.date_filter_not_set).setVisibility(View.VISIBLE);
+        activity.findViewById(R.id.date_filter_set).setVisibility(View.INVISIBLE);
 
+        tmpmainFilter="";
+        tmpsubFilter="";
+        if(pchecked!=null)
+            pchecked.setChecked(false);
+        pchecked=null;
+        activity.findViewById(R.id.authority_bullet).setVisibility(View.INVISIBLE);
+        activity.findViewById(R.id.placements_bullet).setVisibility(View.INVISIBLE);
+        activity.findViewById(R.id.departments_bullet).setVisibility(View.INVISIBLE);
+
+    }
 }
