@@ -6,16 +6,16 @@
     android:background="#ffffff"
     android:clickable="true"
     android:focusable="true"
-    android:paddingTop="10dp"
     android:layout_height="106dp">
 
     <LinearLayout
         android:id="@+id/open"
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginEnd="58dp"
-        app:layout_constraintEnd_toStartOf="@+id/bookmark"/>
+        android:orientation="vertical"
+        app:layout_constraintEnd_toStartOf="@+id/bookmark"
+        app:layout_constraintTop_toTopOf="parent" />
     <TextView
         android:id="@+id/subject"
         android:layout_width="match_parent"
@@ -74,7 +74,7 @@
         android:layout_centerVertical="true"
         android:layout_marginEnd="16dp"
         android:padding="10dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="12dp"
         app:srcCompat="@drawable/bookmark"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

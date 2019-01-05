@@ -1,36 +1,29 @@
 package com.example.aniket.noticeboard;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.ScaleAnimation;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.aniket.noticeboard.ApiResponseClasses.Banner;
 import com.example.aniket.noticeboard.ApiResponseClasses.Filters;
 import com.example.aniket.noticeboard.ApiResponseClasses.FiltersList;
 import com.example.aniket.noticeboard.ApiResponseClasses.NoticeCardResponse;
@@ -40,13 +33,7 @@ import com.example.aniket.noticeboard.Utilities.EndlessRecyclerViewScrollListene
 import com.example.aniket.noticeboard.Utilities.FilterDialog;
 import com.example.aniket.noticeboard.Utilities.UtilityFunctions;
 
-import java.nio.file.Path;
-import java.sql.Time;
-import java.text.SimpleDateFormat;
-import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -210,8 +197,13 @@ public class NoticeListScreen extends AppCompatActivity {
                     }
 
                 }
-
-                progressDialog.dismiss();
+                Handler mHandler = new Handler();
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressDialog.dismiss();
+                    }
+                },300);
                 if (swipeContainer != null) {
                         swipeContainer.setRefreshing(false);
                 }
@@ -226,8 +218,13 @@ public class NoticeListScreen extends AppCompatActivity {
                     swipeContainer.setRefreshing(false);
 
                 Toast.makeText(NoticeListScreen.this, "connection error", Toast.LENGTH_SHORT).show();
-
-                progressDialog.dismiss();
+                Handler mHandler = new Handler();
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressDialog.dismiss();
+                    }
+                },300);
 
             }
         });
@@ -246,6 +243,14 @@ public class NoticeListScreen extends AppCompatActivity {
                 findViewById(R.id.swipeContainer).setVisibility(View.VISIBLE);
                 findViewById(R.id.filter_menu).setVisibility(View.INVISIBLE);
                 cancelFilters(v);
+
+                findViewById(R.id.search).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent in = new Intent(NoticeListScreen.this, SearchNoticeScreen.class);
+                        startActivityForResult(in, 1);
+                    }
+                });
 
                 ((TextView)findViewById(R.id.heading)).setText(heading);
                 mlist.clear();
@@ -287,7 +292,13 @@ public class NoticeListScreen extends AppCompatActivity {
                 String heading="Expired Notices";
                 findViewById(R.id.back).setVisibility(View.VISIBLE);
                 findViewById(R.id.filter_button).setVisibility(View.INVISIBLE);
-                findViewById(R.id.search).setVisibility(View.INVISIBLE);
+                findViewById(R.id.search).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent in = new Intent(NoticeListScreen.this, ExpiredSearch.class);
+                        startActivityForResult(in, 1);
+                    }
+                });
                 findViewById(R.id.drawer_opener).setVisibility(View.INVISIBLE);
                 ((TextView)findViewById(R.id.heading)).setText(heading);
                 mlist.clear();

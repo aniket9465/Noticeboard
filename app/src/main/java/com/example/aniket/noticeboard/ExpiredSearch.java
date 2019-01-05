@@ -25,20 +25,16 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.aniket.noticeboard.ApiResponseClasses.Filters;
-import com.example.aniket.noticeboard.ApiResponseClasses.FiltersList;
 import com.example.aniket.noticeboard.ApiResponseClasses.NoticeCardResponse;
 import com.example.aniket.noticeboard.ApiResponseClasses.NoticeListResponse;
 import com.example.aniket.noticeboard.Utilities.ApiInterface;
 import com.example.aniket.noticeboard.Utilities.EndlessRecyclerViewScrollListener;
-import com.example.aniket.noticeboard.Utilities.FilterDialog;
 import com.example.aniket.noticeboard.Utilities.UtilityFunctions;
 
 import java.lang.reflect.Field;
@@ -53,16 +49,14 @@ import static com.example.aniket.noticeboard.NoticeListScreen.retrofit;
 /*
     set up calls for filters
 */
-public class SearchNoticeScreen extends AppCompatActivity {
+public class ExpiredSearch extends AppCompatActivity {
 
     ArrayList<NoticeCardResponse> mlist;
     String searched = "";
     View recent_searches;
-    static ProgressDialog progressDialog;
+        static ProgressDialog progressDialog;
     ArrayList<String> listItems = new ArrayList<String>();
     ListView search_list;
-    private FilterDialog filterDialog;
-    private ArrayList<Filters> filters;
     SwipeRefreshLayout swipeContainer;
     ArrayAdapter<String> recent_adapter;
     android.support.v7.widget.SearchView searchView;
@@ -75,7 +69,7 @@ public class SearchNoticeScreen extends AppCompatActivity {
 
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.search_notice);
+        setContentView(R.layout.expired_search);
 
         UtilityFunctions.tokenRefresh(this);
 
@@ -84,10 +78,6 @@ public class SearchNoticeScreen extends AppCompatActivity {
         swipeContainer = findViewById(R.id.swipeContainer);
         recent_searches.setVisibility(View.VISIBLE);
         swipeContainer.setVisibility(View.INVISIBLE);
-        filters=new ArrayList<>();
-        filterDialog=new FilterDialog(filters,SearchNoticeScreen.this);
-        getFilters();
-
 
         progressDialog=new ProgressDialog(this);
 
@@ -97,32 +87,6 @@ public class SearchNoticeScreen extends AppCompatActivity {
         animShowSubFilters.setDuration(200);
         animHideSubFilters = new ScaleAnimation(0.0f, 1.0f, 1.0f, 1.0f, Animation.RELATIVE_TO_SELF,1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
         animShowSubFilters.setDuration(200);
-
-
-        findViewById(R.id.filter_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                v.requestFocus();
-                if(findViewById(R.id.filter_menu).getVisibility()==View.INVISIBLE) {
-                    SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-                    searchView = (android.support.v7.widget.SearchView) findViewById(R.id.search_bar);
-                    searchView.clearFocus();
-
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                    findViewById(R.id.filter_menu).setVisibility(View.VISIBLE);
-                    findViewById(R.id.filter_menu).startAnimation(animShow);
-                    findViewById(R.id.swipeContainer).setVisibility(View.INVISIBLE);
-                }
-                else
-                {
-
-                    cancelFilters(v);
-                }
-            }
-        });
 
 
         listItems = new ArrayList<>();
@@ -181,7 +145,7 @@ public class SearchNoticeScreen extends AppCompatActivity {
 
         view = findViewById(R.id.notice_list);
         view.setLayoutManager(manager);
-        adapter = new NoticeListAdapter(mlist, SearchNoticeScreen.this);
+        adapter = new NoticeListAdapter(mlist, ExpiredSearch.this);
         view.setAdapter(adapter);
         view.addOnScrollListener(mScrollListener);
 
@@ -189,26 +153,20 @@ public class SearchNoticeScreen extends AppCompatActivity {
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         searchView = (android.support.v7.widget.SearchView) findViewById(R.id.search_bar);
         View v = searchView.findViewById(android.support.v7.appcompat.R.id.search_plate);
-        v.setBackgroundColor(Color.parseColor("#5288DA"));
         final EditText editText = ((EditText) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text));
 
         editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                filterDialog.setOriginal();
                 findViewById(R.id.recent_searches).setVisibility(View.VISIBLE);
-                if(findViewById(R.id.filter_menu).getVisibility()==View.VISIBLE) {
-                    findViewById(R.id.filter_menu).setVisibility(View.INVISIBLE);
-                    findViewById(R.id.filter_menu).startAnimation(animHide);
-                }
             }
         });
 
         editText.setHintTextColor(getResources().getColor(R.color.white));
-        editText.setHint(" Search for notices");
+        editText.setHint(" Search expired notices");
         editText.setTextSize(TypedValue.COMPLEX_UNIT_DIP,14);
-        editText.setHintTextColor(Color.parseColor("#8EB2E7"));
         editText.setTextColor(Color.parseColor("#ffffff"));
+        editText.setHintTextColor(Color.parseColor("#8EB2E7"));
         try {
             Field mCursorDrawableRes = TextView.class.getDeclaredField("mCursorDrawableRes");
             mCursorDrawableRes.setAccessible(true);
@@ -233,7 +191,6 @@ public class SearchNoticeScreen extends AppCompatActivity {
 
             public boolean onQueryTextChange(String newText) {
                 // this is your adapter that will be filtered
-                cancelFilters(findViewById(R.id.filter_menu));
                 String recents = getSharedPreferences("Noticeboard_data", 0).getString("recent_searches", "");
                 String[] recent = recents.split(";;;");
                 listItems.clear();
@@ -304,10 +261,9 @@ public class SearchNoticeScreen extends AppCompatActivity {
         searched = search_query;
         if (swipeContainer != null)
             if (!swipeContainer.isRefreshing()) {
-                progressDialog = ProgressDialog.show(SearchNoticeScreen.this, "Loading", "please wait", true);
+                progressDialog = ProgressDialog.show(ExpiredSearch.this, "Loading", "please wait", true);
             }
-
-            adapter.notifyData(mlist);
+        adapter.notifyData(mlist);
         if (search_query.equals("")) {
             if (swipeContainer != null)
                 swipeContainer.setRefreshing(false);
@@ -316,7 +272,7 @@ public class SearchNoticeScreen extends AppCompatActivity {
                 mHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                         progressDialog.dismiss();
+                        progressDialog.dismiss();
                     }
                 },300);
             }
@@ -329,24 +285,7 @@ public class SearchNoticeScreen extends AppCompatActivity {
 
 
         Call<NoticeListResponse> call;
-        String filterid=filterDialog.getFilterId();
-        if(filterid.equals("-1")&&(!filterDialog.dateFilterSelected)) {
-            call = api_service.search_notices(search_query,(mlist.size() / 10 + 1) + "", access_token);
-        }
-        else {
-            if (filterid.equals("-1")) {
-                call = api_service.searchAndDateFilter(search_query,filterDialog.startDate, filterDialog.endDate, (mlist.size() / 10 + 1 ) + "", access_token);
-            }
-            else {
-                if (!filterDialog.dateFilterSelected) {
-                    call = api_service.searchAndFilteredNotices(search_query,filterid, (mlist.size() / 10 + 1 ) + "", access_token);
-                }
-                else {
-                    call = api_service.searchAndFilterAndDateFilterNotices(search_query,filterDialog.startDate, filterDialog.endDate, filterid, (mlist.size() / 10 + 1 ) + "", access_token);
-                }
-            }
-        }
-
+        call = api_service.searchExpiredNotices((mlist.size() / 10 + 1) + "" , search_query ,  access_token);
 
         call.enqueue(new Callback<NoticeListResponse>() {
             @Override
@@ -359,7 +298,7 @@ public class SearchNoticeScreen extends AppCompatActivity {
                         }
                 }
 
-                if (progressDialog != null){
+                if (progressDialog != null) {
                     Handler mHandler = new Handler();
                     mHandler.postDelayed(new Runnable() {
                         @Override
@@ -382,9 +321,9 @@ public class SearchNoticeScreen extends AppCompatActivity {
                 if (swipeContainer != null)
                     swipeContainer.setRefreshing(false);
 
-                Toast.makeText(SearchNoticeScreen.this, "connection error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ExpiredSearch.this, "connection error", Toast.LENGTH_SHORT).show();
 
-                if (progressDialog != null) {
+                if (progressDialog != null){
                     Handler mHandler = new Handler();
                     mHandler.postDelayed(new Runnable() {
                         @Override
@@ -393,37 +332,10 @@ public class SearchNoticeScreen extends AppCompatActivity {
                         }
                     },300);
                 }
+
                 adapter.notifyData(mlist);
             }
         });
-    }
-
-    public void applyFilters(View v)
-    {
-        mlist.clear();
-        filterDialog.setNew();
-        if(searched.equals(""))
-            findViewById(R.id.recent_searches).setVisibility(View.VISIBLE);
-        else
-            findViewById(R.id.swipeContainer).setVisibility(View.VISIBLE);
-        findViewById(R.id.filter_menu).setVisibility(View.INVISIBLE);
-        findViewById(R.id.filter_menu).startAnimation(animHide);
-        if(!searched.equals(""))
-            notice_search(searched);
-    }
-
-    public void cancelFilters(View v)
-    {
-        filterDialog.setOriginal();
-        if(searched.equals(""))
-            findViewById(R.id.recent_searches).setVisibility(View.VISIBLE);
-        else
-            findViewById(R.id.swipeContainer).setVisibility(View.VISIBLE);
-        if(findViewById(R.id.filter_menu).getVisibility()==View.VISIBLE) {
-            findViewById(R.id.filter_menu).setVisibility(View.INVISIBLE);
-            findViewById(R.id.filter_menu).startAnimation(animHide);
-        }
-
     }
 
     private void focus_change(View v) {
@@ -478,39 +390,4 @@ public class SearchNoticeScreen extends AppCompatActivity {
 
         }
     }
-
-
-
-    private void getFilters()
-    {
-        String access_token = getSharedPreferences("Noticeboard_data", 0).getString("access_token", null);
-        retrofit=UtilityFunctions.getRetrofitInstance(getResources().getString(R.string.base_url),retrofit);
-        ApiInterface api_service = retrofit.create(ApiInterface.class);
-
-        Call<FiltersList> call = api_service.getFilters( access_token);
-        call = api_service.getFilters( access_token);
-
-        call.enqueue(new Callback<FiltersList>() {
-            @Override
-            public void onResponse(Call<FiltersList> call, Response<FiltersList> response) {
-
-                filterDialog=new FilterDialog(filters,SearchNoticeScreen.this);
-                if(response.body()!=null) {
-
-                    filters=response.body().getResult();
-                    filterDialog=new FilterDialog(filters,SearchNoticeScreen.this);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<FiltersList> call, Throwable t) {
-
-                Toast.makeText(SearchNoticeScreen.this, "connection error", Toast.LENGTH_SHORT).show();
-                filterDialog=new FilterDialog(filters,SearchNoticeScreen.this);
-            }
-        });
-
-    }
-
-
 }

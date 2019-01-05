@@ -48,6 +48,9 @@ public interface ApiInterface {
     @GET("api/noticeboard/expired_notices/{page}/")
     Call<NoticeListResponse> expiredNotices(@Path(value = "page") String page, @Header("access_token") String access_token);
 
+    @GET("api/noticeboard/expired_notices/{page}/")
+    Call<NoticeListResponse> searchExpiredNotices(@Path(value = "page")  String page , @Query(value = "search") String search, @Header("access_token") String access_token);
+
     @GET("api/noticeboard/filter/")
     Call<NoticeListResponse> filteredNotices(@Query(value = "banner") String banner,@Query(value = "page") String page, @Header("access_token") String access_token);
 
