@@ -11,6 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
 import android.util.Log;
@@ -44,16 +45,18 @@ public class NoticeListScreen extends AppCompatActivity {
 
     static Retrofit retrofit;
     private ArrayList<NoticeCardResponse> mlist = new ArrayList<>();
+    private ArrayList<NoticeCardResponse> tmpMlist =new ArrayList<>();
+    private int tmpPos;
+    private FilterDialog filterDialog;
     private SwipeRefreshLayout swipeContainer;
     private RecyclerView view;
     private NoticeListAdapter adapter;
     private String category;
     private ArrayList<Filters> filters;
-    private FilterDialog filterDialog;
     private EndlessRecyclerViewScrollListener mScrollListener;
     private Animation animShow, animHide ,animShowSubFilters,animHideSubFilters;
     static ProgressDialog progressDialog;
-
+    LinearLayoutManager manager;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
 
@@ -114,7 +117,7 @@ public class NoticeListScreen extends AppCompatActivity {
         swipeContainer.setColorSchemeResources(android.R.color.holo_blue_dark,
                 android.R.color.holo_green_dark);
 
-        final LinearLayoutManager manager = new LinearLayoutManager(this.getApplicationContext());
+        manager = new LinearLayoutManager(this.getApplicationContext());
          mScrollListener = new EndlessRecyclerViewScrollListener(manager) {
             @Override
             public void onLoadMore(int page, final int totalItemsCount, RecyclerView view) {
@@ -123,7 +126,6 @@ public class NoticeListScreen extends AppCompatActivity {
                 }
             }
         };
-
 
         view.setLayoutManager(manager);
         adapter = new NoticeListAdapter(mlist,NoticeListScreen.this);
@@ -209,7 +211,6 @@ public class NoticeListScreen extends AppCompatActivity {
                 }
 
                 adapter.notifyData(mlist);
-
             }
 
             @Override
@@ -290,6 +291,11 @@ public class NoticeListScreen extends AppCompatActivity {
             public void onClick(View v) {
                 category="expired";
                 String heading="Expired Notices";
+                tmpMlist.clear();
+                tmpMlist.addAll(mlist);
+                tmpPos=manager.findFirstVisibleItemPosition();
+                Log.d("//",tmpPos+" "+tmpMlist.size());
+                manager.scrollToPosition(0);
                 findViewById(R.id.back).setVisibility(View.VISIBLE);
                 findViewById(R.id.filter_button).setVisibility(View.INVISIBLE);
                 findViewById(R.id.search).setOnClickListener(new View.OnClickListener() {
@@ -309,6 +315,7 @@ public class NoticeListScreen extends AppCompatActivity {
                 findViewById(R.id.filter_menu).setVisibility(View.INVISIBLE);
                 findViewById(R.id.swipeContainer).setVisibility(View.VISIBLE);
                 cancelFilters(v);
+
             }
         });
 
@@ -319,14 +326,16 @@ public class NoticeListScreen extends AppCompatActivity {
                 String heading="All Notices";
                 ((TextView)findViewById(R.id.heading)).setText(heading);
                 mlist.clear();
-                mScrollListener.resetState();
+                mlist.addAll(tmpMlist);
+                adapter.notifyData(mlist);
+                Log.d("",tmpPos+" "+mlist.size()+"");
+                manager.scrollToPositionWithOffset(tmpPos, 0);
                 findViewById(R.id.back).setVisibility(View.INVISIBLE);
                 findViewById(R.id.filter_button).setVisibility(View.VISIBLE);
                 findViewById(R.id.content_frame).startAnimation(animHideSubFilters);
                 findViewById(R.id.content_frame).startAnimation(animShowSubFilters);
                 findViewById(R.id.search).setVisibility(View.VISIBLE);
                 findViewById(R.id.drawer_opener).setVisibility(View.VISIBLE);
-                noticeRequest();
 
                 findViewById(R.id.filter_menu).setVisibility(View.INVISIBLE);
                 findViewById(R.id.swipeContainer).setVisibility(View.VISIBLE);
@@ -340,6 +349,10 @@ public class NoticeListScreen extends AppCompatActivity {
             public void onClick(View v) {
                 category="bookmarks";
                 String heading="Bookmarked Notices";
+                tmpMlist.clear();
+                tmpMlist.addAll(mlist);
+                tmpPos=manager.findFirstVisibleItemPosition();
+                manager.scrollToPosition(0);
                 findViewById(R.id.back).setVisibility(View.VISIBLE);
                 findViewById(R.id.filter_button).setVisibility(View.INVISIBLE);
                 findViewById(R.id.search).setVisibility(View.INVISIBLE);
@@ -458,5 +471,7 @@ public class NoticeListScreen extends AppCompatActivity {
         });
 
     }
+
+
 
 }

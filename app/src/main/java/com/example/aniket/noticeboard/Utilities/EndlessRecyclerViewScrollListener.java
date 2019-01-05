@@ -48,7 +48,6 @@ public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnS
         if (mLayoutManager instanceof LinearLayoutManager) {
             lastVisibleItemPosition = ((LinearLayoutManager) mLayoutManager).findLastVisibleItemPosition();
         }
-        Log.d("",totalItemCount+" "+lastVisibleItemPosition+" "+previousTotalItemCount);
         if (loading && (totalItemCount > previousTotalItemCount)) {
             loading = false;
             previousTotalItemCount = totalItemCount;
@@ -58,7 +57,6 @@ public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnS
             onLoadMore(currentPage, totalItemCount, view);
             loading = true;
         }
-        Log.d("",totalItemCount+" "+lastVisibleItemPosition+" "+previousTotalItemCount);
 
     }
 
