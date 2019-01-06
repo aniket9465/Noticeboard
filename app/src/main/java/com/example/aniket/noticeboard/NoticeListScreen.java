@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -21,6 +22,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.ScaleAnimation;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -190,19 +192,19 @@ public class NoticeListScreen extends AppCompatActivity {
 
         call.enqueue(new Callback<NoticeListResponse>() {
             @Override
-            public void onResponse(Call<NoticeListResponse> call, Response<NoticeListResponse> response) {
+            public void onResponse(Call<NoticeListResponse> call,final Response<NoticeListResponse> response) {
 
-                if(response.body()!=null) {
-
-                    for (int i = 0; i < response.body().getNotices().size(); ++i) {
-                        mlist.add(response.body().getNotices().get(i));
-                    }
-
-                }
                 Handler mHandler = new Handler();
                 mHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        if(response.body()!=null) {
+
+                            for (int i = 0; i < response.body().getNotices().size(); ++i) {
+                                mlist.add(response.body().getNotices().get(i));
+                            }
+                            adapter.notifyData(mlist);
+                        }
                         progressDialog.dismiss();
                     }
                 },300);
@@ -210,7 +212,6 @@ public class NoticeListScreen extends AppCompatActivity {
                         swipeContainer.setRefreshing(false);
                 }
 
-                adapter.notifyData(mlist);
             }
 
             @Override
@@ -472,6 +473,30 @@ public class NoticeListScreen extends AppCompatActivity {
 
     }
 
-
+    @Override
+    public void onBackPressed() {
+        if(((DrawerLayout)findViewById(R.id.list_of_notices)).isDrawerOpen(Gravity.START))
+        {
+            ((DrawerLayout)findViewById(R.id.list_of_notices)).closeDrawer(Gravity.START);
+            return;
+        }
+        if(findViewById(R.id.filter_menu).getVisibility()==View.VISIBLE)
+        {
+            cancelFilters(findViewById(R.id.filter_menu));
+            return;
+        }
+        switch ((String)((TextView)findViewById(R.id.heading)).getText())
+        {
+            case "All Notices" :
+                finish();
+                break;
+            case "Expired Notices" :
+                findViewById(R.id.nav_all).callOnClick();
+                break;
+            case "Bookmarked Notices" :
+                findViewById(R.id.nav_all).callOnClick();
+                break;
+        }
+    }
 
 }

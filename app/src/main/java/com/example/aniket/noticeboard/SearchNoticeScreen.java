@@ -6,15 +6,18 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -188,8 +191,8 @@ public class SearchNoticeScreen extends AppCompatActivity {
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         searchView = (android.support.v7.widget.SearchView) findViewById(R.id.search_bar);
-        View v = searchView.findViewById(android.support.v7.appcompat.R.id.search_plate);
-        v.setBackgroundColor(Color.parseColor("#5288DA"));
+        View searchplate = (View)searchView.findViewById(android.support.v7.appcompat.R.id.search_plate);
+        searchplate.getBackground().setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);
         final EditText editText = ((EditText) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text));
 
         editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -350,20 +353,20 @@ public class SearchNoticeScreen extends AppCompatActivity {
 
         call.enqueue(new Callback<NoticeListResponse>() {
             @Override
-            public void onResponse(Call<NoticeListResponse> call, Response<NoticeListResponse> response) {
-
-                if (response.body() != null) {
-                    if (response.body().getNotices() != null)
-                        for (int i = 0; i < response.body().getNotices().size(); ++i) {
-                            mlist.add(response.body().getNotices().get(i));
-                        }
-                }
+            public void onResponse(Call<NoticeListResponse> call, final Response<NoticeListResponse> response) {
 
                 if (progressDialog != null){
                     Handler mHandler = new Handler();
                     mHandler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
+                            if (response.body() != null) {
+                                if (response.body().getNotices() != null)
+                                    for (int i = 0; i < response.body().getNotices().size(); ++i) {
+                                        mlist.add(response.body().getNotices().get(i));
+                                    }
+                            }
+                            adapter.notifyData(mlist);
                              progressDialog.dismiss();
                         }
                     },300);
@@ -373,7 +376,6 @@ public class SearchNoticeScreen extends AppCompatActivity {
                     swipeContainer.setRefreshing(false);
                 }
 
-                adapter.notifyData(mlist);
             }
 
             @Override
@@ -488,7 +490,6 @@ public class SearchNoticeScreen extends AppCompatActivity {
         ApiInterface api_service = retrofit.create(ApiInterface.class);
 
         Call<FiltersList> call = api_service.getFilters( access_token);
-        call = api_service.getFilters( access_token);
 
         call.enqueue(new Callback<FiltersList>() {
             @Override
@@ -512,5 +513,14 @@ public class SearchNoticeScreen extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        if(findViewById(R.id.filter_menu).getVisibility()==View.VISIBLE)
+        {
+            cancelFilters(findViewById(R.id.filter_menu));
+            return;
+        }
+        finish();
+    }
 
 }

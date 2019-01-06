@@ -42,24 +42,23 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:visibility="invisible"
-                    android:paddingLeft="19dp"
-                    android:paddingRight="22dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="16dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/back_white" />
 
                 <TextView
                     android:id="@+id/heading"
-                    android:layout_width="272dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
-                    android:layout_marginStart="16dp"
                     android:layout_marginTop="18dp"
                     android:text="All Notices"
                     android:textColor="#fff"
                     android:textSize="16dp"
-                    app:layout_constraintEnd_toStartOf="@+id/search"
-                    app:layout_constraintStart_toEndOf="@+id/drawer_opener"
+                    app:layout_constraintEnd_toStartOf="@+id/filter_button"
+                    app:layout_constraintStart_toEndOf="@+id/back"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
@@ -70,7 +69,7 @@
                     android:layout_alignParentEnd="true"
                     android:paddingBottom="16dp"
                     android:paddingLeft="16dp"
-                    android:paddingRight="16dp"
+                    android:paddingRight="20dp"
                     android:paddingTop="16dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -115,8 +114,8 @@
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_below="@id/lay"
-                android:id="@+id/filter_menu"
                 android:visibility="invisible"
+                android:id="@+id/filter_menu"
                 android:background="#EDF4FF"
                 android:layout_height="match_parent">
                 <TextView
@@ -170,12 +169,12 @@
 
                     <View
                         android:id="@+id/view"
-                        android:layout_width="123dp"
+                        android:layout_width="0dp"
                         android:layout_height="1dp"
                         android:layout_marginEnd="8dp"
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="54dp"
-                        android:background="#000"
+                        android:background="#46000000"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -193,21 +192,21 @@
                             android:layout_height="36dp"
                             android:background="#fff"
                             android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:paddingLeft="16dp"
+                                android:gravity="center"
+                                android:text="Authorities"
+                                />
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:visibility="invisible"
                                 android:layout_height="wrap_content"
                                 android:id="@+id/authority_bullet"
                                 android:layout_marginTop="13dp"
-                                android:layout_marginStart="15dp"
+                                android:layout_marginStart="8dp"
                                 app:srcCompat="@drawable/blue_check"
-                                />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:paddingLeft="8dp"
-                                android:gravity="center"
-                                android:text="Authorities"
                                 />
                         </LinearLayout>
                         <LinearLayout
@@ -215,21 +214,21 @@
                             android:layout_height="36dp"
                             android:id="@+id/departments"
                             android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:paddingLeft="16dp"
+                                android:gravity="center"
+                                android:text="Departments"
+                                />
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:visibility="invisible"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="13dp"
-                                android:layout_marginStart="15dp"
+                                android:layout_marginStart="8dp"
                                 android:id="@+id/departments_bullet"
                                 app:srcCompat="@drawable/blue_check"
-                                />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:paddingLeft="8dp"
-                                android:gravity="center"
-                                android:text="Departments"
                                 />
                         </LinearLayout>
                         <LinearLayout
@@ -237,32 +236,32 @@
                             android:layout_height="36dp"
                             android:id="@+id/placements"
                             android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:paddingLeft="16dp"
+                                android:gravity="center"
+                                android:text="Placement Office"
+                                />
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:id="@+id/placements_bullet"
                                 android:visibility="invisible"
                                 android:layout_marginTop="13dp"
-                                android:layout_marginStart="15dp"
+                                android:layout_marginStart="10dp"
                                 app:srcCompat="@drawable/blue_check"
-                                />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:paddingLeft="8dp"
-                                android:gravity="center"
-                                android:text="Placement Office"
                                 />
                         </LinearLayout>
                     </LinearLayout>
                     <View
                         android:id="@+id/view5"
-                        android:layout_width="123dp"
+                        android:layout_width="0dp"
                         android:layout_height="1dp"
                         android:layout_marginEnd="8dp"
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="142dp"
-                        android:background="#000"
+                        android:background="#46000000"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="@id/view" />
@@ -280,27 +279,21 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="8dp"
+                        android:clickable="true"
+                        android:focusable="true"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/view5" >
 
                         <TextView
                             android:layout_width="wrap_content"
-                            android:clickable="true"
-                            android:focusable="true"
                             android:id="@+id/Date"
                             android:layout_height="24dp"
                             android:paddingBottom="8dp"
                             android:paddingRight="32dp"
                             android:text="Date"
-                            android:textColor="#000"
+                            android:textColor="#5288DA"
                             android:textSize="14dp"/>
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            app:srcCompat="@drawable/date_range"
-                            app:layout_constraintStart_toEndOf="@+id/Date" />
 
                     </android.support.constraint.ConstraintLayout>
                     <android.support.constraint.ConstraintLayout
@@ -549,7 +542,8 @@
                             android:layout_marginStart="56dp"
                             android:layout_marginTop="33dp"
                             android:text="All Notices"
-                            android:textColor="#000000"
+                            android:textColor="#999999"
+                            android:textStyle="bold"
                             android:textSize="14dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -563,7 +557,7 @@
                         android:layout_width="fill_parent"
                         android:layout_height="1dp"
                         android:layout_marginTop="8dp"
-                        android:background="#000"
+                        android:background="#2e000000"
                         app:layout_constraintTop_toBottomOf="@+id/nav_all"
                         />
 
@@ -593,7 +587,8 @@
                             android:layout_marginTop="30dp"
                             android:text="Expired"
                             android:textSize="14dp"
-                            android:textColor="#000000"
+                            android:textColor="#999999"
+                            android:textStyle="bold"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -625,7 +620,8 @@
                             android:layout_marginTop="16dp"
                             android:textSize="14dp"
                             android:text="Bookmarks"
-                            android:textColor="#000000"
+                            android:textColor="#999999"
+                            android:textStyle="bold"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -636,7 +632,7 @@
                         android:layout_width="fill_parent"
                         android:layout_height="1dp"
                         android:layout_marginTop="8dp"
-                        android:background="#000"
+                        android:background="#2e000000"
                         app:layout_constraintTop_toBottomOf="@+id/nav_bookmarks"
                         />
 
@@ -666,7 +662,8 @@
                             android:layout_marginStart="56dp"
                             android:layout_marginTop="30dp"
                             android:text="Notification settings"
-                            android:textColor="#000000"
+                            android:textColor="#999999"
+                            android:textStyle="bold"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -698,7 +695,8 @@
                             android:layout_marginStart="56dp"
                             android:layout_marginTop="16dp"
                             android:text="Feedback"
-                            android:textColor="#000000"
+                            android:textColor="#999999"
+                            android:textStyle="bold"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -730,7 +728,8 @@
                             android:layout_marginStart="56dp"
                             android:layout_marginTop="16dp"
                             android:text="Logout"
-                            android:textColor="#000000"
+                            android:textColor="#999999"
+                            android:textStyle="bold"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
