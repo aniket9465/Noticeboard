@@ -81,12 +81,26 @@
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentEnd="true"
                     android:paddingBottom="16dp"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:paddingLeft="16dp"
                     android:paddingRight="16dp"
                     android:paddingTop="16dp"
                     app:layout_constraintEnd_toStartOf="@id/search"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/filter" />
+                <ImageView
+                    android:id="@+id/filter_selected"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="16dp"
+                    android:visibility="invisible"
+                    android:layout_marginRight="12dp"
+                    app:layout_constraintEnd_toStartOf="@id/search"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/filter_selected" />
 
 
             </android.support.constraint.ConstraintLayout>
@@ -114,8 +128,8 @@
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_below="@id/lay"
-                android:visibility="invisible"
                 android:id="@+id/filter_menu"
+                android:visibility="invisible"
                 android:background="#EDF4FF"
                 android:layout_height="match_parent">
                 <TextView
@@ -180,78 +194,83 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <LinearLayout
+                        android:id="@+id/sub_c"
                         android:layout_width="match_parent"
                         android:layout_height="114dp"
+                        android:layout_marginTop="8dp"
                         android:orientation="vertical"
-                        android:id="@+id/sub_c"
                         app:layout_constraintBottom_toTopOf="@+id/view5"
-                        app:layout_constraintStart_toStartOf="parent" >
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/view">
+
                         <LinearLayout
-                            android:layout_width="match_parent"
                             android:id="@+id/authority"
+                            android:layout_width="match_parent"
                             android:layout_height="36dp"
                             android:background="#fff"
                             android:orientation="horizontal">
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:paddingLeft="16dp"
                                 android:gravity="center"
-                                android:text="Authorities"
-                                />
+                                android:paddingLeft="16dp"
+                                android:text="Authorities" />
+
                             <ImageView
-                                android:layout_width="wrap_content"
-                                android:visibility="invisible"
-                                android:layout_height="wrap_content"
                                 android:id="@+id/authority_bullet"
-                                android:layout_marginTop="13dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:layout_marginStart="8dp"
-                                app:srcCompat="@drawable/blue_check"
-                                />
+                                android:layout_marginTop="13dp"
+                                android:visibility="invisible"
+                                app:srcCompat="@drawable/blue_check" />
                         </LinearLayout>
+
                         <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="36dp"
                             android:id="@+id/departments"
-                            android:orientation="horizontal">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:paddingLeft="16dp"
-                                android:gravity="center"
-                                android:text="Departments"
-                                />
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:visibility="invisible"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="13dp"
-                                android:layout_marginStart="8dp"
-                                android:id="@+id/departments_bullet"
-                                app:srcCompat="@drawable/blue_check"
-                                />
-                        </LinearLayout>
-                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="36dp"
-                            android:id="@+id/placements"
                             android:orientation="horizontal">
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:paddingLeft="16dp"
                                 android:gravity="center"
-                                android:text="Placement Office"
-                                />
+                                android:paddingLeft="16dp"
+                                android:text="Departments" />
+
                             <ImageView
+                                android:id="@+id/departments_bullet"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:id="@+id/placements_bullet"
-                                android:visibility="invisible"
+                                android:layout_marginStart="8dp"
                                 android:layout_marginTop="13dp"
+                                android:visibility="invisible"
+                                app:srcCompat="@drawable/blue_check" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/placements"
+                            android:layout_width="match_parent"
+                            android:layout_height="36dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:paddingLeft="16dp"
+                                android:text="Placement Office" />
+
+                            <ImageView
+                                android:id="@+id/placements_bullet"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:layout_marginStart="10dp"
-                                app:srcCompat="@drawable/blue_check"
-                                />
+                                android:layout_marginTop="13dp"
+                                android:visibility="invisible"
+                                app:srcCompat="@drawable/blue_check" />
                         </LinearLayout>
                     </LinearLayout>
                     <View

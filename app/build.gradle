@@ -28,6 +28,7 @@ repositories {
 dependencies {
     implementation 'com.borax12.materialdaterangepicker:library:1.9'
     implementation 'com.android.support:percent:27.1.1'
+    implementation 'com.google.firebase:firebase-messaging:17.3.4'
     implementation 'com.android.support:cardview-v7:27.1.1'
     implementation 'com.android.support:design:27.1.1'
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'
