@@ -20,6 +20,7 @@ import com.channeli.aniket.noticeboard.R;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class FilterDialog implements DatePickerDialog.OnDateSetListener{
 
@@ -34,7 +35,7 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
     private RadioButton checked;
     private RadioButton pchecked;
 
-    private ArrayList<Filters> filters;
+    private List<Filters> filters;
     private Activity activity;
 
     private String currmainFilter="";
@@ -50,7 +51,7 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
     private MyListAdapter subfilterAdapter;
     private ArrayList<Banner> subfilterListItems;
 
-    public FilterDialog(ArrayList<Filters> filters,Activity activity)
+    public FilterDialog(List<Filters> filters,Activity activity)
     {
          this.filters=filters;
          this.activity=activity;
@@ -140,11 +141,11 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
         activity.findViewById(R.id.departments).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!currmainFilter.equals("Departments"))
+                if(!currmainFilter.equals("Department"))
                 {
                     ((RadioButton)activity.findViewById(R.id.all_subcategories_bullet)).setChecked(false);
                 }
-                if(tmpmainFilter.equals("Departments"))
+                if(tmpmainFilter.equals("Department"))
                 {
                     if(tmpsubFilter.equals("All"))
                     {
@@ -152,7 +153,7 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
                     }
 
                 }
-                currmainFilter="Departments";
+                currmainFilter="Department";
                 activity.findViewById(R.id.authority).setBackgroundColor(Color.parseColor("#EDF4FF"));
                 activity.findViewById(R.id.departments).setBackgroundColor(Color.parseColor("#EDF4FF"));
                 activity.findViewById(R.id.placements).setBackgroundColor(Color.parseColor("#EDF4FF"));
@@ -160,7 +161,7 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
                 subfilterListItems.clear();
                 for(int i=0;i<filters.size();++i)
                 {
-                    if(filters.get(i).getName().equals("Departments")) {
+                    if(filters.get(i).getName().equals("Department")) {
 
                         for (int j = 0; j < filters.get(i).getBanner().size(); ++j) {
                             subfilterListItems.add(filters.get(i).getBanner().get(j));
@@ -174,11 +175,11 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
         activity.findViewById(R.id.placements).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!currmainFilter.equals("Placements"))
+                if(!currmainFilter.equals("Placement"))
                 {
                     ((RadioButton)activity.findViewById(R.id.all_subcategories_bullet)).setChecked(false);
                 }
-                if(tmpmainFilter.equals("Placements"))
+                if(tmpmainFilter.equals("Placement"))
                 {
                     if(tmpsubFilter.equals("All"))
                     {
@@ -186,7 +187,7 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
                     }
 
                 }
-                currmainFilter="Placements";
+                currmainFilter="Placement";
                 activity.findViewById(R.id.authority).setBackgroundColor(Color.parseColor("#EDF4FF"));
                 activity.findViewById(R.id.departments).setBackgroundColor(Color.parseColor("#EDF4FF"));
                 activity.findViewById(R.id.placements).setBackgroundColor(Color.parseColor("#EDF4FF"));
@@ -194,7 +195,7 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
                 subfilterListItems.clear();
                 for(int i=0;i<filters.size();++i)
                 {
-                    if(filters.get(i).getName().equals("Placements")) {
+                    if(filters.get(i).getName().equals("Placement")) {
 
                         for (int j = 0; j < filters.get(i).getBanner().size(); ++j) {
                             subfilterListItems.add(filters.get(i).getBanner().get(j));
@@ -221,11 +222,11 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
                 {
                     activity.findViewById(R.id.authority_bullet).setVisibility(View.VISIBLE);
                 }
-                if(tmpmainFilter.equals("Placements"))
+                if(tmpmainFilter.equals("Placement"))
                 {
                     activity.findViewById(R.id.placements_bullet).setVisibility(View.VISIBLE);
                 }
-                if(tmpmainFilter.equals("Departments"))
+                if(tmpmainFilter.equals("Department"))
                 {
                     activity.findViewById(R.id.departments_bullet).setVisibility(View.VISIBLE);
                 }
@@ -292,11 +293,11 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
             {
                 activity.findViewById(R.id.authority).callOnClick();
             }
-            if(mainFilter.equals("Departments"))
+            if(mainFilter.equals("Department"))
             {
                 activity.findViewById(R.id.departments).callOnClick();
             }
-            if(mainFilter.equals("Placements"))
+            if(mainFilter.equals("Placement"))
             {
                 activity.findViewById(R.id.placements).callOnClick();
             }
@@ -307,11 +308,11 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
             {
                 activity.findViewById(R.id.authority_bullet).setVisibility(View.VISIBLE);
             }
-            if(mainFilter.equals("Placements"))
+            if(mainFilter.equals("Placement"))
             {
                 activity.findViewById(R.id.placements_bullet).setVisibility(View.VISIBLE);
             }
-            if(mainFilter.equals("Departments"))
+            if(mainFilter.equals("Department"))
             {
                 activity.findViewById(R.id.departments_bullet).setVisibility(View.VISIBLE);
             }
@@ -366,7 +367,7 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
                     {
                         activity.findViewById(R.id.placements_bullet).setVisibility(View.VISIBLE);
                     }
-                    if(currmainFilter.equals("Departments"))
+                    if(currmainFilter.equals("Department"))
                     {
                         activity.findViewById(R.id.departments_bullet).setVisibility(View.VISIBLE);
                     }
@@ -391,13 +392,13 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
         if(mainFilter.equals("")) {
             return "-1";
         }
-        if(mainFilter.equals("Placements"))
+        if(mainFilter.equals("Placement"))
         {
             if(subFilter.equals("All"))
             {
                 for(int i=0;i<filters.size();++i)
                 {
-                    if(filters.get(i).getName().equals("Placements"))
+                    if(filters.get(i).getName().equals("Placement"))
                     {
                         filterID=filters.get(i).getId();
                         break;
@@ -445,13 +446,13 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
                 }
             }
         }
-        if(mainFilter.equals("Departments"))
+        if(mainFilter.equals("Department"))
         {
             if(subFilter.equals("All"))
             {
                 for(int i=0;i<filters.size();++i)
                 {
-                    if(filters.get(i).getName().equals("Departments"))
+                    if(filters.get(i).getName().equals("Department"))
                     {
                         filterID=filters.get(i).getId();
                         break;

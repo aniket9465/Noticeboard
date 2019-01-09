@@ -19,6 +19,7 @@ import com.channeli.aniket.noticeboard.Utilities.ApiInterface;
 import com.channeli.aniket.noticeboard.ApiRequestBody.LoginRequestBody;
 import com.channeli.aniket.noticeboard.ApiResponseClasses.LoginResponse;
 import com.channeli.aniket.noticeboard.Utilities.UtilityFunctions;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.text.SimpleDateFormat;
@@ -65,6 +66,7 @@ public class LoginScreen extends AppCompatActivity {
                 ApiInterface api_service = UtilityFunctions.getRetrofitInstance(getResources().getString(R.string.base_url), retrofit).create(ApiInterface.class);
                 LoginRequestBody credentials = new LoginRequestBody(UsernameText.getText().toString(), PasswordText.getText().toString());
                 Call<LoginResponse> call = api_service.login(credentials);
+                Log.d("",call.request().url()+"");
                 call.enqueue(new Callback<LoginResponse>() {
                     @Override
                     public void onResponse( Call<LoginResponse> call, Response<LoginResponse> response) {
@@ -83,11 +85,11 @@ public class LoginScreen extends AppCompatActivity {
                             edit.putString("login_time", sdf.format(Calendar.getInstance().getTime()));
                             edit.putString("Subscription", "111");
                             edit.apply();
-                            if (FirebaseMessaging.getInstance()!=null) {
-                                FirebaseMessaging.getInstance().subscribeToTopic("Placement%20Office");
-                                FirebaseMessaging.getInstance().subscribeToTopic("Authorities");
-                                FirebaseMessaging.getInstance().subscribeToTopic("Departments");
-                            }
+//                            if (FirebaseMessaging.getInstance()!=null) {
+//                                FirebaseMessaging.getInstance().subscribeToTopic("Placement%20Office");
+//                                FirebaseMessaging.getInstance().subscribeToTopic("Authorities");
+//                                FirebaseMessaging.getInstance().subscribeToTopic("Departments");
+//                            }
                             Intent in = new Intent(LoginScreen.this, NoticeListScreen.class);
                             startActivity(in);
                             finish();
@@ -97,7 +99,6 @@ public class LoginScreen extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<LoginResponse> call, Throwable t) {
-
                         Toast.makeText(LoginScreen.this, "connection issue", Toast.LENGTH_SHORT).show();
 
                     }

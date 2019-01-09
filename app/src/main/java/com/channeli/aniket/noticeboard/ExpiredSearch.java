@@ -253,11 +253,13 @@ public class ExpiredSearch extends AppCompatActivity {
 
         UtilityFunctions.tokenRefresh(this);
 
-        if (!search_query.equals(searched))
+        if (!search_query.equals(searched)){
             mlist.clear();
+            adapter.notifyData(mlist);
+        }
+
         searched = search_query;
 
-        adapter.notifyData(mlist);
         if (search_query.equals("")) {
             if (swipeContainer != null)
                 swipeContainer.setRefreshing(false);
@@ -271,7 +273,7 @@ public class ExpiredSearch extends AppCompatActivity {
 
 
         Call<NoticeListResponse> call;
-        call = api_service.searchExpiredNotices((mScrollListener.currentPage+1) + "" , search_query ,  access_token);
+        call = api_service.searchExpiredNotices((mScrollListener.currentPage+1) + "" , search_query ,"Bearer " + access_token);
 
         call.enqueue(new Callback<NoticeListResponse>() {
             @Override

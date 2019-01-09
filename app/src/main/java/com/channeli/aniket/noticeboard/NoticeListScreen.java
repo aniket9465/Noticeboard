@@ -38,6 +38,7 @@ import com.channeli.aniket.noticeboard.Utilities.FilterDialog;
 import com.channeli.aniket.noticeboard.Utilities.UtilityFunctions;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -55,7 +56,7 @@ public class NoticeListScreen extends AppCompatActivity {
     private RecyclerView view;
     private NoticeListAdapter adapter;
     private String category;
-    private ArrayList<Filters> filters;
+    private List<Filters> filters;
     private EndlessRecyclerViewScrollListener mScrollListener;
     private Animation animShow, animHide ,animShowSubFilters,animHideSubFilters;
     LinearLayoutManager manager;
@@ -151,18 +152,19 @@ public class NoticeListScreen extends AppCompatActivity {
 
 
 
-        Call<NoticeListResponse> call = api_service.get_notices( (mlist.size()/10 + 1)+"", access_token);
+        Call<NoticeListResponse> call = api_service.get_notices( (mlist.size()/10 + 1)+"","Bearer" + access_token);
         findViewById(R.id.filter_selected).setVisibility(View.VISIBLE);
+        Log.d(">>>>>>>",call.request().url().toString());
         if(category.equals("All")) {
             String filterid=filterDialog.getFilterId();
             if(filterid.equals("-1")&&(!filterDialog.dateFilterSelected)) {
                 findViewById(R.id.filter_selected).setVisibility(View.INVISIBLE);
                 ((TextView)findViewById(R.id.heading)).setText("All Notices");
-                call = api_service.get_notices((mScrollListener.currentPage+1) + "", access_token);
+                call = api_service.get_notices((mScrollListener.currentPage+1) + "","Bearer" + access_token);
             }
             else {
                 if (filterid.equals("-1")) {
-                    call = api_service.dateFilter(filterDialog.startDate, filterDialog.endDate, (mScrollListener.currentPage+1) + "", access_token);
+                    call = api_service.dateFilter(filterDialog.startDate, filterDialog.endDate, (mScrollListener.currentPage+1) + "","Bearer" + access_token);
                 } else {
                     if(filterDialog.subFilter.equals("All"))
                         ((TextView)findViewById(R.id.heading)).setText((String)("All "+filterDialog.mainFilter+" Notices"));
@@ -170,9 +172,9 @@ public class NoticeListScreen extends AppCompatActivity {
                         ((TextView)findViewById(R.id.heading)).setText(((String)filterDialog.subFilter + " Notices"));
 
                     if (!filterDialog.dateFilterSelected) {
-                        call = api_service.filteredNotices(filterid, (mScrollListener.currentPage+1) + "", access_token);
+                        call = api_service.filteredNotices(filterid, (mScrollListener.currentPage+1) + "","Bearer" + access_token);
                     } else {
-                        call = api_service.filterAndDateFilterNotices(filterDialog.startDate, filterDialog.endDate, filterid, (mScrollListener.currentPage+1) + "", access_token);
+                        call = api_service.filterAndDateFilterNotices(filterDialog.startDate, filterDialog.endDate, filterid, (mScrollListener.currentPage+1) + "","Bearer" + access_token);
                     }
                 }
             }
@@ -182,14 +184,14 @@ public class NoticeListScreen extends AppCompatActivity {
             if(category.equals("bookmarks"))
             {
                 findViewById(R.id.filter_selected).setVisibility(View.INVISIBLE);
-                call = api_service.bookmarkedNotices( (mScrollListener.currentPage+1)+"", access_token);
+                call = api_service.bookmarkedNotices( (mScrollListener.currentPage+1)+"","Bearer" + access_token);
             }
             else
                 {
                     if(category.equals("expired"))
                     {
                         findViewById(R.id.filter_selected).setVisibility(View.INVISIBLE);
-                        call = api_service.expiredNotices( (mScrollListener.currentPage+1)+"", access_token);
+                        call = api_service.expiredNotices( (mScrollListener.currentPage+1)+"","Bearer" + access_token);
                     }
                 }
         }
@@ -485,25 +487,25 @@ public class NoticeListScreen extends AppCompatActivity {
         retrofit=UtilityFunctions.getRetrofitInstance(getResources().getString(R.string.base_url),retrofit);
         ApiInterface api_service = retrofit.create(ApiInterface.class);
 
-        Call<FiltersList> call = api_service.getFilters( access_token);
-        call = api_service.getFilters( access_token);
-
-        call.enqueue(new Callback<FiltersList>() {
+        Call<List<Filters>> call = api_service.getFilters("Bearer" + access_token);
+        call = api_service.getFilters("Bearer" + access_token);
+        Log.d("",""+call.request().url());
+        call.enqueue(new Callback<List<Filters>>() {
             @Override
-            public void onResponse(Call<FiltersList> call, Response<FiltersList> response) {
+            public void onResponse(Call<List<Filters>> call, Response<List<Filters>> response) {
 
                 filterDialog=new FilterDialog(filters,NoticeListScreen.this);
                 if(response.body()!=null) {
-                    filters=response.body().getResult();
+                    filters=response.body();
                     filterDialog=new FilterDialog(filters,NoticeListScreen.this);
                 }
                 noticeRequest();
             }
 
             @Override
-            public void onFailure(Call<FiltersList> call, Throwable t) {
-
-                Toast.makeText(NoticeListScreen.this, "connection error", Toast.LENGTH_SHORT).show();
+            public void onFailure(Call<List<Filters>> call, Throwable t) {
+                Log.d("",t.getMessage()+"....."+t.getCause());
+                Toast.makeText(NoticeListScreen.this, "connection error !!", Toast.LENGTH_SHORT).show();
                 filterDialog=new FilterDialog(filters,NoticeListScreen.this);
                 noticeRequest();
             }

@@ -98,11 +98,11 @@ public class UtilityFunctions {
         editor.remove("access_token");
         editor.remove("refresh_token");
         editor.remove("Subscription");
-        if (FirebaseMessaging.getInstance()!=null) {
-            FirebaseMessaging.getInstance().unsubscribeFromTopic("Placement%20Office");
-            FirebaseMessaging.getInstance().unsubscribeFromTopic("Authorities");
-            FirebaseMessaging.getInstance().unsubscribeFromTopic("Departments");
-        }
+//        if (FirebaseMessaging.getInstance()!=null) {
+//            FirebaseMessaging.getInstance().unsubscribeFromTopic("Placement%20Office");
+//            FirebaseMessaging.getInstance().unsubscribeFromTopic("Authorities");
+//            FirebaseMessaging.getInstance().unsubscribeFromTopic("Departments");
+//        }
         editor.apply();
     }
 }

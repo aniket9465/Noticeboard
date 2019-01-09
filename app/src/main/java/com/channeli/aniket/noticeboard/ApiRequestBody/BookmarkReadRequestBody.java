@@ -1,5 +1,7 @@
 package com.channeli.aniket.noticeboard.ApiRequestBody;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 import com.google.gson.annotations.Expose;
@@ -12,11 +14,11 @@ public class BookmarkReadRequestBody {
     private String keyword;
     @SerializedName("notices")
     @Expose
-    private ArrayList<String> notices = null;
+    private ArrayList<Integer> notices = null;
 
-   public BookmarkReadRequestBody(String id, String keyword)
+   public BookmarkReadRequestBody(Integer id, String keyword)
    {
-       ArrayList<String> l=new ArrayList<>();
+       ArrayList<Integer> l=new ArrayList<>();
        l.add(id);
        setNotices(l);
        setKeyword(keyword);
@@ -30,11 +32,11 @@ public class BookmarkReadRequestBody {
         this.keyword = keyword;
     }
 
-    public List<String> getNotices() {
+    public List<Integer> getNotices() {
         return notices;
     }
 
-    private void setNotices(ArrayList<String> notices) {
+    private void setNotices(ArrayList<Integer> notices) {
         this.notices = notices;
     }
 

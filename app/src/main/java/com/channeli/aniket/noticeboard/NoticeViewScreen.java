@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
@@ -46,6 +47,7 @@ public class NoticeViewScreen extends AppCompatActivity {
         final WebView browser = (WebView) findViewById(R.id.webview);
         browser.getSettings().setBuiltInZoomControls(true);
         browser.getSettings().setDisplayZoomControls(false);
+        browser.getSettings().setJavaScriptEnabled(true);
         browser.setWebViewClient(new WebViewClient() {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 view.loadUrl(url);
@@ -63,7 +65,7 @@ public class NoticeViewScreen extends AppCompatActivity {
 
 
         Intent i = getIntent();
-        final String id = i.getStringExtra("id");
+        final Integer id = i.getIntExtra("id",-1);
         bookmarked = i.getBooleanExtra("bookmarked",false);
         final Integer position = i.getIntExtra("position",-1);
         Log.d("",id+ " " + bookmarked +" "+ position);
@@ -88,7 +90,7 @@ public class NoticeViewScreen extends AppCompatActivity {
 
 
         String access_token = getSharedPreferences("Noticeboard_data", 0).getString("access_token", null);
-        Call<NoticeContentResponse> call = api_service.noticeContent(id, access_token);
+        Call<NoticeContentResponse> call = api_service.noticeContent(id,"Bearer "+ access_token);
 
         findViewById(R.id.share).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,6 +131,7 @@ public class NoticeViewScreen extends AppCompatActivity {
                             return true;
                         }
                     });
+
                 }
             }
 
@@ -152,12 +155,12 @@ public class NoticeViewScreen extends AppCompatActivity {
                 retrofit=UtilityFunctions.getRetrofitInstance(getResources().getString(R.string.base_url),retrofit);
                 api_service = retrofit.create(ApiInterface.class);
                 String access_token = getSharedPreferences("Noticeboard_data", 0).getString("access_token", null);
-                Call<Void> call = api_service.bookmark_read(access_token,new BookmarkReadRequestBody(id,"bookmark"));
+                Call<Void> call = api_service.bookmark_read("Bearer "+access_token,new BookmarkReadRequestBody(id,"star"));
                 call.enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
 
-                        if(response.code()==200) {
+                        if(response.code()==201||response.code()==200) {
                             if (bookmarked) {
                                 ((ImageView) v).setImageResource(R.drawable.bookmark);
                                 bookmarked=!bookmarked;

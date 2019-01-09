@@ -67,14 +67,15 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.no
 
     @Override
     public void onBindViewHolder(@NonNull final NoticeListAdapter.notice_view_holder holder, final int position) {
-        if(position==((int)list.size())-1)
+        if(list.get(position)==null)
             return;
         View.OnClickListener open_notice = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 Intent i = new Intent(context , NoticeViewScreen.class);
-                i.putExtra("id",list.get(position).getId()+"");
+                Log.d("/////////////",position+"");
+                i.putExtra("id",list.get(position).getId());
                 i.putExtra("bookmarked",list.get(position).getBookmark());
                 list.get(position).setRead(true);
                 i.putExtra("position",position);
@@ -83,12 +84,12 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.no
                 retrofit=UtilityFunctions.getRetrofitInstance(context.getResources().getString(R.string.base_url),retrofit);
                 api_service = retrofit.create(ApiInterface.class);
                 String access_token = context.getSharedPreferences("Noticeboard_data", 0).getString("access_token", null);
-                Call<Void> call = api_service.bookmark_read(access_token,new BookmarkReadRequestBody(list.get(position).getId()+"","read"));
+                Call<Void> call = api_service.bookmark_read("Bearer "+access_token,new BookmarkReadRequestBody(list.get(position).getId(),"read"));
                 call.enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse( Call<Void> call, Response<Void> response) {
-                        Log.d("",response+"");
-                        if(response.code()==200)
+                        Log.d("",response.code()+"");
+                        if(response.code()==201||response.code()==200)
                            holder.card.setBackgroundColor(Color.parseColor("#4dc4c4c4"));
                     }
 
@@ -116,12 +117,13 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.no
                 retrofit=UtilityFunctions.getRetrofitInstance(context.getResources().getString(R.string.base_url),retrofit);
                 api_service = retrofit.create(ApiInterface.class);
                 String access_token = context.getSharedPreferences("Noticeboard_data", 0).getString("access_token", null);
-                Call<Void> call = api_service.bookmark_read(access_token,new BookmarkReadRequestBody(list.get(position).getId().toString(),"bookmark"));
+                Log.d("..",access_token);
+                Call<Void> call = api_service.bookmark_read("Bearer "+access_token,new BookmarkReadRequestBody(list.get(position).getId(),"star"));
                 call.enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
-
-                        if(response.code()==200) {
+                        Log.d(".......",list.get(position).getId().toString()+" ");
+                        if(response.code()==201||response.code()==200) {
                             if (list.get(position).getBookmark()) {
                                 ((ImageView) v).setImageResource(R.drawable.bookmark);
                                 list.get(position).bookmark = !list.get(position).getBookmark();
@@ -134,13 +136,12 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.no
                         }
                         else
                         {
-                            Toast.makeText(context, "connection error", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "connection error !!", Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
-                        Toast.makeText(context, "connection error", Toast.LENGTH_SHORT).show();
                     }
                 });
 

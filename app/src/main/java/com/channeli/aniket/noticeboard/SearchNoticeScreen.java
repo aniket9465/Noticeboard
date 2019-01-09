@@ -3,6 +3,7 @@ package com.channeli.aniket.noticeboard;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -46,6 +47,7 @@ import com.channeli.aniket.noticeboard.Utilities.UtilityFunctions;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -63,7 +65,7 @@ public class SearchNoticeScreen extends AppCompatActivity {
     ArrayList<String> listItems = new ArrayList<String>();
     ListView search_list;
     private FilterDialog filterDialog;
-    private ArrayList<Filters> filters;
+    private List<Filters> filters;
     SwipeRefreshLayout swipeContainer;
     private EndlessRecyclerViewScrollListener mScrollListener;
     ArrayAdapter<String> recent_adapter;
@@ -301,11 +303,12 @@ public class SearchNoticeScreen extends AppCompatActivity {
 
         UtilityFunctions.tokenRefresh(this);
 
-        if (!search_query.equals(searched))
+        if (!search_query.equals(searched)){
             mlist.clear();
+            adapter.notifyData(mlist);
+        }
         searched = search_query;
 
-            adapter.notifyData(mlist);
         if (search_query.equals("")) {
             if (swipeContainer != null)
                 swipeContainer.setRefreshing(false);
@@ -322,18 +325,18 @@ public class SearchNoticeScreen extends AppCompatActivity {
         findViewById(R.id.filter_selected).setVisibility(View.VISIBLE);
         if(filterid.equals("-1")&&(!filterDialog.dateFilterSelected)) {
             findViewById(R.id.filter_selected).setVisibility(View.INVISIBLE);
-            call = api_service.search_notices(search_query,(mScrollListener.currentPage+1) + "", access_token);
+            call = api_service.search_notices(search_query,(mScrollListener.currentPage+1) + "","Bearer" + access_token);
         }
         else {
             if (filterid.equals("-1")) {
-                call = api_service.searchAndDateFilter(search_query,filterDialog.startDate, filterDialog.endDate, (mScrollListener.currentPage+1) + "", access_token);
+                call = api_service.searchAndDateFilter(search_query,filterDialog.startDate, filterDialog.endDate, (mScrollListener.currentPage+1) + "","Bearer" + access_token);
             }
             else {
                 if (!filterDialog.dateFilterSelected) {
-                    call = api_service.searchAndFilteredNotices(search_query,filterid, (mScrollListener.currentPage+1 ) + "", access_token);
+                    call = api_service.searchAndFilteredNotices(search_query,filterid, (mScrollListener.currentPage+1 ) + "","Bearer" + access_token);
                 }
                 else {
-                    call = api_service.searchAndFilterAndDateFilterNotices(search_query,filterDialog.startDate, filterDialog.endDate, filterid, (mScrollListener.currentPage+1) + "", access_token);
+                    call = api_service.searchAndFilterAndDateFilterNotices(search_query,filterDialog.startDate, filterDialog.endDate, filterid, (mScrollListener.currentPage+1) + "","Bearer" + access_token);
                 }
             }
         }
@@ -353,6 +356,7 @@ public class SearchNoticeScreen extends AppCompatActivity {
                                 for (int i = 0; i < response.body().getNotices().size(); ++i) {
                                     mlist.add(response.body().getNotices().get(i));
                                 }
+                                Log.d("><><><",mlist.get(mlist.size()-1).getBanner().getName());
                                 if(response.body().next!=null) {
                                     mlist.add(null);
                                 }
@@ -484,22 +488,22 @@ public class SearchNoticeScreen extends AppCompatActivity {
         retrofit=UtilityFunctions.getRetrofitInstance(getResources().getString(R.string.base_url),retrofit);
         ApiInterface api_service = retrofit.create(ApiInterface.class);
 
-        Call<FiltersList> call = api_service.getFilters( access_token);
+        Call<List<Filters>> call = api_service.getFilters( access_token);
 
-        call.enqueue(new Callback<FiltersList>() {
+        call.enqueue(new Callback<List<Filters>>() {
             @Override
-            public void onResponse(Call<FiltersList> call, Response<FiltersList> response) {
+            public void onResponse(Call<List<Filters>> call, Response<List<Filters>> response) {
 
                 filterDialog=new FilterDialog(filters,SearchNoticeScreen.this);
                 if(response.body()!=null) {
 
-                    filters=response.body().getResult();
+                    filters=response.body();
                     filterDialog=new FilterDialog(filters,SearchNoticeScreen.this);
                 }
             }
 
             @Override
-            public void onFailure(Call<FiltersList> call, Throwable t) {
+            public void onFailure(Call<List<Filters>> call, Throwable t) {
 
                 Toast.makeText(SearchNoticeScreen.this, "connection error", Toast.LENGTH_SHORT).show();
                 filterDialog=new FilterDialog(filters,SearchNoticeScreen.this);
@@ -516,6 +520,22 @@ public class SearchNoticeScreen extends AppCompatActivity {
             return;
         }
         finish();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == 0) {
+            if(resultCode == Activity.RESULT_OK){
+                Integer position=data.getIntExtra("position",-1);
+                boolean bookmarked=data.getBooleanExtra("bookmarked",false);
+                if(position!=-1)
+                {
+                    mlist.get(position).setBookmark(bookmarked);
+                    adapter.notifyData(mlist);
+                }
+            }
+        }
     }
 
 }

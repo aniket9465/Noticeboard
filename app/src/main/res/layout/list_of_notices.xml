@@ -55,6 +55,8 @@
                     android:layout_marginEnd="8dp"
                     android:layout_marginTop="18dp"
                     android:text="All Notices"
+                    android:maxLines="1"
+                    android:ellipsize="end"
                     android:textColor="#fff"
                     android:textSize="16dp"
                     app:layout_constraintEnd_toStartOf="@+id/filter_button"
