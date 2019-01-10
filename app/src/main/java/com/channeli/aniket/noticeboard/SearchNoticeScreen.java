@@ -54,9 +54,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.channeli.aniket.noticeboard.NoticeListScreen.retrofit;
-/*
-    set up calls for filters
-*/
+
+
 public class SearchNoticeScreen extends AppCompatActivity {
 
     ArrayList<NoticeCardResponse> mlist;

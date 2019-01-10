@@ -66,6 +66,7 @@ public class NoticeListScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_of_notices);
         filters=new ArrayList<>();
+        filterDialog=new FilterDialog(filters,this);
         getFilters();
         category="All";
 
@@ -152,9 +153,9 @@ public class NoticeListScreen extends AppCompatActivity {
 
 
 
-        Call<NoticeListResponse> call = api_service.get_notices( (mlist.size()/10 + 1)+"","Bearer" + access_token);
+        Call<NoticeListResponse> call = api_service.get_notices( (mScrollListener.currentPage+1)+"","Bearer" + access_token);
         findViewById(R.id.filter_selected).setVisibility(View.VISIBLE);
-        Log.d(">>>>>>>",call.request().url().toString());
+        Log.d(">>>>>>>",filterDialog+"");
         if(category.equals("All")) {
             String filterid=filterDialog.getFilterId();
             if(filterid.equals("-1")&&(!filterDialog.dateFilterSelected)) {
