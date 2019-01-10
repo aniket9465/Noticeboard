@@ -65,6 +65,7 @@ public class NoticeViewScreen extends AppCompatActivity {
 
 
         Intent i = getIntent();
+        Boolean expired =  i.getBooleanExtra("Expired",true);
         final Integer id = i.getIntExtra("id",-1);
         bookmarked = i.getBooleanExtra("bookmarked",false);
         final Integer position = i.getIntExtra("position",-1);
@@ -74,6 +75,11 @@ public class NoticeViewScreen extends AppCompatActivity {
 
         returnIntent.putExtra("position",position);
         returnIntent.putExtra("bookmarked",bookmarked);
+
+        if(expired)
+        {
+            findViewById(R.id.bookmark).setVisibility(View.INVISIBLE);
+        }
 
         if(bookmarked)
         {
@@ -91,7 +97,8 @@ public class NoticeViewScreen extends AppCompatActivity {
 
         String access_token = getSharedPreferences("Noticeboard_data", 0).getString("access_token", null);
         Call<NoticeContentResponse> call = api_service.noticeContent(id,"Bearer "+ access_token);
-
+        if(expired)
+            call = api_service.noticeContentExpired(id,"Bearer "+ access_token);
         findViewById(R.id.share).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

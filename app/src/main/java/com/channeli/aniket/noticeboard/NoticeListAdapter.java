@@ -73,31 +73,42 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.no
             @Override
             public void onClick(View v) {
 
-                Intent i = new Intent(context , NoticeViewScreen.class);
-                Log.d("/////////////",position+"");
-                i.putExtra("id",list.get(position).getId());
-                i.putExtra("bookmarked",list.get(position).getBookmark());
-                list.get(position).setRead(true);
-                i.putExtra("position",position);
-                ((Activity)context).startActivityForResult(i,0);
-                ApiInterface api_service;
-                retrofit=UtilityFunctions.getRetrofitInstance(context.getResources().getString(R.string.base_url),retrofit);
-                api_service = retrofit.create(ApiInterface.class);
-                String access_token = context.getSharedPreferences("Noticeboard_data", 0).getString("access_token", null);
-                Call<Void> call = api_service.bookmark_read("Bearer "+access_token,new BookmarkReadRequestBody(list.get(position).getId(),"read"));
-                call.enqueue(new Callback<Void>() {
-                    @Override
-                    public void onResponse( Call<Void> call, Response<Void> response) {
-                        Log.d("",response.code()+"");
-                        if(response.code()==201||response.code()==200)
-                           holder.card.setBackgroundColor(Color.parseColor("#4dc4c4c4"));
-                    }
+                if (list.get(position).getBookmark() != null) {
+                    Intent i = new Intent(context, NoticeViewScreen.class);
+                    i.putExtra("id", list.get(position).getId());
+                    i.putExtra("Expired",false);
+                    i.putExtra("bookmarked", list.get(position).getBookmark());
+                    list.get(position).setRead(true);
+                    i.putExtra("position", position);
+                    ((Activity) context).startActivityForResult(i, 0);
+                    ApiInterface api_service;
+                    retrofit = UtilityFunctions.getRetrofitInstance(context.getResources().getString(R.string.base_url), retrofit);
+                    api_service = retrofit.create(ApiInterface.class);
+                    String access_token = context.getSharedPreferences("Noticeboard_data", 0).getString("access_token", null);
+                    Call<Void> call = api_service.bookmark_read("Bearer " + access_token, new BookmarkReadRequestBody(list.get(position).getId(), "read"));
+                    call.enqueue(new Callback<Void>() {
+                        @Override
+                        public void onResponse(Call<Void> call, Response<Void> response) {
+                            Log.d("", response.code() + "");
+                            if (response.code() == 201 || response.code() == 200)
+                                holder.card.setBackgroundColor(Color.parseColor("#4dc4c4c4"));
+                        }
 
-                    @Override
-                    public void onFailure( Call<Void> call, Throwable t) {
+                        @Override
+                        public void onFailure(Call<Void> call, Throwable t) {
 
-                    }
-                });
+                        }
+                    });
+                }
+                else
+                {
+                    Intent i = new Intent(context, NoticeViewScreen.class);
+                    i.putExtra("id", list.get(position).getId());
+                    i.putExtra("position", position);
+                    i.putExtra("bookmarked", false);
+                    i.putExtra("Expired",true);
+                    ((Activity) context).startActivityForResult(i, 1);
+                }
             }
         };
 
@@ -106,8 +117,13 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.no
         holder.banner.setOnClickListener(open_notice);
         holder.date.setOnClickListener(open_notice);
 
+        if(list.get(position).getBookmark()==null)
+        {
+            holder.bookmark.setVisibility(View.INVISIBLE);
+        }
 
 
+        if(list.get(position).getBookmark()!=null)
         holder.bookmark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
@@ -149,6 +165,7 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.no
         });
 
 
+        if(list.get(position).getBookmark()!=null)
         if(list.get(position).getBookmark())
         {
             holder.bookmark.setImageResource(R.drawable.bookmarked);
@@ -159,6 +176,7 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.no
         }
 
 
+        if(list.get(position).getBookmark()!=null)
         if(list.get(position).getRead())
         {
             holder.card.setBackgroundColor(Color.parseColor("#4dc4c4c4"));

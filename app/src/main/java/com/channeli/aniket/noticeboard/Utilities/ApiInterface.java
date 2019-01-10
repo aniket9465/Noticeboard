@@ -38,6 +38,9 @@ public interface ApiInterface {
     @GET("api/noticeboard/new/{id}/")
     Call<NoticeContentResponse> noticeContent(@Path(value="id") Integer id, @Header("Authorization") String Authorization);
 
+    @GET("api/noticeboard/new/{id}/")
+    Call<NoticeContentResponse> noticeContentExpired(@Path(value="id") Integer id, @Header("Authorization") String Authorization);
+
     @GET("api/noticeboard/filter_list/")
     Call<List<Filters>> getFilters(@Header("Authorization") String Authorization);
 
@@ -51,7 +54,7 @@ public interface ApiInterface {
     Call<NoticeListResponse> expiredNotices(@Query(value = "page") String page, @Header("Authorization") String Authorization);
 
     @GET("api/noticeboard/old/")
-    Call<NoticeListResponse> searchExpiredNotices(@Query(value = "page")  String page , @Query(value = "search") String search, @Header("Authorization") String Authorization);
+    Call<NoticeListResponse> searchExpiredNotices(@Query(value = "page")  String page , @Query(value = "keyword") String search, @Header("Authorization") String Authorization);
 
     @GET("api/noticeboard/new/")
     Call<NoticeListResponse> filteredNotices(@Query(value = "banner") String banner,@Query(value = "page") String page, @Header("Authorization") String Authorization);
@@ -60,15 +63,15 @@ public interface ApiInterface {
     Call<NoticeListResponse> filterAndDateFilterNotices(@Query(value="start") String start,@Query(value = "end") String end,@Query(value = "banner") String banner,@Query(value = "page") String page, @Header("Authorization") String Authorization);
 
     @GET("api/noticeboard/new")
-    Call<NoticeListResponse> search_notices(@Query(value = "search") String search,@Query(value = "page") String page, @Header("Authorization") String Authorization);
+    Call<NoticeListResponse> search_notices(@Query(value = "keyword") String search,@Query(value = "page") String page, @Header("Authorization") String Authorization);
 
     @GET("api/noticeboard/new/")
-    Call<NoticeListResponse> searchAndFilteredNotices(@Query(value = "search") String search,@Query(value = "banner") String banner,@Query(value = "page") String page, @Header("Authorization") String Authorization);
+    Call<NoticeListResponse> searchAndFilteredNotices(@Query(value = "keyword") String search,@Query(value = "banner") String banner,@Query(value = "page") String page, @Header("Authorization") String Authorization);
 
     @GET("api/noticeboard/new/")
-    Call<NoticeListResponse> searchAndFilterAndDateFilterNotices(@Query(value = "search") String search,@Query(value="start") String start,@Query(value = "end") String end,@Query(value = "banner") String banner,@Query(value = "page") String page, @Header("Authorization") String Authorization);
+    Call<NoticeListResponse> searchAndFilterAndDateFilterNotices(@Query(value = "keyword") String search,@Query(value="start") String start,@Query(value = "end") String end,@Query(value = "banner") String banner,@Query(value = "page") String page, @Header("Authorization") String Authorization);
 
     @GET("api/noticeboard/new/")
-    Call<NoticeListResponse> searchAndDateFilter(@Query(value = "search") String search,@Query(value="start") String start,@Query(value = "end") String end,@Query(value = "page") String page, @Header("Authorization") String Authorization);
+    Call<NoticeListResponse> searchAndDateFilter(@Query(value = "keyword") String search,@Query(value="start") String start,@Query(value = "end") String end,@Query(value = "page") String page, @Header("Authorization") String Authorization);
 
 }

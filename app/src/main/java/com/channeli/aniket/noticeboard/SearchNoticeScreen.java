@@ -356,7 +356,6 @@ public class SearchNoticeScreen extends AppCompatActivity {
                                 for (int i = 0; i < response.body().getNotices().size(); ++i) {
                                     mlist.add(response.body().getNotices().get(i));
                                 }
-                                Log.d("><><><",mlist.get(mlist.size()-1).getBanner().getName());
                                 if(response.body().next!=null) {
                                     mlist.add(null);
                                 }
