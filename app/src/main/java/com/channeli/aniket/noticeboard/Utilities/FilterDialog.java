@@ -253,8 +253,8 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
 
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth,int yearEnd, int monthOfYearEnd, int dayOfMonthEnd) {
-        tmpstartDate=""+year+"-"+monthOfYear+"-"+dayOfMonth;
-        tmpendDate=yearEnd+"-"+monthOfYearEnd+"-"+dayOfMonthEnd;
+        tmpstartDate=""+year+"-"+monthOfYear+1+"-"+dayOfMonth;
+        tmpendDate=yearEnd+"-"+monthOfYearEnd+1+"-"+dayOfMonthEnd;
         tmpdateFilterSelected=true;
         activity.findViewById(R.id.date_filter_not_set).setVisibility(View.INVISIBLE);
         activity.findViewById(R.id.date_filter_set).setVisibility(View.VISIBLE);
@@ -300,6 +300,10 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
             if(mainFilter.equals("Placement"))
             {
                 activity.findViewById(R.id.placements).callOnClick();
+            }
+            if(!dateFilterSelected)
+            {
+                activity.findViewById(R.id.reset_date_filter).callOnClick();
             }
             activity.findViewById(R.id.authority_bullet).setVisibility(View.INVISIBLE);
             activity.findViewById(R.id.placements_bullet).setVisibility(View.INVISIBLE);
@@ -485,6 +489,8 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
 
         tmpmainFilter="";
         tmpsubFilter="";
+        tmpstartDate="";
+        tmpendDate="";
         if(pchecked!=null)
             pchecked.setChecked(false);
         pchecked=null;

@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -23,7 +26,9 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.ScaleAnimation;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.WebView;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,13 +37,21 @@ import com.channeli.aniket.noticeboard.ApiResponseClasses.Filters;
 import com.channeli.aniket.noticeboard.ApiResponseClasses.FiltersList;
 import com.channeli.aniket.noticeboard.ApiResponseClasses.NoticeCardResponse;
 import com.channeli.aniket.noticeboard.ApiResponseClasses.NoticeListResponse;
+import com.channeli.aniket.noticeboard.ApiResponseClasses.UserInfo;
 import com.channeli.aniket.noticeboard.Utilities.ApiInterface;
 import com.channeli.aniket.noticeboard.Utilities.EndlessRecyclerViewScrollListener;
 import com.channeli.aniket.noticeboard.Utilities.FilterDialog;
+import com.channeli.aniket.noticeboard.Utilities.GetImage;
 import com.channeli.aniket.noticeboard.Utilities.UtilityFunctions;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -135,7 +148,7 @@ public class NoticeListScreen extends AppCompatActivity {
         view.setAdapter(adapter);
         view.addOnScrollListener(mScrollListener);
 
-
+        getUserInfo();
 
     }
 
@@ -150,12 +163,11 @@ public class NoticeListScreen extends AppCompatActivity {
         retrofit=UtilityFunctions.getRetrofitInstance(getResources().getString(R.string.base_url),retrofit);
         ApiInterface api_service = retrofit.create(ApiInterface.class);
 
-
-
+        
 
         Call<NoticeListResponse> call = api_service.get_notices( (mScrollListener.currentPage+1)+"","Bearer" + access_token);
         findViewById(R.id.filter_selected).setVisibility(View.VISIBLE);
-        Log.d(">>>>>>>",filterDialog+"");
+
         if(category.equals("All")) {
             String filterid=filterDialog.getFilterId();
             if(filterid.equals("-1")&&(!filterDialog.dateFilterSelected)) {
@@ -165,7 +177,7 @@ public class NoticeListScreen extends AppCompatActivity {
             }
             else {
                 if (filterid.equals("-1")) {
-                    call = api_service.dateFilter(filterDialog.startDate, filterDialog.endDate, (mScrollListener.currentPage+1) + "","Bearer" + access_token);
+                    call = api_service.dateFilter(filterDialog.startDate+" 00:00", filterDialog.endDate+" 23:59", (mScrollListener.currentPage+1) + "","Bearer" + access_token);
                 } else {
                     if(filterDialog.subFilter.equals("All"))
                         ((TextView)findViewById(R.id.heading)).setText((String)("All "+filterDialog.mainFilter+" Notices"));
@@ -175,7 +187,7 @@ public class NoticeListScreen extends AppCompatActivity {
                     if (!filterDialog.dateFilterSelected) {
                         call = api_service.filteredNotices(filterid, (mScrollListener.currentPage+1) + "","Bearer" + access_token);
                     } else {
-                        call = api_service.filterAndDateFilterNotices(filterDialog.startDate, filterDialog.endDate, filterid, (mScrollListener.currentPage+1) + "","Bearer" + access_token);
+                        call = api_service.filterAndDateFilterNotices(filterDialog.startDate+" 00:00", filterDialog.endDate+" 23:59", filterid, (mScrollListener.currentPage+1) + "","Bearer" + access_token);
                     }
                 }
             }
@@ -489,7 +501,7 @@ public class NoticeListScreen extends AppCompatActivity {
         ApiInterface api_service = retrofit.create(ApiInterface.class);
 
         Call<List<Filters>> call = api_service.getFilters("Bearer" + access_token);
-        call = api_service.getFilters("Bearer" + access_token);
+        call = api_service.getFilters("Bearer " + access_token);
         Log.d("",""+call.request().url());
         call.enqueue(new Callback<List<Filters>>() {
             @Override
@@ -553,5 +565,40 @@ public class NoticeListScreen extends AppCompatActivity {
             }
         }
     }
+
+    void getUserInfo()
+    {
+        String access_token = getSharedPreferences("Noticeboard_data", 0).getString("access_token", null);
+        retrofit=UtilityFunctions.getRetrofitInstance(getResources().getString(R.string.base_url),retrofit);
+        ApiInterface api_service = retrofit.create(ApiInterface.class);
+        Call<UserInfo> call = api_service.getUserInfo( "Bearer " + access_token);
+        call.enqueue(new Callback<UserInfo>() {
+            @Override
+            public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
+                if(response.body()!=null)
+                {
+                    ((TextView)findViewById(R.id.username)).setText(response.body().getFullName());
+                    Log.d("" , " "+response.body().getDisplayPicture());
+                    if(response.body().getDisplayPicture()!=null)
+                    {
+                         String url = (getResources().getString(R.string.base_url) + response.body().getDisplayPicture());
+                         GetImage getImage=new GetImage(NoticeListScreen.this);
+                         getImage.execute(url);
+                    }
+                }
+                else
+                {
+                    Log.d("",call.request().url()+" " + response.message());
+                    Toast.makeText(NoticeListScreen.this, "connection error", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserInfo> call, Throwable t) {
+                Toast.makeText(NoticeListScreen.this, "No Internet", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 
 }

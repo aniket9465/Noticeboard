@@ -4,8 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.channeli.aniket.noticeboard.ApiRequestBody.LoginRequestBody;
@@ -18,6 +22,8 @@ import com.channeli.aniket.noticeboard.R;
 import com.channeli.aniket.noticeboard.SplashScreen;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -105,4 +111,5 @@ public class UtilityFunctions {
 //        }
         editor.apply();
     }
+
 }

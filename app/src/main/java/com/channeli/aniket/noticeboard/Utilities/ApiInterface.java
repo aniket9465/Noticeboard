@@ -8,6 +8,7 @@ import com.channeli.aniket.noticeboard.ApiResponseClasses.FiltersList;
 import com.channeli.aniket.noticeboard.ApiResponseClasses.LoginResponse;
 import com.channeli.aniket.noticeboard.ApiResponseClasses.NoticeContentResponse;
 import com.channeli.aniket.noticeboard.ApiResponseClasses.NoticeListResponse;
+import com.channeli.aniket.noticeboard.ApiResponseClasses.UserInfo;
 import com.channeli.aniket.noticeboard.ApiResponseClasses.accessToken;
 
 import java.util.List;
@@ -73,5 +74,8 @@ public interface ApiInterface {
 
     @GET("api/noticeboard/new/")
     Call<NoticeListResponse> searchAndDateFilter(@Query(value = "keyword") String search,@Query(value="start") String start,@Query(value = "end") String end,@Query(value = "page") String page, @Header("Authorization") String Authorization);
+
+    @GET("kernel/who_am_i/")
+    Call<UserInfo> getUserInfo(@Header("Authorization") String Authorization);
 
 }

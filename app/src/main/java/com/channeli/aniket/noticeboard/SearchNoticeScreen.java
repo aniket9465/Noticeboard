@@ -324,18 +324,18 @@ public class SearchNoticeScreen extends AppCompatActivity {
         findViewById(R.id.filter_selected).setVisibility(View.VISIBLE);
         if(filterid.equals("-1")&&(!filterDialog.dateFilterSelected)) {
             findViewById(R.id.filter_selected).setVisibility(View.INVISIBLE);
-            call = api_service.search_notices(search_query,(mScrollListener.currentPage+1) + "","Bearer" + access_token);
+            call = api_service.search_notices(search_query,(mScrollListener.currentPage+1) + "","Bearer " + access_token);
         }
         else {
             if (filterid.equals("-1")) {
-                call = api_service.searchAndDateFilter(search_query,filterDialog.startDate, filterDialog.endDate, (mScrollListener.currentPage+1) + "","Bearer" + access_token);
+                call = api_service.searchAndDateFilter(search_query,filterDialog.startDate+" 00:00", filterDialog.endDate+" 23:59", (mScrollListener.currentPage+1) + "","Bearer" + access_token);
             }
             else {
                 if (!filterDialog.dateFilterSelected) {
                     call = api_service.searchAndFilteredNotices(search_query,filterid, (mScrollListener.currentPage+1 ) + "","Bearer" + access_token);
                 }
                 else {
-                    call = api_service.searchAndFilterAndDateFilterNotices(search_query,filterDialog.startDate, filterDialog.endDate, filterid, (mScrollListener.currentPage+1) + "","Bearer" + access_token);
+                    call = api_service.searchAndFilterAndDateFilterNotices(search_query,filterDialog.startDate+" 00:00", filterDialog.endDate+" 23:59", filterid, (mScrollListener.currentPage+1) + "","Bearer" + access_token);
                 }
             }
         }
