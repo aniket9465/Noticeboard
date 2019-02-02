@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 27
     defaultConfig {
-        applicationId "com.example.aniket.noticeboard"
+        applicationId "com.channeli.img.noticeboard"
         minSdkVersion 17
         targetSdkVersion 27
         versionCode 1
@@ -26,6 +26,7 @@ repositories {
 
 
 dependencies {
+    implementation 'com.google.firebase:firebase-core:16.0.6'
     implementation 'com.borax12.materialdaterangepicker:library:1.9'
     implementation 'com.android.support:percent:27.1.1'
     implementation 'com.google.firebase:firebase-messaging:17.3.4'
@@ -43,3 +44,5 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
+
+apply plugin: 'com.google.gms.google-services'
