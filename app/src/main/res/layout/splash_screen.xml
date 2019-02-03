@@ -38,7 +38,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:text="Noticeboard"
-            android:textColor="#5288DA"
+            android:textColor="@color/appColour"
             android:textSize="20dp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"

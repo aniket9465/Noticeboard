@@ -64,6 +64,7 @@ public class NoticeListScreen extends AppCompatActivity {
     private ArrayList<NoticeCardResponse> mlist = new ArrayList<>();
     private ArrayList<NoticeCardResponse> tmpMlist =new ArrayList<>();
     private int tmpPos,tmpCurrPage;
+    private int tmpState;
     private String tmpNextPage;
     private FilterDialog filterDialog;
     private SwipeRefreshLayout swipeContainer;
@@ -131,8 +132,7 @@ public class NoticeListScreen extends AppCompatActivity {
 
             }
         });
-        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_dark,
-                android.R.color.holo_green_dark);
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_dark);
 
         manager = new LinearLayoutManager(this.getApplicationContext());
          mScrollListener = new EndlessRecyclerViewScrollListener(manager) {
@@ -237,6 +237,15 @@ public class NoticeListScreen extends AppCompatActivity {
                             mScrollListener.nextPage=null;
                         }
                         adapter.notifyData(mlist);
+                        if(mlist.size()==0)
+                        {
+                            findViewById(R.id.NoNotices).setVisibility(View.VISIBLE);
+                            findViewById(R.id.NoInternet).setVisibility(View.INVISIBLE);
+                        }
+                        else{
+                            findViewById(R.id.NoNotices).setVisibility(View.INVISIBLE);
+                            findViewById(R.id.NoInternet).setVisibility(View.INVISIBLE);
+                        }
                     }
                 },300);
                 if (swipeContainer != null) {
@@ -253,6 +262,8 @@ public class NoticeListScreen extends AppCompatActivity {
                 mScrollListener.nextPage=null;
                 adapter.notifyData(mlist);
                 Toast.makeText(NoticeListScreen.this, "No Internet", Toast.LENGTH_SHORT).show();
+                findViewById(R.id.NoNotices).setVisibility(View.INVISIBLE);
+                findViewById(R.id.NoInternet).setVisibility(View.VISIBLE);
 
             }
         });
@@ -319,7 +330,11 @@ public class NoticeListScreen extends AppCompatActivity {
                 category="expired";
                 String heading="Expired Notices";
                 tmpMlist.clear();
-
+                tmpState=0;
+                if(findViewById(R.id.NoNotices).getVisibility()==View.VISIBLE)
+                    tmpState=1;
+                if(findViewById(R.id.NoInternet).getVisibility()==View.VISIBLE)
+                    tmpState=2;
                 tmpMlist.addAll(mlist);
                 tmpPos=manager.findFirstVisibleItemPosition();
                 tmpCurrPage=mScrollListener.currentPage;
@@ -355,6 +370,22 @@ public class NoticeListScreen extends AppCompatActivity {
                 category="All";
                 String heading="All Notices";
                 ((TextView)findViewById(R.id.heading)).setText(heading);
+                if(tmpState==0)
+                {
+                    findViewById(R.id.NoNotices).setVisibility(View.INVISIBLE);
+                    findViewById(R.id.NoInternet).setVisibility(View.INVISIBLE);
+                }
+                if(tmpState==1)
+                {
+                    findViewById(R.id.NoNotices).setVisibility(View.VISIBLE);
+                    findViewById(R.id.NoInternet).setVisibility(View.INVISIBLE);
+                }
+
+                if(tmpState==2)
+                {
+                    findViewById(R.id.NoNotices).setVisibility(View.INVISIBLE);
+                    findViewById(R.id.NoInternet).setVisibility(View.VISIBLE);
+                }
                 mlist.clear();
                 mlist.addAll(tmpMlist);
                 adapter.notifyData(mlist);
@@ -402,6 +433,11 @@ public class NoticeListScreen extends AppCompatActivity {
                 category="bookmarks";
                 String heading="Bookmarked Notices";
                 tmpMlist.clear();
+                tmpState=0;
+                if(findViewById(R.id.NoNotices).getVisibility()==View.VISIBLE)
+                    tmpState=1;
+                if(findViewById(R.id.NoInternet).getVisibility()==View.VISIBLE)
+                    tmpState=2;
                 tmpMlist.addAll(mlist);
                 tmpPos=manager.findFirstVisibleItemPosition();
                 tmpCurrPage=mScrollListener.currentPage;
@@ -539,11 +575,11 @@ public class NoticeListScreen extends AppCompatActivity {
         switch ((String)((TextView)findViewById(R.id.heading)).getText())
         {
             case "Expired Notices" :
-                findViewById(R.id.nav_all).callOnClick();
-                break;
+                findViewById(R.id.back).callOnClick();
+                return;
             case "Bookmarked Notices" :
-                findViewById(R.id.nav_all).callOnClick();
-                break;
+                findViewById(R.id.back).callOnClick();
+                return;
         }
         finish();
     }
@@ -594,11 +630,13 @@ public class NoticeListScreen extends AppCompatActivity {
                 {
                     Log.d("noticeListScreen : ","could not fetch user information (repose.body()==null)");
                 }
+
             }
 
             @Override
             public void onFailure(Call<UserInfo> call, Throwable t) {
                 Log.d("noticeListScreen : ","could not fetch user information (Failure)");
+
             }
         });
     }

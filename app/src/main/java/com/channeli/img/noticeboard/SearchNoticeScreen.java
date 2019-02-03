@@ -87,6 +87,8 @@ public class SearchNoticeScreen extends AppCompatActivity {
         swipeContainer = findViewById(R.id.swipeContainer);
         recent_searches.setVisibility(View.VISIBLE);
         swipeContainer.setVisibility(View.INVISIBLE);
+                findViewById(R.id.NoNotices).setVisibility(View.INVISIBLE);
+                findViewById(R.id.NoInternet).setVisibility(View.INVISIBLE);
         filters=new ArrayList<>();
         filterDialog=new FilterDialog(filters,SearchNoticeScreen.this);
         getFilters();
@@ -99,7 +101,6 @@ public class SearchNoticeScreen extends AppCompatActivity {
         animHideSubFilters = new ScaleAnimation(0.0f, 1.0f, 1.0f, 1.0f, Animation.RELATIVE_TO_SELF,1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
         animShowSubFilters.setDuration(200);
 
-
         findViewById(R.id.filter_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,11 +111,12 @@ public class SearchNoticeScreen extends AppCompatActivity {
                     searchView.clearFocus();
 
                     findViewById(R.id.authority).callOnClick();
-
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                     imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                     imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                    findViewById(R.id.filter_menu).requestFocus();
+                    (findViewById(R.id.search_bar)).setFocusable(false);
                     findViewById(R.id.filter_menu).setVisibility(View.VISIBLE);
                     findViewById(R.id.filter_menu).startAnimation(animShow);
                     findViewById(R.id.swipeContainer).setVisibility(View.INVISIBLE);
@@ -165,8 +167,7 @@ public class SearchNoticeScreen extends AppCompatActivity {
 
             }
         });
-        swipeContainer.setColorScheme(android.R.color.holo_blue_dark,
-                android.R.color.holo_green_dark);
+        swipeContainer.setColorScheme(android.R.color.holo_blue_dark);
 
 
 
@@ -197,13 +198,15 @@ public class SearchNoticeScreen extends AppCompatActivity {
         editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
+                Log.d("/..",""+hasFocus);
+                if(hasFocus){
                 filterDialog.setOriginal();
                 findViewById(R.id.recent_searches).setVisibility(View.VISIBLE);
                 if(findViewById(R.id.filter_menu).getVisibility()==View.VISIBLE) {
                     findViewById(R.id.filter_menu).setVisibility(View.INVISIBLE);
                     findViewById(R.id.filter_menu).startAnimation(animHide);
                 }
-            }
+            }}
         });
 
         editText.setHintTextColor(getResources().getColor(R.color.white));
@@ -245,6 +248,8 @@ public class SearchNoticeScreen extends AppCompatActivity {
                 recent_adapter.notifyDataSetChanged();
                 recent_searches.setVisibility(View.VISIBLE);
                 swipeContainer.setVisibility(View.INVISIBLE);
+                findViewById(R.id.NoNotices).setVisibility(View.INVISIBLE);
+                findViewById(R.id.NoInternet).setVisibility(View.INVISIBLE);
 
                 return true;
             }
@@ -257,6 +262,8 @@ public class SearchNoticeScreen extends AppCompatActivity {
                 if (query.equals("")) {
                     recent_searches.setVisibility(View.VISIBLE);
                     swipeContainer.setVisibility(View.INVISIBLE);
+                findViewById(R.id.NoNotices).setVisibility(View.INVISIBLE);
+                findViewById(R.id.NoInternet).setVisibility(View.INVISIBLE);
                     return false;
                 }
 
@@ -315,8 +322,7 @@ public class SearchNoticeScreen extends AppCompatActivity {
 
         ApiInterface api_service;
         api_service = UtilityFunctions.getRetrofitInstance(getResources().getString(R.string.base_url), retrofit).create(ApiInterface.class);
-        String access_token=getSharedPreferences("Noticeboard_data", 0).getString("access token", null);
-
+        String access_token=getSharedPreferences("Noticeboard_data", 0).getString("access_token", null);
 
         Call<NoticeListResponse> call;
         String filterid=filterDialog.getFilterId();
@@ -367,6 +373,15 @@ public class SearchNoticeScreen extends AppCompatActivity {
                             }
                             adapter.notifyData(mlist);
                             adapter.notifyDataSetChanged();
+                            if(mlist.size()==0)
+                            {
+                                findViewById(R.id.NoNotices).setVisibility(View.VISIBLE);
+                                findViewById(R.id.NoInternet).setVisibility(View.INVISIBLE);
+                            }
+                            else{
+                                findViewById(R.id.NoNotices).setVisibility(View.INVISIBLE);
+                                findViewById(R.id.NoInternet).setVisibility(View.INVISIBLE);
+                            }
                         }
                     },300);
 
@@ -389,6 +404,10 @@ public class SearchNoticeScreen extends AppCompatActivity {
                 if(mlist.size()!=0)
                     mlist.remove(mlist.size()-1);
                 adapter.notifyData(mlist);
+
+
+                findViewById(R.id.NoNotices).setVisibility(View.INVISIBLE);
+                findViewById(R.id.NoInternet).setVisibility(View.VISIBLE);
 
             }
         });
@@ -422,7 +441,6 @@ public class SearchNoticeScreen extends AppCompatActivity {
             findViewById(R.id.filter_menu).setVisibility(View.INVISIBLE);
             findViewById(R.id.filter_menu).startAnimation(animHide);
         }
-
     }
 
     private void focus_change(View v) {

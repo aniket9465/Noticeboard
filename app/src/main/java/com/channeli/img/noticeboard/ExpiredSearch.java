@@ -76,6 +76,8 @@ public class ExpiredSearch extends AppCompatActivity {
         swipeContainer = findViewById(R.id.swipeContainer);
         recent_searches.setVisibility(View.VISIBLE);
         swipeContainer.setVisibility(View.INVISIBLE);
+        findViewById(R.id.NoNotices).setVisibility(View.INVISIBLE);
+        findViewById(R.id.NoInternet).setVisibility(View.INVISIBLE);
 
 
         animShow = AnimationUtils.loadAnimation( this, R.anim.view_show);
@@ -123,8 +125,7 @@ public class ExpiredSearch extends AppCompatActivity {
 
             }
         });
-        swipeContainer.setColorScheme(android.R.color.holo_blue_dark,
-                android.R.color.holo_green_dark);
+        swipeContainer.setColorScheme(android.R.color.holo_blue_dark);
 
 
 
@@ -154,7 +155,9 @@ public class ExpiredSearch extends AppCompatActivity {
         editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                findViewById(R.id.recent_searches).setVisibility(View.VISIBLE);
+                if(hasFocus) {
+                    findViewById(R.id.recent_searches).setVisibility(View.VISIBLE);
+                }
             }
         });
 
@@ -196,6 +199,8 @@ public class ExpiredSearch extends AppCompatActivity {
                 recent_adapter.notifyDataSetChanged();
                 recent_searches.setVisibility(View.VISIBLE);
                 swipeContainer.setVisibility(View.INVISIBLE);
+                findViewById(R.id.NoNotices).setVisibility(View.INVISIBLE);
+                findViewById(R.id.NoInternet).setVisibility(View.INVISIBLE);
 
                 return true;
             }
@@ -208,6 +213,8 @@ public class ExpiredSearch extends AppCompatActivity {
                 if (query.equals("")) {
                     recent_searches.setVisibility(View.VISIBLE);
                     swipeContainer.setVisibility(View.INVISIBLE);
+                    findViewById(R.id.NoNotices).setVisibility(View.INVISIBLE);
+                    findViewById(R.id.NoInternet).setVisibility(View.INVISIBLE);
                     return false;
                 }
 
@@ -302,6 +309,15 @@ public class ExpiredSearch extends AppCompatActivity {
                         }
                         adapter.notifyData(mlist);
                         adapter.notifyDataSetChanged();
+                        if(mlist.size()==0)
+                        {
+                            findViewById(R.id.NoNotices).setVisibility(View.VISIBLE);
+                            findViewById(R.id.NoInternet).setVisibility(View.INVISIBLE);
+                        }
+                        else{
+                            findViewById(R.id.NoNotices).setVisibility(View.INVISIBLE);
+                            findViewById(R.id.NoInternet).setVisibility(View.INVISIBLE);
+                        }
                     }
                 },300);
 
@@ -325,6 +341,9 @@ public class ExpiredSearch extends AppCompatActivity {
                     mlist.remove(mlist.size()-1);
                 adapter.notifyData(mlist);
                 adapter.notifyItemRangeChanged(0, mlist.size());
+
+                    findViewById(R.id.NoNotices).setVisibility(View.INVISIBLE);
+                    findViewById(R.id.NoInternet).setVisibility(View.VISIBLE);
             }
         });
     }

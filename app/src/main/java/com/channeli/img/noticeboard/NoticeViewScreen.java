@@ -139,6 +139,10 @@ public class NoticeViewScreen extends AppCompatActivity {
                         }
                     });
 
+
+                    browser.getSettings().setLoadWithOverviewMode(true);
+                    browser.getSettings().setUseWideViewPort(true);
+
                 }
             }
 

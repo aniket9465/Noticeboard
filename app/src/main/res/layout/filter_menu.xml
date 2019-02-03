@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#EDF4FF"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:id="@+id/filter_text"
+        android:text="Filters"
+        android:textColor="#000"
+        android:textSize="14dp"
+        android:paddingLeft="19dp"
+        android:paddingTop="12dp"
+        />
+    <View
+        android:id="@+id/view4"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#999999"
+        app:layout_constraintTop_toBottomOf="@+id/filter_text"
+        />
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="153dp"
+        android:layout_height="0dp"
+        android:id="@+id/filter_main_category"
+        android:layout_marginBottom="48dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/filter_text">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:textSize="14dp"
+            android:textColor="#000"
+            android:layout_marginStart="16dp"
+            android:text="Categories"
+            app:layout_constraintBottom_toTopOf="@+id/view"
+            app:layout_constraintStart_toStartOf="parent" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:textSize="12dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:id="@+id/filter_reset"
+            android:textColor="@color/appColour"
+            android:layout_marginEnd="8dp"
+            android:text="Reset"
+            app:layout_constraintBottom_toTopOf="@+id/view"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="54dp"
+            android:background="#46000000"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/sub_c"
+            android:layout_width="match_parent"
+            android:layout_height="114dp"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@+id/view5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/view">
+
+            <LinearLayout
+                android:id="@+id/authority"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:background="#fff"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:paddingLeft="16dp"
+                    android:text="Authorities" />
+
+                <ImageView
+                    android:id="@+id/authority_bullet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="13dp"
+                    android:visibility="invisible"
+                    app:srcCompat="@drawable/blue_check" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/departments"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:paddingLeft="16dp"
+                    android:text="Departments" />
+
+                <ImageView
+                    android:id="@+id/departments_bullet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="13dp"
+                    android:visibility="invisible"
+                    app:srcCompat="@drawable/blue_check" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/placements"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:paddingLeft="16dp"
+                    android:text="Placement Office" />
+
+                <ImageView
+                    android:id="@+id/placements_bullet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="13dp"
+                    android:visibility="invisible"
+                    app:srcCompat="@drawable/blue_check" />
+            </LinearLayout>
+        </LinearLayout>
+        <View
+            android:id="@+id/view5"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="142dp"
+            android:background="#46000000"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/view" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="#999999"
+            />
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/date_filter_not_set"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view5" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:id="@+id/Date"
+                android:layout_height="24dp"
+                android:paddingBottom="8dp"
+                android:paddingRight="32dp"
+                android:text="Date"
+                android:textColor="@color/appColour"
+                android:textSize="14dp"/>
+
+
+        </android.support.constraint.ConstraintLayout>
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:id="@+id/date_filter_set"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/sub_c">
+
+            <TextView
+                android:id="@+id/starting_date"
+                android:layout_width="wrap_content"
+                android:textColor="@color/appColour"
+                android:textSize="12dp"
+                android:layout_height="wrap_content"
+                android:text="11-12-12" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="|"
+                android:textColor="@color/appColour"
+                android:paddingBottom="2dp"
+                app:layout_constraintTop_toBottomOf="@id/starting_date"
+                />
+            <TextView
+                android:id="@+id/ending_date"
+                android:textColor="@color/appColour"
+                android:textSize="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="12-12-12"
+                app:layout_constraintTop_toBottomOf="@id/starting_date" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/reset_date_filter"
+                android:text="Reset Date filter"
+                android:textSize="12dp"
+                android:layout_marginTop="12dp"
+                android:textColor="#999999"
+                app:layout_constraintTop_toBottomOf="@id/ending_date"
+                />
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#fff"
+        android:layout_marginTop="2px"
+        android:layout_marginBottom="48dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/filter_main_category"
+        app:layout_constraintTop_toBottomOf="@+id/filter_text">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:id="@+id/all_subcategories"
+            android:layout_height="36dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="18dp"
+            app:layout_constraintBottom_toTopOf="@id/view6"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:id="@+id/all_subcategories_bullet"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:scaleX="0.5"
+                android:scaleY="0.5" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:paddingLeft="2dp"
+                android:text="ALL" />
+        </LinearLayout>
+
+        <View
+            android:id="@+id/view6"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginEnd="23dp"
+            android:layout_marginStart="23dp"
+            android:background="#999999"
+            android:layout_marginTop="54dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ListView
+            android:id="@+id/subfilters"
+            android:layout_width="match_parent"
+            android:layout_height="479dp"
+            android:layout_marginStart="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view6"
+            app:layout_constraintTop_toTopOf="@id/view6" />
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#999999"
+            app:layout_constraintBottom_toBottomOf="parent" />
+    </android.support.constraint.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="153dp"
+        android:layout_height="48dp"
+        android:gravity="center"
+        android:text="Cancel"
+        android:clickable="true"
+        android:focusable="true"
+        android:onClick="cancelFilters"
+        android:textAlignment="center"
+        android:textColor="@color/appColour"
+        android:textSize="16dp"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:background="@color/appColour"
+        android:gravity="center"
+        android:text="Apply"
+        android:clickable="true"
+        android:focusable="true"
+        android:onClick="applyFilters"
+        android:textAlignment="center"
+        android:textColor="#fff"
+        android:textSize="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView" />
+</android.support.constraint.ConstraintLayout>
