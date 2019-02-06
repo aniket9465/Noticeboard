@@ -1,4 +1,4 @@
-package com.channeli.img.noticeboard.ApiResponseClasses;
+package com.channeli.img.noticeboard.ApiResponseClasses.UserInfo;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -11,6 +11,9 @@ public class Role {
     @SerializedName("activeStatus")
     @Expose
     private String activeStatus;
+    @SerializedName("data")
+    @Expose
+    private Data data;
 
     public String getRole() {
         return role;
@@ -26,6 +29,14 @@ public class Role {
 
     public void setActiveStatus(String activeStatus) {
         this.activeStatus = activeStatus;
+    }
+
+    public Data getData() {
+        return data;
+    }
+
+    public void setData(Data data) {
+        this.data = data;
     }
 
 }

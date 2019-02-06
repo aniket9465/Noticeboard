@@ -1,24 +1,17 @@
 package com.channeli.img.noticeboard;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -26,32 +19,24 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.ScaleAnimation;
 import android.view.inputmethod.InputMethodManager;
-import android.webkit.WebView;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.channeli.img.noticeboard.ApiResponseClasses.Filters;
-import com.channeli.img.noticeboard.ApiResponseClasses.FiltersList;
 import com.channeli.img.noticeboard.ApiResponseClasses.NoticeCardResponse;
 import com.channeli.img.noticeboard.ApiResponseClasses.NoticeListResponse;
-import com.channeli.img.noticeboard.ApiResponseClasses.UserInfo;
+import com.channeli.img.noticeboard.ApiResponseClasses.UserInfo.UserInfo;
 import com.channeli.img.noticeboard.Utilities.ApiInterface;
 import com.channeli.img.noticeboard.Utilities.EndlessRecyclerViewScrollListener;
 import com.channeli.img.noticeboard.Utilities.FilterDialog;
 import com.channeli.img.noticeboard.Utilities.GetImage;
 import com.channeli.img.noticeboard.Utilities.UtilityFunctions;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingService;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -84,7 +69,6 @@ public class NoticeListScreen extends AppCompatActivity {
         filterDialog=new FilterDialog(filters,this);
         getFilters();
         category="All";
-
         UtilityFunctions.tokenRefresh(this);
 
         animShow = AnimationUtils.loadAnimation( this, R.anim.view_show);
@@ -149,7 +133,7 @@ public class NoticeListScreen extends AppCompatActivity {
         view.setAdapter(adapter);
         view.addOnScrollListener(mScrollListener);
 
-        getUserInfo();
+        noticeRequest();
 
     }
 
@@ -546,7 +530,6 @@ public class NoticeListScreen extends AppCompatActivity {
                     filters=response.body();
                     filterDialog=new FilterDialog(filters,NoticeListScreen.this);
                 }
-                noticeRequest();
             }
 
             @Override
@@ -554,7 +537,6 @@ public class NoticeListScreen extends AppCompatActivity {
                 Log.d("NoticeListScreen :","failed to fetch filters");
                 Toast.makeText(NoticeListScreen.this, "Filters not fetched", Toast.LENGTH_SHORT).show();
                 filterDialog=new FilterDialog(filters,NoticeListScreen.this);
-                noticeRequest();
             }
         });
 
@@ -600,46 +582,6 @@ public class NoticeListScreen extends AppCompatActivity {
         }
     }
 
-    void getUserInfo()
-    {
-        String access_token = getSharedPreferences("Noticeboard_data", 0).getString("access_token", null);
-        retrofit=UtilityFunctions.getRetrofitInstance(getResources().getString(R.string.base_url),retrofit);
-        ApiInterface api_service = retrofit.create(ApiInterface.class);
-        Call<UserInfo> call = api_service.getUserInfo( "Bearer " + access_token);
-        call.enqueue(new Callback<UserInfo>() {
-            @Override
-            public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
-                if(response.code()==401)
-                {
-                    Intent i = new Intent(NoticeListScreen.this,LoginScreen.class);
-                    UtilityFunctions.logout(NoticeListScreen.this);
-                    startActivity(i);
-                    finish();
-                }
-                if(response.body()!=null)
-                {
-                    ((TextView)findViewById(R.id.username)).setText(response.body().getFullName());
-                    if(response.body().getDisplayPicture()!=null)
-                    {
-                         String url = (getResources().getString(R.string.base_url) + response.body().getDisplayPicture());
-                         GetImage getImage=new GetImage(NoticeListScreen.this);
-                         getImage.execute(url);
-                    }
-                }
-                else
-                {
-                    Log.d("noticeListScreen : ","could not fetch user information (repose.body()==null)");
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<UserInfo> call, Throwable t) {
-                Log.d("noticeListScreen : ","could not fetch user information (Failure)");
-
-            }
-        });
-    }
 
 
 }

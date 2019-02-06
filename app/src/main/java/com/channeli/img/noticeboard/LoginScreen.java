@@ -85,11 +85,11 @@ public class LoginScreen extends AppCompatActivity {
                             edit.putString("login_time", sdf.format(Calendar.getInstance().getTime()));
                             edit.putString("Subscription", "111");
                             edit.apply();
-//                            if (FirebaseMessaging.getInstance()!=null) {
-//                                FirebaseMessaging.getInstance().subscribeToTopic("Placement%20Office");
-//                                FirebaseMessaging.getInstance().subscribeToTopic("Authorities");
-//                                FirebaseMessaging.getInstance().subscribeToTopic("Departments");
-//                            }
+                            if (FirebaseMessaging.getInstance()!=null) {
+                                FirebaseMessaging.getInstance().subscribeToTopic("Placement%20Office");
+                                FirebaseMessaging.getInstance().subscribeToTopic("Authorities");
+                                FirebaseMessaging.getInstance().subscribeToTopic("Departments");
+                            }
                             Intent in = new Intent(LoginScreen.this, NoticeListScreen.class);
                             startActivity(in);
                             finish();

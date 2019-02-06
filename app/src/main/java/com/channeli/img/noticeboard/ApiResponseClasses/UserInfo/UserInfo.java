@@ -1,4 +1,4 @@
-package com.channeli.img.noticeboard.ApiResponseClasses;
+package com.channeli.img.noticeboard.ApiResponseClasses.UserInfo;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

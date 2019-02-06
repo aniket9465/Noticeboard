@@ -156,7 +156,7 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.no
                         }
                         else
                         {
-                            Toast.makeText(context, "connection error !!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Connection Error", Toast.LENGTH_SHORT).show();
                         }
                     }
 

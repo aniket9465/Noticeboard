@@ -51,6 +51,7 @@
                     android:layout_width="0dp"
                     android:ellipsize="end"
                     android:maxLines="1"
+                    android:id="@+id/branch"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="19dp"

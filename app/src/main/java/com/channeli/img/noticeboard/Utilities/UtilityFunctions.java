@@ -10,23 +10,28 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.channeli.img.noticeboard.ApiRequestBody.LoginRequestBody;
 import com.channeli.img.noticeboard.ApiRequestBody.RefreshTokenBody;
 import com.channeli.img.noticeboard.ApiResponseClasses.LoginResponse;
+import com.channeli.img.noticeboard.ApiResponseClasses.UserInfo.UserInfo;
 import com.channeli.img.noticeboard.ApiResponseClasses.accessToken;
 import com.channeli.img.noticeboard.LoginScreen;
 import com.channeli.img.noticeboard.NoticeListScreen;
 import com.channeli.img.noticeboard.R;
 import com.channeli.img.noticeboard.SplashScreen;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.WeakHashMap;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -47,7 +52,7 @@ public class UtilityFunctions {
     public static void tokenRefresh(final Activity activity)
     {
 
-        String loginTime = activity.getSharedPreferences("Noticeboard_data", 0).getString("token_time", "not logged in");
+        final String loginTime = activity.getSharedPreferences("Noticeboard_data", 0).getString("token_time", "not logged in");
 
         Date currdate = Calendar.getInstance().getTime();
         Date Logindate;
@@ -73,7 +78,8 @@ public class UtilityFunctions {
             @Override
             public void onResponse( Call<accessToken> call, Response<accessToken> response) {
                 if (response.body() == null) {
-                    Toast.makeText(activity, "could not fetch token", Toast.LENGTH_SHORT).show();
+                    Log.d("refresh token Utility ","token fetch fail logging out");
+                    logout(activity);
                 }
                 else {
                     SharedPreferences pref = activity.getApplicationContext().getSharedPreferences("Noticeboard_data", 0);
@@ -82,19 +88,72 @@ public class UtilityFunctions {
                     edit.putString("access_token", response.body().getAccess());
                     edit.putString("token_time", sdf.format(Calendar.getInstance().getTime()));
                     edit.apply();
+                    UtilityFunctions.getUserInfo(activity);
                 }
             }
 
             @Override
             public void onFailure(Call<accessToken> call, Throwable t) {
 
-                Toast.makeText(activity, "connection issue", Toast.LENGTH_SHORT).show();
-
             }
         });
 
     }
+    static void getUserInfo(final Activity activity)
+    {
+        String access_token = activity.getSharedPreferences("Noticeboard_data", 0).getString("access_token", null);
+        Retrofit retrofit=null;
+        retrofit=UtilityFunctions.getRetrofitInstance(activity.getResources().getString(R.string.base_url),retrofit);
+        ApiInterface api_service = retrofit.create(ApiInterface.class);
+        Call<UserInfo> call = api_service.getUserInfo( "Bearer " + access_token);
+        call.enqueue(new Callback<UserInfo>() {
+            @Override
+            public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
+                if(response.code()==401)
+                {
+                    Intent i = new Intent(activity,LoginScreen.class);
+                    UtilityFunctions.logout(activity);
+                    activity.startActivity(i);
+                    activity.finish();
+                }
+                if(response.body()!=null)
+                {
+                    ((TextView)activity.findViewById(R.id.username)).setText(response.body().getFullName());
+                    String branch="";
+                    for(int i=0;i<response.body().getRoles().size();++i)
+                    {
+                        if(response.body().getRoles().get(i).getRole().equals("Student"))
+                        {
+                            branch=response.body().getRoles().get(i).getData().getBranch().getName();
+                        }
 
+                        if(response.body().getRoles().get(i).getRole().equals("FacultyMember"))
+                        {
+                            branch=response.body().getRoles().get(i).getData().getDepartment().getName();
+                        }
+                    }
+                    ((TextView)activity.findViewById(R.id.branch)).setText(branch);
+                    if(response.body().getDisplayPicture()!=null)
+                    {
+                        String url = (activity.getResources().getString(R.string.base_url) + response.body().getDisplayPicture());
+                        GetImage getImage=new GetImage(activity);
+                        getImage.execute(url);
+                    }
+                }
+                else
+                {
+                    Log.d("noticeListScreen : ","could not fetch user information (repose.body()==null)");
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<UserInfo> call, Throwable t) {
+                Log.d("noticeListScreen : ","could not fetch user information (Failure)");
+
+            }
+        });
+    }
     public static void logout(Activity activity)
     {
         SharedPreferences prefs = activity.getSharedPreferences("Noticeboard_data", 0);
@@ -104,11 +163,13 @@ public class UtilityFunctions {
         editor.remove("access_token");
         editor.remove("refresh_token");
         editor.remove("Subscription");
-//        if (FirebaseMessaging.getInstance()!=null) {
-//            FirebaseMessaging.getInstance().unsubscribeFromTopic("Placement%20Office");
-//            FirebaseMessaging.getInstance().unsubscribeFromTopic("Authorities");
-//            FirebaseMessaging.getInstance().unsubscribeFromTopic("Departments");
-//        }
+        if (FirebaseMessaging.getInstance()!=null) {
+            FirebaseMessaging.getInstance().unsubscribeFromTopic("Placement%20Office");
+            FirebaseMessaging.getInstance().unsubscribeFromTopic("Authorities");
+            FirebaseMessaging.getInstance().unsubscribeFromTopic("Departments");
+        }
+
+
         editor.apply();
     }
 

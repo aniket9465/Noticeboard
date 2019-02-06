@@ -4,11 +4,10 @@ import com.channeli.img.noticeboard.ApiRequestBody.BookmarkReadRequestBody;
 import com.channeli.img.noticeboard.ApiRequestBody.LoginRequestBody;
 import com.channeli.img.noticeboard.ApiRequestBody.RefreshTokenBody;
 import com.channeli.img.noticeboard.ApiResponseClasses.Filters;
-import com.channeli.img.noticeboard.ApiResponseClasses.FiltersList;
 import com.channeli.img.noticeboard.ApiResponseClasses.LoginResponse;
 import com.channeli.img.noticeboard.ApiResponseClasses.NoticeContentResponse;
 import com.channeli.img.noticeboard.ApiResponseClasses.NoticeListResponse;
-import com.channeli.img.noticeboard.ApiResponseClasses.UserInfo;
+import com.channeli.img.noticeboard.ApiResponseClasses.UserInfo.UserInfo;
 import com.channeli.img.noticeboard.ApiResponseClasses.accessToken;
 
 import java.util.List;
@@ -20,7 +19,6 @@ import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
-import retrofit2.http.Url;
 
 public interface ApiInterface {
 

@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebSettings;
@@ -47,11 +48,12 @@ public class NoticeViewScreen extends AppCompatActivity {
         final WebView browser = (WebView) findViewById(R.id.webview);
         browser.getSettings().setBuiltInZoomControls(true);
         browser.getSettings().setDisplayZoomControls(false);
+        browser.getSettings().setDomStorageEnabled(true);
         browser.getSettings().setJavaScriptEnabled(true);
         browser.setWebViewClient(new WebViewClient() {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 view.loadUrl(url);
-                return true;
+                return false;
             }
         });
 
@@ -123,9 +125,12 @@ public class NoticeViewScreen extends AppCompatActivity {
                     if(response.body().getDatetimeModified()!=null)
                         ((TextView) findViewById(R.id.date_time_notice_view)).setText(response.body().getDatetimeModified());
 
-                    if(response.body().getContent()!=null)
-                        browser.loadData(response.body().getContent(), "text/html; charset=utf-8", "UTF-8");
-
+                    if(response.body().getContent()!=null) {
+                        Log.d("",""+response.body().getContent());
+                        String encodedHtml = Base64.encodeToString(response.body().getContent().getBytes(),
+                                Base64.NO_PADDING);
+                        browser.loadData(encodedHtml, "text/html", "base64");
+                    }
                     browser.setWebViewClient(new WebViewClient() {
                         @Override
                         public boolean shouldOverrideUrlLoading(WebView view, String url) {

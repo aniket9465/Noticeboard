@@ -17,6 +17,7 @@ android {
         }
     }
     defaultConfig {
+        applicationId "com.channeli.img.noticeboard"
         vectorDrawables.useSupportLibrary = true
     }
 }
@@ -26,7 +27,7 @@ repositories {
 
 
 dependencies {
-    implementation 'com.google.firebase:firebase-core:16.0.6'
+    implementation 'com.google.firebase:firebase-core:16.0.7'
     implementation 'com.borax12.materialdaterangepicker:library:1.9'
     implementation 'com.android.support:percent:27.1.1'
     implementation 'com.google.firebase:firebase-messaging:17.3.4'
