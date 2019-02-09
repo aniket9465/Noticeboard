@@ -7,6 +7,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -33,46 +35,47 @@ public class FCMService extends FirebaseMessagingService {
         JSONObject data=new JSONObject(remoteMessage.getData());
 
         String category="All";
-        String main_category="All";
         String subject="";
+        Integer id=-1;
+        Boolean bookmarked=false;
         try {
             category=data.getString("category");
-            main_category=data.getString("main_category");
             subject=data.getString("subject");
+            bookmarked=data.getBoolean("bookmarked");
+            id=data.getInt("id");
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-//        NoticeNotification noticeNotification=new NoticeNotification(main_category,category,subject);
-        //Calling method to send notification
-        sendNotification(generateNotification(/*noticeNotification*/));
-        Log.d("/-----------","firebase  service ");
+        sendNotification(generateNotification(category,subject,bookmarked,id));
 
     }
 
-    private Notification generateNotification(/*NoticeNotification noticeNotification*/){
-        Intent intent = new Intent(this, SplashScreen.class);
+
+    private Notification generateNotification(String category,String subject,boolean bookmarked,Integer id){
+        Intent intent = new Intent(this, NoticeViewScreen.class);
         intent.putExtra("notification",true);
+        intent.putExtra("bookmarked",bookmarked);
+        intent.putExtra("id",id);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        return new NotificationCompat.Builder(this)
+        return new NotificationCompat.Builder(this,CHANNEL_ID)
                 .setSmallIcon(R.drawable.noticeboard_logo)
-//                .setLargeIcon()
                 .setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setSound(defaultSoundUri)
-                .setColor(getResources().getColor(R.color.colorAccent))
+                .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.noticeboard_logo))
+                .setColor(getResources().getColor(R.color.appColour))
                 .setShowWhen(true)
                 .setTicker("New Notice!")
                 .setPriority(Notification.PRIORITY_HIGH)
                 .setContentIntent(pendingIntent)
-                .setContentTitle("New Notice : ")
-//                .setContentText(noticeNotification.getCategory()+" : "+noticeNotification.getSubject())
-                .setChannelId(CHANNEL_ID)
+                .setContentTitle(category+" Notice")
+                .setContentText(subject)
                 .build();
     }
 

@@ -134,7 +134,6 @@ public class NoticeListScreen extends AppCompatActivity {
         view.addOnScrollListener(mScrollListener);
 
         noticeRequest();
-
     }
 
 
@@ -164,16 +163,24 @@ public class NoticeListScreen extends AppCompatActivity {
                 if (filterid.equals("-1")) {
                     call = api_service.dateFilter(filterDialog.startDate+" 00:00", filterDialog.endDate+" 23:59", (mScrollListener.currentPage+1) + "","Bearer " + access_token);
                 } else {
-                    if(filterDialog.subFilter.equals("All"))
-                        ((TextView)findViewById(R.id.heading)).setText((String)("All "+filterDialog.mainFilter+" Notices"));
-                    else
-                        ((TextView)findViewById(R.id.heading)).setText(((String)filterDialog.subFilter + " Notices"));
-
-                    if (!filterDialog.dateFilterSelected) {
-                        call = api_service.filteredNotices(filterid, (mScrollListener.currentPage+1) + "","Bearer " + access_token);
-                    } else {
-                        call = api_service.filterAndDateFilterNotices(filterDialog.startDate+" 00:00", filterDialog.endDate+" 23:59", filterid, (mScrollListener.currentPage+1) + "","Bearer " + access_token);
+                    if(filterDialog.subFilter.equals("All")) {
+                        // send slug here
+                        if (!filterDialog.dateFilterSelected) {
+                            call = api_service.filteredNotices(filterid, (mScrollListener.currentPage+1) + "","Bearer " + access_token);
+                        } else {
+                            call = api_service.filterAndDateFilterNotices(filterDialog.startDate+" 00:00", filterDialog.endDate+" 23:59", filterid, (mScrollListener.currentPage+1) + "","Bearer " + access_token);
+                        }
+                        ((TextView) findViewById(R.id.heading)).setText((String) ("All " + filterDialog.mainFilter + " Notices"));
                     }
+                    else {
+                        if (!filterDialog.dateFilterSelected) {
+                            call = api_service.filteredNotices(filterid, (mScrollListener.currentPage+1) + "","Bearer " + access_token);
+                        } else {
+                            call = api_service.filterAndDateFilterNotices(filterDialog.startDate+" 00:00", filterDialog.endDate+" 23:59", filterid, (mScrollListener.currentPage+1) + "","Bearer " + access_token);
+                        }
+                        ((TextView) findViewById(R.id.heading)).setText(((String) filterDialog.subFilter + " Notices"));
+                    }
+
                 }
             }
         }
@@ -476,6 +483,8 @@ public class NoticeListScreen extends AppCompatActivity {
     public void applyFilters(View v)
     {
         mlist.clear();
+        adapter.notifyData(mlist);
+        mScrollListener.resetState();
         filterDialog.setNew();
         findViewById(R.id.swipeContainer).setVisibility(View.VISIBLE);
         if(findViewById(R.id.filter_menu).getVisibility()==View.VISIBLE) {

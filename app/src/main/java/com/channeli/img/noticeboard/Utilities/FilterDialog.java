@@ -404,7 +404,7 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
                 {
                     if(filters.get(i).getName().equals("Placement"))
                     {
-                        filterID=filters.get(i).getId();
+                        filterID=filters.get(i).getSlug();
                         break;
                     }
                 }
@@ -431,7 +431,7 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
                 {
                     if(filters.get(i).getName().equals("Authorities"))
                     {
-                        filterID=filters.get(i).getId();
+                        filterID=filters.get(i).getSlug();
                         break;
                     }
                 }
@@ -458,7 +458,7 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
                 {
                     if(filters.get(i).getName().equals("Department"))
                     {
-                        filterID=filters.get(i).getId();
+                        filterID=filters.get(i).getSlug();
                         break;
                     }
                 }

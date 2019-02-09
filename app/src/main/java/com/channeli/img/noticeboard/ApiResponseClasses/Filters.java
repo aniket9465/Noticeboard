@@ -7,9 +7,9 @@ import com.google.gson.annotations.SerializedName;
 
 public class Filters {
 
-    @SerializedName("id")
+    @SerializedName("slug")
     @Expose
-    private String id;
+    private String slug;
     @SerializedName("name")
     @Expose
     private String name;
@@ -17,12 +17,12 @@ public class Filters {
     @Expose
     private ArrayList<Banner> banner = null;
 
-    public String getId() {
-        return id;
+    public String getSlug() {
+        return slug;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setSlug(String slug) {
+        this.slug = slug;
     }
 
     public String getName() {

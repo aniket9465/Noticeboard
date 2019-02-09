@@ -337,10 +337,18 @@ public class SearchNoticeScreen extends AppCompatActivity {
             }
             else {
                 if (!filterDialog.dateFilterSelected) {
-                    call = api_service.searchAndFilteredNotices(search_query,filterid, (mScrollListener.currentPage+1 ) + "","Bearer " + access_token);
+                    if(filterDialog.subFilter.equals("All")) // send slug here
+                        call = api_service.searchAndFilteredNotices(search_query,filterid, (mScrollListener.currentPage+1 ) + "","Bearer " + access_token);
+                    else
+                        call = api_service.searchAndFilteredNotices(search_query,filterid, (mScrollListener.currentPage+1 ) + "","Bearer " + access_token);
+
                 }
                 else {
-                    call = api_service.searchAndFilterAndDateFilterNotices(search_query,filterDialog.startDate+" 00:00", filterDialog.endDate+" 23:59", filterid, (mScrollListener.currentPage+1) + "","Bearer " + access_token);
+                    if(filterDialog.subFilter.equals("All")) // send slug here.
+                        call = api_service.searchAndFilterAndDateFilterNotices(search_query,filterDialog.startDate+" 00:00", filterDialog.endDate+" 23:59", filterid, (mScrollListener.currentPage+1) + "","Bearer " + access_token);
+                    else
+                        call = api_service.searchAndFilterAndDateFilterNotices(search_query,filterDialog.startDate+" 00:00", filterDialog.endDate+" 23:59", filterid, (mScrollListener.currentPage+1) + "","Bearer " + access_token);
+
                 }
             }
         }
@@ -416,6 +424,7 @@ public class SearchNoticeScreen extends AppCompatActivity {
     public void applyFilters(View v) {
         mlist.clear();
         filterDialog.setNew();
+        mScrollListener.resetState();
         if (searched.equals(""))
             findViewById(R.id.recent_searches).setVisibility(View.VISIBLE);
         else
@@ -503,7 +512,7 @@ public class SearchNoticeScreen extends AppCompatActivity {
         retrofit=UtilityFunctions.getRetrofitInstance(getResources().getString(R.string.base_url),retrofit);
         ApiInterface api_service = retrofit.create(ApiInterface.class);
 
-        Call<List<Filters>> call = api_service.getFilters( access_token);
+        Call<List<Filters>> call = api_service.getFilters( "Bearer "+access_token);
 
         call.enqueue(new Callback<List<Filters>>() {
             @Override

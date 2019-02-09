@@ -65,6 +65,8 @@ public class UtilityFunctions {
                 diff/=60;
                 if(diff<4)
                 {
+                    if(activity instanceof NoticeListScreen)
+                        UtilityFunctions.getUserInfo(activity);
                     return ;
                 }
             }
@@ -88,7 +90,8 @@ public class UtilityFunctions {
                     edit.putString("access_token", response.body().getAccess());
                     edit.putString("token_time", sdf.format(Calendar.getInstance().getTime()));
                     edit.apply();
-                    UtilityFunctions.getUserInfo(activity);
+                    if(activity instanceof NoticeListScreen)
+                        UtilityFunctions.getUserInfo(activity);
                 }
             }
 

@@ -29,9 +29,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-/*
-    implement download button and shareable link button
-*/
 
 public class NoticeViewScreen extends AppCompatActivity {
     static Retrofit retrofit;
@@ -61,13 +58,20 @@ public class NoticeViewScreen extends AppCompatActivity {
         ((ImageView) (findViewById(R.id.back_button))).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent calling = getIntent();
+                if(calling.getBooleanExtra("notification",false))
+                {
+                    Intent i = new Intent(NoticeViewScreen.this,NoticeListScreen.class);
+                    startActivity(i);
+                    finish();
+                }
                 finish();
             }
         });
 
 
         Intent i = getIntent();
-        Boolean expired =  i.getBooleanExtra("Expired",true);
+        Boolean expired =  i.getBooleanExtra("Expired",false);
         final Integer id = i.getIntExtra("id",-1);
         bookmarked = i.getBooleanExtra("bookmarked",false);
         final Integer position = i.getIntExtra("position",-1);
@@ -206,5 +210,17 @@ public class NoticeViewScreen extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent calling= getIntent();
+        if(calling.getBooleanExtra("notification",false))
+        {
+            Intent i = new Intent(NoticeViewScreen.this,NoticeListScreen.class);
+            startActivity(i);
+            finish();
+        }
+        super.onBackPressed();
     }
 }
