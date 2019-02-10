@@ -176,6 +176,8 @@ public class NoticeViewScreen extends AppCompatActivity {
                 api_service = retrofit.create(ApiInterface.class);
                 String access_token = getSharedPreferences("Noticeboard_data", 0).getString("access_token", null);
                 Call<Void> call = api_service.bookmark_read("Bearer "+access_token,new BookmarkReadRequestBody(id,"star"));
+                if(bookmarked)
+                    call = api_service.bookmark_read("Bearer "+access_token,new BookmarkReadRequestBody(id,"unstar"));
                 call.enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {

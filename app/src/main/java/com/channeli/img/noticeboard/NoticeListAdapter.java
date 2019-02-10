@@ -139,6 +139,8 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.no
                 String access_token = context.getSharedPreferences("Noticeboard_data", 0).getString("access_token", null);
                 Log.d("..",access_token);
                 Call<Void> call = api_service.bookmark_read("Bearer "+access_token,new BookmarkReadRequestBody(list.get(position).getId(),"star"));
+                if(list.get(position).getBookmark())
+                    call = api_service.bookmark_read("Bearer "+access_token,new BookmarkReadRequestBody(list.get(position).getId(),"unstar"));
                 call.enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {

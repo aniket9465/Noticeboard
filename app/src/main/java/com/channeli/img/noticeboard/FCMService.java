@@ -59,17 +59,17 @@ public class FCMService extends FirebaseMessagingService {
         intent.putExtra("id",id);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, ((int)System.currentTimeMillis()%1000), intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         return new NotificationCompat.Builder(this,CHANNEL_ID)
-                .setSmallIcon(R.drawable.noticeboard_logo)
+                .setSmallIcon(R.drawable.notification_logo)
                 .setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setSound(defaultSoundUri)
-                .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.noticeboard_logo))
-                .setColor(getResources().getColor(R.color.appColour))
+                .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.notification_logo))
+                .setColor(Color.parseColor("#ffffff"))
                 .setShowWhen(true)
                 .setTicker("New Notice!")
                 .setPriority(Notification.PRIORITY_HIGH)
