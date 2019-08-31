@@ -73,9 +73,9 @@ public class NoticeListScreen extends AppCompatActivity {
 
         animShow = AnimationUtils.loadAnimation( this, R.anim.view_show);
         animHide = AnimationUtils.loadAnimation( this, R.anim.view_hide);
-        animShowSubFilters = new ScaleAnimation(0.0f, 1.0f, 1.0f, 1.0f, Animation.RELATIVE_TO_SELF,0.0f, Animation.RELATIVE_TO_SELF, 0.0f);
+        animShowSubFilters = new ScaleAnimation(0.0f, 1.0f, 1.0f, 1.0f, Animation.RELATIVE_TO_SELF,1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
         animShowSubFilters.setDuration(200);
-        animHideSubFilters = new ScaleAnimation(0.0f, 1.0f, 1.0f, 1.0f, Animation.RELATIVE_TO_SELF,1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
+        animHideSubFilters = new ScaleAnimation(0.0f, 1.0f, 1.0f, 1.0f, Animation.RELATIVE_TO_SELF,0.0f, Animation.RELATIVE_TO_SELF, 0.0f);
         animShowSubFilters.setDuration(200);
 
 
@@ -386,8 +386,9 @@ public class NoticeListScreen extends AppCompatActivity {
                 mScrollListener.nextPage=tmpNextPage;
                 findViewById(R.id.back).setVisibility(View.INVISIBLE);
                 findViewById(R.id.filter_button).setVisibility(View.VISIBLE);
-                findViewById(R.id.content_frame).startAnimation(animHideSubFilters);
-                findViewById(R.id.content_frame).startAnimation(animShowSubFilters);
+//                findViewById(R.id.content_frame).startAnimation(animHideSubFilters);
+//                findViewById(R.id.content_frame).startAnimation(animShowSubFilters);
+                ((DrawerLayout) findViewById(R.id.list_of_notices)).openDrawer(Gravity.LEFT);
                 findViewById(R.id.search).setVisibility(View.VISIBLE);
                 findViewById(R.id.drawer_opener).setVisibility(View.VISIBLE);
 

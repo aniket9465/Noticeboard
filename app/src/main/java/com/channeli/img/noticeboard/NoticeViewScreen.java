@@ -24,6 +24,9 @@ import com.channeli.img.noticeboard.ApiResponseClasses.NoticeContentResponse;
 import com.channeli.img.noticeboard.Utilities.ApiInterface;
 import com.channeli.img.noticeboard.Utilities.UtilityFunctions;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -109,7 +112,7 @@ public class NoticeViewScreen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText("Notice shareable link", getResources().getString(R.string.base_url)+"notice/"+id);
+                ClipData clip = ClipData.newPlainText("Notice shareable link", getResources().getString(R.string.base_url)+"/notice/"+id);
                 clipboard.setPrimaryClip(clip);
                 Toast.makeText(NoticeViewScreen.this, "Notice link copied to clipboard", Toast.LENGTH_SHORT).show();
             }
@@ -126,8 +129,20 @@ public class NoticeViewScreen extends AppCompatActivity {
                     if(response.body().getTitle()!=null)
                         ((TextView) findViewById(R.id.notice_title)).setText(response.body().getTitle());
 
-                    if(response.body().getDatetimeModified()!=null)
-                        ((TextView) findViewById(R.id.date_time_notice_view)).setText(response.body().getDatetimeModified());
+                    if(response.body().getDatetimeModified()!=null) {
+                        try {
+                            String date = response.body().getDatetimeModified();
+                            SimpleDateFormat spf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+                            Date newDate = spf.parse(date);
+                            spf = new SimpleDateFormat("dd MMM yyyy");
+                            date = spf.format(newDate);
+                            ((TextView) findViewById(R.id.date_time_notice_view)).setText(date);
+                        }
+                        catch (Exception e)
+                        {
+                            ((TextView) findViewById(R.id.date_time_notice_view)).setText(response.body().getDatetimeModified());
+                        }
+                    }
 
                     if(response.body().getContent()!=null) {
                         Log.d("",""+response.body().getContent());

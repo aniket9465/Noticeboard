@@ -20,7 +20,10 @@ import com.channeli.img.noticeboard.ApiResponseClasses.NoticeCardResponse;
 import com.channeli.img.noticeboard.Utilities.ApiInterface;
 import com.channeli.img.noticeboard.Utilities.UtilityFunctions;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -195,7 +198,18 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.no
         }
 
 
-        holder.date.setText(list.get(position).getDatetimeModified());
+        try {
+            String date = list.get(position).getDatetimeModified();
+            SimpleDateFormat spf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+            Date newDate = spf.parse(date);
+            spf = new SimpleDateFormat("dd MMM yyyy");
+            date = spf.format(newDate);
+            holder.date.setText(date);
+        }
+        catch (Exception e)
+        {
+            holder.date.setText(list.get(position).getDatetimeModified());
+        }
 
         holder.subject.setText(list.get(position).getBanner().getName());
 
