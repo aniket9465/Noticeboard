@@ -58,7 +58,9 @@ public class NoticeListScreen extends AppCompatActivity {
     private String category;
     private List<Filters> filters;
     private EndlessRecyclerViewScrollListener mScrollListener;
-    private Animation animShow, animHide ,animShowSubFilters,animHideSubFilters;
+    private Animation animShow, animHide ;
+    private Animation backAnimation;
+
     LinearLayoutManager manager;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,11 +75,7 @@ public class NoticeListScreen extends AppCompatActivity {
 
         animShow = AnimationUtils.loadAnimation( this, R.anim.view_show);
         animHide = AnimationUtils.loadAnimation( this, R.anim.view_hide);
-        animShowSubFilters = new ScaleAnimation(0.0f, 1.0f, 1.0f, 1.0f, Animation.RELATIVE_TO_SELF,1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
-        animShowSubFilters.setDuration(200);
-        animHideSubFilters = new ScaleAnimation(0.0f, 1.0f, 1.0f, 1.0f, Animation.RELATIVE_TO_SELF,0.0f, Animation.RELATIVE_TO_SELF, 0.0f);
-        animShowSubFilters.setDuration(200);
-
+        backAnimation = AnimationUtils.loadAnimation(this,R.anim.view_hide_subfilters);
 
 
         findViewById(R.id.nav_complete_menu).setVisibility(View.VISIBLE);
@@ -136,7 +134,6 @@ public class NoticeListScreen extends AppCompatActivity {
         noticeRequest();
     }
 
-
     void noticeRequest() {
 
         UtilityFunctions.tokenRefresh(this);
@@ -191,14 +188,18 @@ public class NoticeListScreen extends AppCompatActivity {
                 findViewById(R.id.filter_selected).setVisibility(View.INVISIBLE);
                 call = api_service.bookmarkedNotices( (mScrollListener.currentPage+1)+"","Bearer " + access_token);
             }
-            else
+            else {
+                if(category.equals("expired"))
                 {
-                    if(category.equals("expired"))
-                    {
-                        findViewById(R.id.filter_selected).setVisibility(View.INVISIBLE);
-                        call = api_service.expiredNotices( (mScrollListener.currentPage+1)+"","Bearer " + access_token);
-                    }
+                    findViewById(R.id.filter_selected).setVisibility(View.INVISIBLE);
+                    call = api_service.expiredNotices( (mScrollListener.currentPage+1)+"","Bearer " + access_token);
                 }
+                else
+                {
+                    findViewById(R.id.filter_selected).setVisibility(View.INVISIBLE);
+                    call = api_service.importantNotices( (mScrollListener.currentPage+1)+"",true,"Bearer " + access_token);
+                }
+            }
         }
 
 
@@ -377,6 +378,9 @@ public class NoticeListScreen extends AppCompatActivity {
                     findViewById(R.id.NoNotices).setVisibility(View.INVISIBLE);
                     findViewById(R.id.NoInternet).setVisibility(View.VISIBLE);
                 }
+
+                findViewById(R.id.swipeContainer).startAnimation(backAnimation);
+
                 mlist.clear();
                 mlist.addAll(tmpMlist);
                 adapter.notifyData(mlist);
@@ -386,9 +390,6 @@ public class NoticeListScreen extends AppCompatActivity {
                 mScrollListener.nextPage=tmpNextPage;
                 findViewById(R.id.back).setVisibility(View.INVISIBLE);
                 findViewById(R.id.filter_button).setVisibility(View.VISIBLE);
-//                findViewById(R.id.content_frame).startAnimation(animHideSubFilters);
-//                findViewById(R.id.content_frame).startAnimation(animShowSubFilters);
-                ((DrawerLayout) findViewById(R.id.list_of_notices)).openDrawer(Gravity.LEFT);
                 findViewById(R.id.search).setVisibility(View.VISIBLE);
                 findViewById(R.id.drawer_opener).setVisibility(View.VISIBLE);
 
@@ -452,6 +453,39 @@ public class NoticeListScreen extends AppCompatActivity {
             }
         });
 
+        findViewById(R.id.nav_important).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                category="important";
+                String heading="Important Notices";
+                tmpMlist.clear();
+                tmpState=0;
+                if(findViewById(R.id.NoNotices).getVisibility()==View.VISIBLE)
+                    tmpState=1;
+                if(findViewById(R.id.NoInternet).getVisibility()==View.VISIBLE)
+                    tmpState=2;
+                tmpMlist.addAll(mlist);
+                tmpPos=manager.findFirstVisibleItemPosition();
+                tmpCurrPage=mScrollListener.currentPage;
+                tmpNextPage=mScrollListener.nextPage;
+                manager.scrollToPosition(0);
+                findViewById(R.id.back).setVisibility(View.VISIBLE);
+                findViewById(R.id.filter_button).setVisibility(View.INVISIBLE);
+                findViewById(R.id.search).setVisibility(View.INVISIBLE);
+                findViewById(R.id.drawer_opener).setVisibility(View.INVISIBLE);
+                ((TextView)findViewById(R.id.heading)).setText(heading);
+                mlist.clear();
+                mScrollListener.resetState();
+                ((DrawerLayout)findViewById(R.id.list_of_notices)).closeDrawer(Gravity.LEFT);
+                noticeRequest();
+
+
+                findViewById(R.id.filter_menu).setVisibility(View.INVISIBLE);
+                findViewById(R.id.swipeContainer).setVisibility(View.VISIBLE);
+                cancelFilters(v);
+            }
+        });
+
         findViewById(R.id.nav_feedback).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -464,6 +498,8 @@ public class NoticeListScreen extends AppCompatActivity {
         findViewById(R.id.nav_notification_settings).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                ((DrawerLayout) findViewById(R.id.list_of_notices)).closeDrawer(Gravity.LEFT);
                 Intent intent = new Intent(NoticeListScreen.this,NotificationSettings.class);
                 startActivity(intent);
             }
@@ -566,6 +602,9 @@ public class NoticeListScreen extends AppCompatActivity {
         }
         switch ((String)((TextView)findViewById(R.id.heading)).getText())
         {
+            case  "Important Notices":
+                findViewById(R.id.back).callOnClick();
+                return;
             case "Expired Notices" :
                 findViewById(R.id.back).callOnClick();
                 return;

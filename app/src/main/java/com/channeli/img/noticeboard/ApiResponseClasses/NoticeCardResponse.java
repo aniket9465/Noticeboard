@@ -20,6 +20,9 @@ public class NoticeCardResponse {
     @SerializedName("isDraft")
     @Expose
     private Boolean isDraft;
+    @SerializedName("isImportant")
+    @Expose
+    private Boolean isImportant;
     @SerializedName("read")
     @Expose
     private Boolean read;
@@ -61,6 +64,10 @@ public class NoticeCardResponse {
 
     public Boolean getIsDraft() {
         return isDraft;
+    }
+
+    public Boolean getIsImportant() {
+        return isImportant;
     }
 
     public void setIsDraft(Boolean isDraft) {

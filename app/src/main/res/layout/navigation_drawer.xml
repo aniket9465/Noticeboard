@@ -140,10 +140,43 @@
                         />
 
                     <android.support.constraint.ConstraintLayout
-                        android:id="@+id/nav_expired"
+                        android:id="@+id/nav_important"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:layout_constraintTop_toBottomOf="@+id/view3">
+
+                        <ImageView
+                            android:id="@+id/nav_view_important"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="16dp"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginTop="30dp"
+                            app:srcCompat="@drawable/nav_important"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="16dp"
+                            android:layout_marginStart="56dp"
+                            android:layout_marginTop="30dp"
+                            android:text="Important"
+                            android:textSize="14dp"
+                            android:textColor="#999999"
+                            android:textStyle="bold"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </android.support.constraint.ConstraintLayout>
+
+                    <android.support.constraint.ConstraintLayout
+                        android:id="@+id/nav_expired"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@+id/nav_important">
 
                         <ImageView
                             android:id="@+id/nav_view_expired"

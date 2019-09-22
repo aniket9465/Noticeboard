@@ -49,6 +49,9 @@ public interface ApiInterface {
     @GET("api/noticeboard/star_filter_view/")
     Call<NoticeListResponse> bookmarkedNotices(@Query(value = "page") String page, @Header("Authorization") String Authorization);
 
+    @GET("api/noticeboard/new/")
+    Call<NoticeListResponse> importantNotices(@Query(value = "page") String page,@Query(value = "important") Boolean important, @Header("Authorization") String Authorization);
+
     @GET("api/noticeboard/old/")
     Call<NoticeListResponse> expiredNotices(@Query(value = "page") String page, @Header("Authorization") String Authorization);
 
