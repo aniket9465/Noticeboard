@@ -253,8 +253,8 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
 
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth,int yearEnd, int monthOfYearEnd, int dayOfMonthEnd) {
-        tmpstartDate=""+year+"-"+monthOfYear+1+"-"+dayOfMonth;
-        tmpendDate=yearEnd+"-"+monthOfYearEnd+1+"-"+dayOfMonthEnd;
+        tmpstartDate=""+year+"-"+(monthOfYear+1)+"-"+dayOfMonth;
+        tmpendDate=yearEnd+"-"+(monthOfYearEnd+1)+"-"+dayOfMonthEnd;
         tmpdateFilterSelected=true;
         activity.findViewById(R.id.date_filter_not_set).setVisibility(View.INVISIBLE);
         activity.findViewById(R.id.date_filter_set).setVisibility(View.VISIBLE);

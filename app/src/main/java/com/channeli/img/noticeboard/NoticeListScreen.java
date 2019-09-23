@@ -214,6 +214,10 @@ public class NoticeListScreen extends AppCompatActivity {
                         if(response.body()!=null) {
                             if(mlist.size()!=0)
                                 mlist.remove(mlist.size()-1);
+                            else if(category.equals("All")) // change 1
+                            {
+                                mlist.add(new NoticeCardResponse("Important Unread Notices"));
+                            }
                             for (int i = 0; i < response.body().getNotices().size(); ++i) {
                                 mlist.add(response.body().getNotices().get(i));
                             }

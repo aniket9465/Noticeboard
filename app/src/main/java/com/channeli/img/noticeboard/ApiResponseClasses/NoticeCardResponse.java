@@ -30,6 +30,11 @@ public class NoticeCardResponse {
     @Expose
     public Boolean bookmark;
 
+    public NoticeCardResponse(String title)
+    {
+        this.title=title;
+    }
+
     public Integer getId() {
         return id;
     }

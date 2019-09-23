@@ -51,10 +51,16 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.no
     @Override
     @NonNull
     public NoticeListAdapter.notice_view_holder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if(viewType==1)
+        if(viewType==0)
         {
             View v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.loader, parent, false);
+            return new NoticeListAdapter.notice_view_holder(v);
+        }
+        if(viewType==2)
+        {
+            View v = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.important_notices_card, parent, false);
             return new NoticeListAdapter.notice_view_holder(v);
         }
         View v = LayoutInflater.from(parent.getContext())
@@ -71,6 +77,9 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.no
     @Override
     public void onBindViewHolder(@NonNull final NoticeListAdapter.notice_view_holder holder, final int position) {
         if(list.get(position)==null)
+            return;
+        Log.d("tag","........................"+list.get(position).getTitle()+".........."+getItemViewType(position));
+        if(getItemViewType(position)==2)
             return;
         View.OnClickListener open_notice = new View.OnClickListener() {
             @Override
@@ -221,7 +230,11 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.no
 
     @Override
     public int getItemViewType(int position) {
-        return list.get(position)==null ?1:0;
+        if(list.get(position)==null)
+            return 0;
+        if(list.get(position).getTitle().equals("Important Unread Notices"))
+            return 2;
+        return 1;
     }
 
     class notice_view_holder extends RecyclerView.ViewHolder {

@@ -111,17 +111,26 @@
                 android:id="@+id/swipeContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/lay">
+                android:layout_below="@id/lay"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="0dp">
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-                <android.support.v7.widget.RecyclerView
-                        android:id="@+id/notice_list"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="#ffffff"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:onClick="focus_change" />
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/notice_list"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:background="#ffffff"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:onClick="focus_change" />
+
+                </LinearLayout>
 
 
             </android.support.v4.widget.SwipeRefreshLayout>
