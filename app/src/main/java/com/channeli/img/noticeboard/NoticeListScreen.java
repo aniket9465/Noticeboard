@@ -60,6 +60,7 @@ public class NoticeListScreen extends AppCompatActivity {
     private EndlessRecyclerViewScrollListener mScrollListener;
     private Animation animShow, animHide ;
     private Animation backAnimation;
+    private Integer unreadImportantNotices;
 
     LinearLayoutManager manager;
     @Override
@@ -67,6 +68,7 @@ public class NoticeListScreen extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_of_notices);
+        unreadImportantNotices = 0;
         filters=new ArrayList<>();
         filterDialog=new FilterDialog(filters,this);
         getFilters();
@@ -134,6 +136,7 @@ public class NoticeListScreen extends AppCompatActivity {
         noticeRequest();
     }
 
+
     void noticeRequest() {
 
         UtilityFunctions.tokenRefresh(this);
@@ -152,11 +155,18 @@ public class NoticeListScreen extends AppCompatActivity {
         if(category.equals("All")) {
             String filterid=filterDialog.getFilterId();
             if(filterid.equals("-1")&&(!filterDialog.dateFilterSelected)) {
+
+                unreadImportantNotices = 0;
+                unreadImportantNoticesCountUpdate();
+
                 findViewById(R.id.filter_selected).setVisibility(View.INVISIBLE);
                 ((TextView)findViewById(R.id.heading)).setText("All Notices");
                 call = api_service.get_notices((mScrollListener.currentPage+1) + "","Bearer " + access_token);
             }
             else {
+
+                unreadImportantNotices = 0;
+
                 if (filterid.equals("-1")) {
                     call = api_service.dateFilter(filterDialog.startDate+" 00:00", filterDialog.endDate+" 23:59", (mScrollListener.currentPage+1) + "","Bearer " + access_token);
                 } else {
@@ -182,6 +192,8 @@ public class NoticeListScreen extends AppCompatActivity {
             }
         }
         else {
+
+            unreadImportantNotices = 0;
 
             if(category.equals("bookmarks"))
             {
@@ -214,10 +226,7 @@ public class NoticeListScreen extends AppCompatActivity {
                         if(response.body()!=null) {
                             if(mlist.size()!=0)
                                 mlist.remove(mlist.size()-1);
-                            else if(category.equals("All")) // change 1
-                            {
-                                mlist.add(new NoticeCardResponse("Important Unread Notices"));
-                            }
+
                             for (int i = 0; i < response.body().getNotices().size(); ++i) {
                                 mlist.add(response.body().getNotices().get(i));
                             }
@@ -231,6 +240,29 @@ public class NoticeListScreen extends AppCompatActivity {
                             if(mlist.size()!=0)
                                 mlist.remove(mlist.size()-1);
                             mScrollListener.nextPage=null;
+                        }
+                        if(mlist.size()==0)
+                        {
+                            if(unreadImportantNotices!=0)
+                                mlist.add(new NoticeCardResponse("Important Unread Notices", unreadImportantNotices));
+                        }
+                        else
+                        {
+                            if(mlist.get(0).getTitle().equals("Important Unread Notices"))
+                            {
+                                if(unreadImportantNotices==0)
+                                {
+                                    mlist.remove(0);
+                                }
+                                else
+                                {
+                                    mlist.get(0).unreadCount = unreadImportantNotices;
+                                }
+                            }
+                            else{
+                                if(unreadImportantNotices != 0)
+                                    mlist.add(0, new NoticeCardResponse("Important Unread Notices", unreadImportantNotices));
+                            }
                         }
                         adapter.notifyData(mlist);
                         if(mlist.size()==0)
@@ -521,6 +553,86 @@ public class NoticeListScreen extends AppCompatActivity {
 
     }
 
+
+    void unreadImportantNoticesCountUpdate()
+    {
+        UtilityFunctions.tokenRefresh(this);
+
+        String access_token = getSharedPreferences("Noticeboard_data", 0).getString("access_token", null);
+        retrofit=UtilityFunctions.getRetrofitInstance(getResources().getString(R.string.base_url),retrofit);
+        ApiInterface api_service = retrofit.create(ApiInterface.class);
+
+        Call<NoticeListResponse> call = api_service.importantUnreadNotices( "1", true, true,"Bearer " + access_token);
+
+        call.enqueue(new Callback<NoticeListResponse>() {
+            @Override
+            public void onResponse(Call<NoticeListResponse> call,final Response<NoticeListResponse> response) {
+
+               if(response.body()!=null) {
+                   unreadImportantNotices = response.body().getCount();
+               }
+               else
+               {
+                   unreadImportantNotices = 0;
+               }
+               if(mlist.size()==0)
+               {
+                   if(unreadImportantNotices!=0)
+                       mlist.add(new NoticeCardResponse("Important Unread Notices", unreadImportantNotices));
+               }
+               else
+               {
+                   if(mlist.get(0).getTitle().equals("Important Unread Notices"))
+                   {
+                       if(unreadImportantNotices==0)
+                       {
+                           mlist.remove(0);
+                       }
+                       else
+                       {
+                           mlist.get(0).unreadCount = unreadImportantNotices;
+                       }
+                   }
+                   else{
+                       mlist.add(0, new NoticeCardResponse("Important Unread Notices", unreadImportantNotices));
+                   }
+               }
+               adapter.notifyData(mlist);
+            }
+
+            @Override
+            public void onFailure(Call<NoticeListResponse> call, Throwable t) {
+
+                unreadImportantNotices = 0;
+
+                if(mlist.size()==0)
+                {
+                    if(unreadImportantNotices!=0)
+                        mlist.add(new NoticeCardResponse("Important Unread Notices", unreadImportantNotices));
+                }
+                else
+                {
+                    if(mlist.get(0).getTitle().equals("Important Unread Notices"))
+                    {
+                        if(unreadImportantNotices==0)
+                        {
+                            mlist.remove(0);
+                        }
+                        else
+                        {
+                            mlist.get(0).unreadCount = unreadImportantNotices;
+                        }
+                    }
+                    else{
+                        mlist.add(0, new NoticeCardResponse("Important Unread Notices", unreadImportantNotices));
+                    }
+                }
+                adapter.notifyData(mlist);
+
+            }
+        });
+    }
+
     public void applyFilters(View v)
     {
         mlist.clear();
@@ -591,6 +703,14 @@ public class NoticeListScreen extends AppCompatActivity {
         });
 
     }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        unreadImportantNoticesCountUpdate();
+    }
+
 
     @Override
     public void onBackPressed() {

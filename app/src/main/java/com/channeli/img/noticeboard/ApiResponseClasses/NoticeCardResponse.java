@@ -29,10 +29,12 @@ public class NoticeCardResponse {
     @SerializedName("starred")
     @Expose
     public Boolean bookmark;
+    public int unreadCount;
 
-    public NoticeCardResponse(String title)
+    public NoticeCardResponse(String title,int unreadCount)
     {
         this.title=title;
+        this.unreadCount=unreadCount;
     }
 
     public Integer getId() {

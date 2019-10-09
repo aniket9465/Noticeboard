@@ -45,9 +45,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.channeli.img.noticeboard.NoticeListScreen.retrofit;
-/*
-    set up calls for filters
-*/
+
 public class ExpiredSearch extends AppCompatActivity {
 
     ArrayList<NoticeCardResponse> mlist;

@@ -78,9 +78,19 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.no
     public void onBindViewHolder(@NonNull final NoticeListAdapter.notice_view_holder holder, final int position) {
         if(list.get(position)==null)
             return;
-        Log.d("tag","........................"+list.get(position).getTitle()+".........."+getItemViewType(position));
-        if(getItemViewType(position)==2)
+
+        if(getItemViewType(position)==2) {
+            holder.count.setText(list.get(position).unreadCount+" Unread");
+            holder.open.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent in = new Intent(context, ImportantUnreadNotices.class);
+                    ((Activity)context).startActivityForResult(in, 1);
+                }
+            });
             return;
+        }
+
         View.OnClickListener open_notice = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -241,6 +251,7 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.no
         TextView subject;
         TextView banner;
         TextView date;
+        TextView count;
         LinearLayout open;
         ImageView bookmark;
         View card;
@@ -254,6 +265,7 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.no
             this.bookmark = parent.findViewById(R.id.bookmark);
             this.banner = parent.findViewById(R.id.banner);
             this.date = parent.findViewById(R.id.date);
+            this.count = parent.findViewById(R.id.count);
         }
     }
 

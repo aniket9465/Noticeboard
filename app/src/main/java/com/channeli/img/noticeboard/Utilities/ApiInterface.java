@@ -52,6 +52,9 @@ public interface ApiInterface {
     @GET("api/noticeboard/new/")
     Call<NoticeListResponse> importantNotices(@Query(value = "page") String page,@Query(value = "important") Boolean important, @Header("Authorization") String Authorization);
 
+    @GET("api/noticeboard/new/")
+    Call<NoticeListResponse> importantUnreadNotices(@Query(value = "page") String page,@Query(value = "important") Boolean important,@Query(value = "unread") Boolean unread, @Header("Authorization") String Authorization);
+
     @GET("api/noticeboard/old/")
     Call<NoticeListResponse> expiredNotices(@Query(value = "page") String page, @Header("Authorization") String Authorization);
 
