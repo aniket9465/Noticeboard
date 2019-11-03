@@ -39,7 +39,7 @@
             android:layout_marginBottom="0dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="Important Unread Notices"
+            android:text="Important Notices"
             android:textColor="#fff"
             android:textSize="16dp"
             app:layout_constraintBottom_toBottomOf="parent"

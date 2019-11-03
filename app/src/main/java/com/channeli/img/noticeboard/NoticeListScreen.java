@@ -143,7 +143,7 @@ public class NoticeListScreen extends AppCompatActivity {
 
 
 
-            String access_token = getSharedPreferences("Noticeboard_data", 0).getString("access_token", null);
+        String access_token = getSharedPreferences("Noticeboard_data", 0).getString("access_token", null);
         retrofit=UtilityFunctions.getRetrofitInstance(getResources().getString(R.string.base_url),retrofit);
         ApiInterface api_service = retrofit.create(ApiInterface.class);
 
@@ -595,7 +595,9 @@ public class NoticeListScreen extends AppCompatActivity {
                        }
                    }
                    else{
-                       mlist.add(0, new NoticeCardResponse("Important Unread Notices", unreadImportantNotices));
+                       if(unreadImportantNotices!=0) {
+                           mlist.add(0, new NoticeCardResponse("Important Unread Notices", unreadImportantNotices));
+                       }
                    }
                }
                adapter.notifyData(mlist);
@@ -625,7 +627,9 @@ public class NoticeListScreen extends AppCompatActivity {
                         }
                     }
                     else{
-                        mlist.add(0, new NoticeCardResponse("Important Unread Notices", unreadImportantNotices));
+                        if(unreadImportantNotices!=0) {
+                            mlist.add(0, new NoticeCardResponse("Important Unread Notices", unreadImportantNotices));
+                        }
                     }
                 }
                 adapter.notifyData(mlist);
