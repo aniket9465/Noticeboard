@@ -84,7 +84,7 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.no
             holder.open.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent in = new Intent(context, ImportantUnreadNotices.class);
+                    Intent in = new Intent(context, ImportantNotices.class);
                     ((Activity)context).startActivityForResult(in, 1);
                 }
             });

@@ -272,8 +272,11 @@ public class ExpiredSearch extends AppCompatActivity {
         }
 
         ApiInterface api_service;
-        api_service = UtilityFunctions.getRetrofitInstance(getResources().getString(R.string.base_url), retrofit).create(ApiInterface.class);
-        String access_token=getSharedPreferences("Noticeboard_data", 0).getString("access token", null);
+        retrofit=UtilityFunctions.getRetrofitInstance(getResources().getString(R.string.base_url),retrofit);
+        api_service = retrofit.create(ApiInterface.class);
+        String access_token=getSharedPreferences("Noticeboard_data", 0).getString("access_token", null);
+
+        Log.d("","........" +access_token);
 
 
         Call<NoticeListResponse> call;

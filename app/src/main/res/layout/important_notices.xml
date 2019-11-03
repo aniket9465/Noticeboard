@@ -8,7 +8,7 @@
     <android.support.constraint.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="56dp"
         android:background="@color/appColour"
         android:paddingBottom="8dp"
 
@@ -19,14 +19,14 @@
             android:layout_width="37dp"
             android:layout_height="33dp"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="0dp"
             android:clickable="true"
             android:focusable="true"
             android:padding="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:srcCompat="@drawable/back_white" />
 
         <TextView
@@ -34,9 +34,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="0dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="0dp"
             android:ellipsize="end"
             android:maxLines="1"
             android:text="Important Unread Notices"
@@ -53,7 +53,6 @@
 
     <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/swipeContainer"
-        android:visibility="invisible"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_below="@id/lay"

@@ -143,11 +143,12 @@ public class NoticeListScreen extends AppCompatActivity {
 
 
 
-        String access_token = getSharedPreferences("Noticeboard_data", 0).getString("access_token", null);
+            String access_token = getSharedPreferences("Noticeboard_data", 0).getString("access_token", null);
         retrofit=UtilityFunctions.getRetrofitInstance(getResources().getString(R.string.base_url),retrofit);
         ApiInterface api_service = retrofit.create(ApiInterface.class);
 
-        
+
+        Log.d("","........" +access_token);
 
         Call<NoticeListResponse> call = api_service.get_notices( (mScrollListener.currentPage+1)+"","Bearer " + access_token);
         findViewById(R.id.filter_selected).setVisibility(View.VISIBLE);

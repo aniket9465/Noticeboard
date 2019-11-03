@@ -21,6 +21,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".LoginScreen" android:screenOrientation="portrait" android:windowSoftInputMode="stateHidden"/>
+        <activity android:name=".ImportantNotices" android:screenOrientation="portrait" android:windowSoftInputMode="stateHidden"/>
         <activity android:name=".ExpiredSearch" android:screenOrientation="portrait" android:windowSoftInputMode="stateHidden"/>
         <activity android:name=".NoticeListScreen" android:screenOrientation="portrait" android:windowSoftInputMode="stateHidden"/>
         <activity android:name=".NoticeViewScreen" android:screenOrientation="portrait" android:windowSoftInputMode="stateHidden"/>
