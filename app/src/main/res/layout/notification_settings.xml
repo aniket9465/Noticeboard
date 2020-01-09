@@ -60,6 +60,8 @@
         android:layout_height="wrap_content">
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
+            android:id="@+id/Authorities_row"
+            android:clickable="true"
             android:layout_height="wrap_content">
             <TextView
                 android:layout_width="wrap_content"
@@ -80,6 +82,8 @@
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
+            android:id="@+id/Departments_row"
+            android:clickable="true"
             android:layout_height="wrap_content">
             <TextView
                 android:layout_width="wrap_content"
@@ -100,6 +104,8 @@
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
+            android:id="@+id/Placement_office_row"
+            android:clickable="true"
             android:layout_height="wrap_content">
             <TextView
                 android:layout_width="wrap_content"

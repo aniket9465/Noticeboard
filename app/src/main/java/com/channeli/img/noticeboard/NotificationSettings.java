@@ -92,6 +92,36 @@ public class NotificationSettings extends AppCompatActivity {
                 changeStatus();
             }
         });
+        findViewById(R.id.Placement_office_row).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                placement.callOnClick();
+                if(placement.isChecked())
+                    placement.setChecked(false);
+                else
+                    placement.setChecked(true);
+            }
+        });
+        findViewById(R.id.Authorities_row).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                authority.callOnClick();
+                if(authority.isChecked())
+                    authority.setChecked(false);
+                else
+                    authority.setChecked(true);
+            }
+        });
+        findViewById(R.id.Departments_row).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                department.callOnClick();
+                if(department.isChecked())
+                    department.setChecked(false);
+                else
+                    department.setChecked(true);
+            }
+        });
     }
     void changeStatus()
     {if (FirebaseMessaging.getInstance()!=null) {

@@ -171,11 +171,11 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.no
                             if (list.get(position).getBookmark()) {
                                 ((ImageView) v).setImageResource(R.drawable.bookmark);
                                 list.get(position).bookmark = !list.get(position).getBookmark();
-                                Toast.makeText(context, "notice unmarked", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "Notice Unmarked", Toast.LENGTH_SHORT).show();
                             } else {
                                 ((ImageView) v).setImageResource(R.drawable.bookmarked);
                                 list.get(position).bookmark = !list.get(position).getBookmark();
-                                Toast.makeText(context, "notice bookmarked", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "Notice Bookmarked", Toast.LENGTH_SHORT).show();
                             }
                         }
                         else

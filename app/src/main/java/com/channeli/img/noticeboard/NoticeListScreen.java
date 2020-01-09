@@ -169,14 +169,14 @@ public class NoticeListScreen extends AppCompatActivity {
                 unreadImportantNotices = 0;
 
                 if (filterid.equals("-1")) {
-                    call = api_service.dateFilter(filterDialog.startDate+" 00:00", filterDialog.endDate+" 23:59", (mScrollListener.currentPage+1) + "","Bearer " + access_token);
+                    call = api_service.dateFilter(filterDialog.startDate, filterDialog.endDate, (mScrollListener.currentPage+1) + "","Bearer " + access_token);
                 } else {
                     if(filterDialog.subFilter.equals("All")) {
                         // send slug here
                         if (!filterDialog.dateFilterSelected) {
                             call = api_service.filteredNoticesAll(filterid, (mScrollListener.currentPage+1) + "","Bearer " + access_token);
                         } else {
-                            call = api_service.filterAndDateFilterNoticesAll(filterDialog.startDate+" 00:00", filterDialog.endDate+" 23:59", filterid, (mScrollListener.currentPage+1) + "","Bearer " + access_token);
+                            call = api_service.filterAndDateFilterNoticesAll(filterDialog.startDate, filterDialog.endDate, filterid, (mScrollListener.currentPage+1) + "","Bearer " + access_token);
                         }
                         ((TextView) findViewById(R.id.heading)).setText((String) ("All " + filterDialog.mainFilter + " Notices"));
                     }
@@ -184,7 +184,7 @@ public class NoticeListScreen extends AppCompatActivity {
                         if (!filterDialog.dateFilterSelected) {
                             call = api_service.filteredNotices(filterid, (mScrollListener.currentPage+1) + "","Bearer " + access_token);
                         } else {
-                            call = api_service.filterAndDateFilterNotices(filterDialog.startDate+" 00:00", filterDialog.endDate+" 23:59", filterid, (mScrollListener.currentPage+1) + "","Bearer " + access_token);
+                            call = api_service.filterAndDateFilterNotices(filterDialog.startDate, filterDialog.endDate, filterid, (mScrollListener.currentPage+1) + "","Bearer " + access_token);
                         }
                         ((TextView) findViewById(R.id.heading)).setText(((String) filterDialog.subFilter + " Notices"));
                     }

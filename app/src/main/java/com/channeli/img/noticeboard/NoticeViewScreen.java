@@ -5,6 +5,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -76,6 +77,7 @@ public class NoticeViewScreen extends AppCompatActivity {
         Intent i = getIntent();
         Boolean expired =  i.getBooleanExtra("Expired",false);
         final Integer id = i.getIntExtra("id",-1);
+        markRead(id);
         bookmarked = i.getBooleanExtra("bookmarked",false);
         final Integer position = i.getIntExtra("position",-1);
         Log.d("",id+ " " + bookmarked +" "+ position);
@@ -105,14 +107,17 @@ public class NoticeViewScreen extends AppCompatActivity {
 
 
         String access_token = getSharedPreferences("Noticeboard_data", 0).getString("access_token", null);
+
         Call<NoticeContentResponse> call = api_service.noticeContent(id,"Bearer "+ access_token);
+
         if(expired)
             call = api_service.noticeContentExpired(id,"Bearer " + access_token);
+
         findViewById(R.id.share).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText("Notice shareable link", getResources().getString(R.string.base_url)+"/notice/"+id);
+                ClipData clip = ClipData.newPlainText("Notice shareable link", getResources().getString(R.string.base_url_frontend)+"/noticeboard/notice/"+id);
                 clipboard.setPrimaryClip(clip);
                 Toast.makeText(NoticeViewScreen.this, "Notice link copied to clipboard", Toast.LENGTH_SHORT).show();
             }
@@ -228,6 +233,27 @@ public class NoticeViewScreen extends AppCompatActivity {
         });
 
     }
+
+    public void markRead(int id)
+    {
+        ApiInterface api_service;
+        retrofit = UtilityFunctions.getRetrofitInstance(getResources().getString(R.string.base_url), retrofit);
+        api_service = retrofit.create(ApiInterface.class);
+        String access_token = getSharedPreferences("Noticeboard_data", 0).getString("access_token", null);
+        Call<Void> call = api_service.bookmark_read("Bearer " + access_token, new BookmarkReadRequestBody(id, "read"));
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Log.d("", response.code() + "");
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
+            }
+        });
+    }
+
 
     @Override
     public void onBackPressed() {

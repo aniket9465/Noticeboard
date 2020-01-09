@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Noticeboard</string>
-    <string name="base_url">http://192.168.121.228:2111</string>
+    <string name="base_url">http://10.76.0.62:60000</string>
+    <string name="base_url_frontend">http://10.76.0.62:40000</string>
     <string name="title_activity_login">Login</string>
     <string name="contact_img">Having trouble signing in? <a href="http://img.channeli.in/contact/">Contact IMG</a></string>
 </resources>

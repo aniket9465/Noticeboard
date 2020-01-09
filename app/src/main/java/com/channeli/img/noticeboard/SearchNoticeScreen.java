@@ -333,7 +333,7 @@ public class SearchNoticeScreen extends AppCompatActivity {
         }
         else {
             if (filterid.equals("-1")) {
-                call = api_service.searchAndDateFilter(search_query,filterDialog.startDate+" 00:00", filterDialog.endDate+" 23:59", (mScrollListener.currentPage+1) + "","Bearer " + access_token);
+                call = api_service.searchAndDateFilter(search_query,filterDialog.startDate, filterDialog.endDate, (mScrollListener.currentPage+1) + "","Bearer " + access_token);
             }
             else {
                 if (!filterDialog.dateFilterSelected) {
@@ -345,9 +345,9 @@ public class SearchNoticeScreen extends AppCompatActivity {
                 }
                 else {
                     if(filterDialog.subFilter.equals("All")) // send slug here.
-                        call = api_service.searchAndFilterAndDateFilterNoticesAll(search_query,filterDialog.startDate+" 00:00", filterDialog.endDate+" 23:59", filterid, (mScrollListener.currentPage+1) + "","Bearer " + access_token);
+                        call = api_service.searchAndFilterAndDateFilterNoticesAll(search_query,filterDialog.startDate, filterDialog.endDate, filterid, (mScrollListener.currentPage+1) + "","Bearer " + access_token);
                     else
-                        call = api_service.searchAndFilterAndDateFilterNotices(search_query,filterDialog.startDate+" 00:00", filterDialog.endDate+" 23:59", filterid, (mScrollListener.currentPage+1) + "","Bearer " + access_token);
+                        call = api_service.searchAndFilterAndDateFilterNotices(search_query,filterDialog.startDate, filterDialog.endDate, filterid, (mScrollListener.currentPage+1) + "","Bearer " + access_token);
 
                 }
             }
