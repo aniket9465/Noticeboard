@@ -83,7 +83,6 @@ public class NoticeListScreen extends AppCompatActivity {
         findViewById(R.id.nav_complete_menu).setVisibility(View.VISIBLE);
 
         view = findViewById(R.id.notice_list);
-        view.requestFocus();
         setUpOnClicks();
 
 
@@ -601,6 +600,7 @@ public class NoticeListScreen extends AppCompatActivity {
                    }
                }
                adapter.notifyData(mlist);
+               adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -632,7 +632,9 @@ public class NoticeListScreen extends AppCompatActivity {
                         }
                     }
                 }
+
                 adapter.notifyData(mlist);
+                adapter.notifyDataSetChanged();
 
             }
         });

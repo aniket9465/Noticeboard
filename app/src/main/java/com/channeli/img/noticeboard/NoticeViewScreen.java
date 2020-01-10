@@ -1,6 +1,7 @@
 package com.channeli.img.noticeboard;
 
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -9,6 +10,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ShareCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
@@ -38,6 +40,7 @@ public class NoticeViewScreen extends AppCompatActivity {
     static Retrofit retrofit;
     Boolean bookmarked;
     Intent returnIntent;
+    String dataString;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
 
@@ -75,8 +78,25 @@ public class NoticeViewScreen extends AppCompatActivity {
 
 
         Intent i = getIntent();
+        dataString = i.getDataString();
         Boolean expired =  i.getBooleanExtra("Expired",false);
-        final Integer id = i.getIntExtra("id",-1);
+        final Integer id;
+        Integer tempId;
+        if(dataString != null)
+        {
+            if(dataString.charAt(dataString.length()-1) == '/')
+                dataString=dataString.substring(0,dataString.length()-2);
+            try {
+                tempId = Integer.parseInt(dataString.substring(dataString.lastIndexOf('/') + 1));
+            }
+            catch (Exception e)
+            {
+                tempId = -1;
+            }
+        }
+        else
+            tempId = i.getIntExtra("id",-1);
+        id=tempId;
         markRead(id);
         bookmarked = i.getBooleanExtra("bookmarked",false);
         final Integer position = i.getIntExtra("position",-1);
@@ -116,10 +136,13 @@ public class NoticeViewScreen extends AppCompatActivity {
         findViewById(R.id.share).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText("Notice shareable link", getResources().getString(R.string.base_url_frontend)+"/noticeboard/notice/"+id);
-                clipboard.setPrimaryClip(clip);
-                Toast.makeText(NoticeViewScreen.this, "Notice link copied to clipboard", Toast.LENGTH_SHORT).show();
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.base_url_frontend) + "/noticeboard/notice/" + id);
+                sendIntent.setType("text/plain");
+
+                Intent shareIntent = Intent.createChooser(sendIntent, null);
+                startActivity(shareIntent);
             }
         });
 
@@ -127,7 +150,7 @@ public class NoticeViewScreen extends AppCompatActivity {
             @Override
             public void onResponse(Call<NoticeContentResponse> call, Response<NoticeContentResponse> response) {
 
-                if (response.body() != null) {
+                if (response.code() == 200 && response.body() != null) {
 
                     ((TextView) findViewById(R.id.banner_name)).setText(response.body().banner.getName());
 
@@ -173,6 +196,12 @@ public class NoticeViewScreen extends AppCompatActivity {
                     browser.getSettings().setUseWideViewPort(true);
 
                 }
+                else
+                {
+                    ((TextView) findViewById(R.id.banner_name)).setVisibility(View.INVISIBLE);
+                    findViewById(R.id.no_notice).setVisibility(View.VISIBLE);
+                    findViewById(R.id.constraintLayout2).setVisibility(View.INVISIBLE);
+                }
             }
 
             @Override
@@ -208,24 +237,24 @@ public class NoticeViewScreen extends AppCompatActivity {
                                 bookmarked=!bookmarked;
                                 returnIntent.putExtra("bookmarked",bookmarked);
                                 setResult(Activity.RESULT_OK, returnIntent);
-                                Toast.makeText(getApplicationContext(), "notice unmarked", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Notice Unmarked", Toast.LENGTH_SHORT).show();
                             } else {
                                 ((ImageView) v).setImageResource(R.drawable.bookmarked);
                                 bookmarked=!bookmarked;
                                 returnIntent.putExtra("bookmarked",bookmarked);
                                 setResult(Activity.RESULT_OK, returnIntent);
-                                Toast.makeText(getApplicationContext(), "notice bookmarked", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Notice Bookmarked", Toast.LENGTH_SHORT).show();
                             }
                         }
                         else
                         {
-                            Toast.makeText(getApplicationContext(), "connection error", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Connection Error", Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
-                        Toast.makeText(getApplicationContext(), "connection error", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Connection Error", Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -258,7 +287,7 @@ public class NoticeViewScreen extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Intent calling= getIntent();
-        if(calling.getBooleanExtra("notification",false))
+        if(calling.getBooleanExtra("notification",false) || dataString != null)
         {
             Intent i = new Intent(NoticeViewScreen.this,NoticeListScreen.class);
             startActivity(i);
