@@ -122,7 +122,8 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
                 currmainFilter="Authorities";
                 activity.findViewById(R.id.authority).setBackgroundColor(Color.parseColor("#EDF4FF"));
                 activity.findViewById(R.id.departments).setBackgroundColor(Color.parseColor("#EDF4FF"));
-                activity.findViewById(R.id.placements).setBackgroundColor(Color.parseColor("#EDF4FF"));
+                activity.findViewById(R.id.bhawans).setBackgroundColor(Color.parseColor("#EDF4FF"));
+                activity.findViewById(R.id.centres).setBackgroundColor(Color.parseColor("#EDF4FF"));
                 v.setBackgroundColor(Color.parseColor("#ffffff"));
                 subfilterListItems.clear();
                 for(int i=0;i<filters.size();++i)
@@ -141,11 +142,11 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
         activity.findViewById(R.id.departments).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!currmainFilter.equals("Department"))
+                if(!currmainFilter.equals("Departments"))
                 {
                     ((RadioButton)activity.findViewById(R.id.all_subcategories_bullet)).setChecked(false);
                 }
-                if(tmpmainFilter.equals("Department"))
+                if(tmpmainFilter.equals("Departments"))
                 {
                     if(tmpsubFilter.equals("All"))
                     {
@@ -153,15 +154,16 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
                     }
 
                 }
-                currmainFilter="Department";
+                currmainFilter="Departments";
                 activity.findViewById(R.id.authority).setBackgroundColor(Color.parseColor("#EDF4FF"));
                 activity.findViewById(R.id.departments).setBackgroundColor(Color.parseColor("#EDF4FF"));
-                activity.findViewById(R.id.placements).setBackgroundColor(Color.parseColor("#EDF4FF"));
+                activity.findViewById(R.id.bhawans).setBackgroundColor(Color.parseColor("#EDF4FF"));
+                activity.findViewById(R.id.centres).setBackgroundColor(Color.parseColor("#EDF4FF"));
                 v.setBackgroundColor(Color.parseColor("#ffffff"));
                 subfilterListItems.clear();
                 for(int i=0;i<filters.size();++i)
                 {
-                    if(filters.get(i).getName().equals("Department")) {
+                    if(filters.get(i).getName().equals("Departments")) {
 
                         for (int j = 0; j < filters.get(i).getBanner().size(); ++j) {
                             subfilterListItems.add(filters.get(i).getBanner().get(j));
@@ -172,14 +174,14 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
             }
         });
 
-        activity.findViewById(R.id.placements).setOnClickListener(new View.OnClickListener() {
+        activity.findViewById(R.id.bhawans).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!currmainFilter.equals("Placement"))
+                if(!currmainFilter.equals("Bhawans"))
                 {
                     ((RadioButton)activity.findViewById(R.id.all_subcategories_bullet)).setChecked(false);
                 }
-                if(tmpmainFilter.equals("Placement"))
+                if(tmpmainFilter.equals("Bhawans"))
                 {
                     if(tmpsubFilter.equals("All"))
                     {
@@ -187,15 +189,51 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
                     }
 
                 }
-                currmainFilter="Placement";
+                currmainFilter="Bhawans";
                 activity.findViewById(R.id.authority).setBackgroundColor(Color.parseColor("#EDF4FF"));
                 activity.findViewById(R.id.departments).setBackgroundColor(Color.parseColor("#EDF4FF"));
-                activity.findViewById(R.id.placements).setBackgroundColor(Color.parseColor("#EDF4FF"));
+                activity.findViewById(R.id.centres).setBackgroundColor(Color.parseColor("#EDF4FF"));
+                activity.findViewById(R.id.bhawans).setBackgroundColor(Color.parseColor("#EDF4FF"));
                 v.setBackgroundColor(Color.parseColor("#ffffff"));
                 subfilterListItems.clear();
                 for(int i=0;i<filters.size();++i)
                 {
-                    if(filters.get(i).getName().equals("Placement")) {
+                    if(filters.get(i).getName().equals("Bhawans")) {
+
+                        for (int j = 0; j < filters.get(i).getBanner().size(); ++j) {
+                            subfilterListItems.add(filters.get(i).getBanner().get(j));
+                        }
+                    }
+                }
+                subfilterAdapter.notifyDataSetChanged();
+            }
+        });
+
+        activity.findViewById(R.id.centres).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!currmainFilter.equals("Centres"))
+                {
+                    ((RadioButton)activity.findViewById(R.id.all_subcategories_bullet)).setChecked(false);
+                }
+                if(tmpmainFilter.equals("Centres"))
+                {
+                    if(tmpsubFilter.equals("All"))
+                    {
+                        ((RadioButton)activity.findViewById(R.id.all_subcategories_bullet)).setChecked(true);
+                    }
+
+                }
+                currmainFilter="Centres";
+                activity.findViewById(R.id.authority).setBackgroundColor(Color.parseColor("#EDF4FF"));
+                activity.findViewById(R.id.departments).setBackgroundColor(Color.parseColor("#EDF4FF"));
+                activity.findViewById(R.id.centres).setBackgroundColor(Color.parseColor("#EDF4FF"));
+                activity.findViewById(R.id.bhawans).setBackgroundColor(Color.parseColor("#EDF4FF"));
+                v.setBackgroundColor(Color.parseColor("#ffffff"));
+                subfilterListItems.clear();
+                for(int i=0;i<filters.size();++i)
+                {
+                    if(filters.get(i).getName().equals("Centres")) {
 
                         for (int j = 0; j < filters.get(i).getBanner().size(); ++j) {
                             subfilterListItems.add(filters.get(i).getBanner().get(j));
@@ -214,7 +252,8 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
                     pchecked.setChecked(false);
                 }
                 activity.findViewById(R.id.authority_bullet).setVisibility(View.INVISIBLE);
-                activity.findViewById(R.id.placements_bullet).setVisibility(View.INVISIBLE);
+                activity.findViewById(R.id.centres_bullet).setVisibility(View.INVISIBLE);
+                activity.findViewById(R.id.bhawans_bullet).setVisibility(View.INVISIBLE);
                 activity.findViewById(R.id.departments_bullet).setVisibility(View.INVISIBLE);
                 tmpsubFilter="All";
                 tmpmainFilter=currmainFilter;
@@ -222,11 +261,15 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
                 {
                     activity.findViewById(R.id.authority_bullet).setVisibility(View.VISIBLE);
                 }
-                if(tmpmainFilter.equals("Placement"))
+                if(tmpmainFilter.equals("Centres"))
                 {
-                    activity.findViewById(R.id.placements_bullet).setVisibility(View.VISIBLE);
+                    activity.findViewById(R.id.centres_bullet).setVisibility(View.VISIBLE);
                 }
-                if(tmpmainFilter.equals("Department"))
+                if(tmpmainFilter.equals("Bhawans"))
+                {
+                    activity.findViewById(R.id.bhawans_bullet).setVisibility(View.VISIBLE);
+                }
+                if(tmpmainFilter.equals("Departments"))
                 {
                     activity.findViewById(R.id.departments_bullet).setVisibility(View.VISIBLE);
                 }
@@ -244,7 +287,8 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
                 pchecked.setChecked(false);
                 pchecked=null;
                 activity.findViewById(R.id.authority_bullet).setVisibility(View.INVISIBLE);
-                activity.findViewById(R.id.placements_bullet).setVisibility(View.INVISIBLE);
+                activity.findViewById(R.id.bhawans_bullet).setVisibility(View.INVISIBLE);
+                activity.findViewById(R.id.centres_bullet).setVisibility(View.INVISIBLE);
                 activity.findViewById(R.id.departments_bullet).setVisibility(View.INVISIBLE);
 
             }
@@ -293,30 +337,39 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
             {
                 activity.findViewById(R.id.authority).callOnClick();
             }
-            if(mainFilter.equals("Department"))
+            if(mainFilter.equals("Departments"))
             {
                 activity.findViewById(R.id.departments).callOnClick();
             }
-            if(mainFilter.equals("Placement"))
+            if(mainFilter.equals("Centres"))
             {
-                activity.findViewById(R.id.placements).callOnClick();
+                activity.findViewById(R.id.centres).callOnClick();
+            }
+            if(mainFilter.equals("Bhawans"))
+            {
+                activity.findViewById(R.id.bhawans).callOnClick();
             }
             if(!dateFilterSelected)
             {
                 activity.findViewById(R.id.reset_date_filter).callOnClick();
             }
             activity.findViewById(R.id.authority_bullet).setVisibility(View.INVISIBLE);
-            activity.findViewById(R.id.placements_bullet).setVisibility(View.INVISIBLE);
+            activity.findViewById(R.id.bhawans_bullet).setVisibility(View.INVISIBLE);
+            activity.findViewById(R.id.centres_bullet).setVisibility(View.INVISIBLE);
             activity.findViewById(R.id.departments_bullet).setVisibility(View.INVISIBLE);
             if(mainFilter.equals("Authorities"))
             {
                 activity.findViewById(R.id.authority_bullet).setVisibility(View.VISIBLE);
             }
-            if(mainFilter.equals("Placement"))
+            if(mainFilter.equals("Centres"))
             {
-                activity.findViewById(R.id.placements_bullet).setVisibility(View.VISIBLE);
+                activity.findViewById(R.id.centres_bullet).setVisibility(View.VISIBLE);
             }
-            if(mainFilter.equals("Department"))
+            if(mainFilter.equals("Bhawans"))
+            {
+                activity.findViewById(R.id.bhawans_bullet).setVisibility(View.VISIBLE);
+            }
+            if(mainFilter.equals("Departments"))
             {
                 activity.findViewById(R.id.departments_bullet).setVisibility(View.VISIBLE);
             }
@@ -361,17 +414,22 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
                     pchecked=((RadioButton)v.findViewById(R.id.subcategory_bullet));
 
                     activity.findViewById(R.id.authority_bullet).setVisibility(View.INVISIBLE);
-                    activity.findViewById(R.id.placements_bullet).setVisibility(View.INVISIBLE);
+                    activity.findViewById(R.id.centres_bullet).setVisibility(View.INVISIBLE);
+                    activity.findViewById(R.id.bhawans_bullet).setVisibility(View.INVISIBLE);
                     activity.findViewById(R.id.departments_bullet).setVisibility(View.INVISIBLE);
                     if(currmainFilter.equals("Authorities"))
                     {
                         activity.findViewById(R.id.authority_bullet).setVisibility(View.VISIBLE);
                     }
-                    if(currmainFilter.equals("Placements"))
+                    if(currmainFilter.equals("Centres"))
                     {
-                        activity.findViewById(R.id.placements_bullet).setVisibility(View.VISIBLE);
+                        activity.findViewById(R.id.centres_bullet).setVisibility(View.VISIBLE);
                     }
-                    if(currmainFilter.equals("Department"))
+                    if(currmainFilter.equals("Bhawans"))
+                    {
+                        activity.findViewById(R.id.bhawans_bullet).setVisibility(View.VISIBLE);
+                    }
+                    if(currmainFilter.equals("Departments"))
                     {
                         activity.findViewById(R.id.departments_bullet).setVisibility(View.VISIBLE);
                     }
@@ -396,13 +454,40 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
         if(mainFilter.equals("")) {
             return "-1";
         }
-        if(mainFilter.equals("Placement"))
+        if(mainFilter.equals("Bhawans"))
         {
             if(subFilter.equals("All"))
             {
                 for(int i=0;i<filters.size();++i)
                 {
-                    if(filters.get(i).getName().equals("Placement"))
+                    if(filters.get(i).getName().equals("Bhawans"))
+                    {
+                        filterID=filters.get(i).getSlug();
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                for(int i=0;i<filters.size();++i)
+                {
+                    for(int j=0;j<filters.get(i).getBanner().size();++j)
+                    {
+                        if(filters.get(i).getBanner().get(j).getName().equals(subFilter))
+                        {
+                            filterID=filters.get(i).getBanner().get(j).getId();
+                        }
+                    }
+                }
+            }
+        }
+        if(mainFilter.equals("Centres"))
+        {
+            if(subFilter.equals("All"))
+            {
+                for(int i=0;i<filters.size();++i)
+                {
+                    if(filters.get(i).getName().equals("Centres"))
                     {
                         filterID=filters.get(i).getSlug();
                         break;
@@ -450,13 +535,13 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
                 }
             }
         }
-        if(mainFilter.equals("Department"))
+        if(mainFilter.equals("Departments"))
         {
             if(subFilter.equals("All"))
             {
                 for(int i=0;i<filters.size();++i)
                 {
-                    if(filters.get(i).getName().equals("Department"))
+                    if(filters.get(i).getName().equals("Departments"))
                     {
                         filterID=filters.get(i).getSlug();
                         break;
@@ -495,7 +580,8 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
             pchecked.setChecked(false);
         pchecked=null;
         activity.findViewById(R.id.authority_bullet).setVisibility(View.INVISIBLE);
-        activity.findViewById(R.id.placements_bullet).setVisibility(View.INVISIBLE);
+        activity.findViewById(R.id.bhawans_bullet).setVisibility(View.INVISIBLE);
+        activity.findViewById(R.id.centres_bullet).setVisibility(View.INVISIBLE);
         activity.findViewById(R.id.departments_bullet).setVisibility(View.INVISIBLE);
 
     }

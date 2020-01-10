@@ -68,7 +68,7 @@
         <LinearLayout
             android:id="@+id/sub_c"
             android:layout_width="match_parent"
-            android:layout_height="114dp"
+            android:layout_height="150dp"
             android:layout_marginTop="8dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toTopOf="@+id/view5"
@@ -100,6 +100,52 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/bhawans"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:paddingLeft="16dp"
+                    android:text="Bhawans" />
+
+                <ImageView
+                    android:id="@+id/bhawans_bullet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="13dp"
+                    android:visibility="invisible"
+                    app:srcCompat="@drawable/blue_check" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/centres"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:paddingLeft="16dp"
+                    android:text="Centres" />
+
+                <ImageView
+                    android:id="@+id/centres_bullet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="13dp"
+                    android:visibility="invisible"
+                    app:srcCompat="@drawable/blue_check" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/departments"
                 android:layout_width="match_parent"
                 android:layout_height="36dp"
@@ -116,29 +162,6 @@
                     android:id="@+id/departments_bullet"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="13dp"
-                    android:visibility="invisible"
-                    app:srcCompat="@drawable/blue_check" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/placements"
-                android:layout_width="match_parent"
-                android:layout_height="36dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:paddingLeft="16dp"
-                    android:text="Placement Office" />
-
-                <ImageView
-                    android:id="@+id/placements_bullet"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="13dp"
                     android:visibility="invisible"
@@ -151,7 +174,7 @@
             android:layout_height="1dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="142dp"
+            android:layout_marginTop="178dp"
             android:background="#46000000"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
