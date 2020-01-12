@@ -529,7 +529,7 @@ public class SearchNoticeScreen extends AppCompatActivity {
             @Override
             public void onFailure(Call<List<Filters>> call, Throwable t) {
 
-                Toast.makeText(SearchNoticeScreen.this, "Filters not fetched", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(SearchNoticeScreen.this, "Filters not fetched", Toast.LENGTH_SHORT).show();
                 filterDialog=new FilterDialog(filters,SearchNoticeScreen.this);
             }
         });

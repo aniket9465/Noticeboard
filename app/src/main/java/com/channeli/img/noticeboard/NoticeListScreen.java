@@ -710,7 +710,7 @@ public class NoticeListScreen extends AppCompatActivity {
             @Override
             public void onFailure(Call<List<Filters>> call, Throwable t) {
                 Log.d("NoticeListScreen :","failed to fetch filters");
-                Toast.makeText(NoticeListScreen.this, "Filters not fetched", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(NoticeListScreen.this, "Filters not fetched", Toast.LENGTH_SHORT).show();
                 filterDialog=new FilterDialog(filters,NoticeListScreen.this);
             }
         });

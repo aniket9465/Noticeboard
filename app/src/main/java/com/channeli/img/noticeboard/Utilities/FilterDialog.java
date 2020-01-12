@@ -55,6 +55,23 @@ public class FilterDialog implements DatePickerDialog.OnDateSetListener{
     {
          this.filters=filters;
          this.activity=activity;
+         if(filters.size() == 0)
+         {
+             activity.findViewById(R.id.cancelButton).setVisibility(View.INVISIBLE);
+             activity.findViewById(R.id.applyButton).setVisibility(View.INVISIBLE);
+             activity.findViewById(R.id.filter_main_category).setVisibility(View.INVISIBLE);
+             activity.findViewById(R.id.filter_subcategory).setVisibility(View.INVISIBLE);
+             activity.findViewById(R.id.filterNotfetched).setVisibility(View.VISIBLE);
+             return;
+         }
+         else
+         {
+             activity.findViewById(R.id.cancelButton).setVisibility(View.VISIBLE);
+             activity.findViewById(R.id.applyButton).setVisibility(View.VISIBLE);
+             activity.findViewById(R.id.filter_main_category).setVisibility(View.VISIBLE);
+             activity.findViewById(R.id.filter_subcategory).setVisibility(View.VISIBLE);
+             activity.findViewById(R.id.filterNotfetched).setVisibility(View.INVISIBLE);
+         }
          currmainFilter="Authorities";
          tmpmainFilter="";
          tmpsubFilter="";
