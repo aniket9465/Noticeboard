@@ -17,7 +17,8 @@ public class NotificationSettings extends AppCompatActivity {
 
     CheckBox department;
     CheckBox authority;
-    CheckBox placement;
+    CheckBox centres;
+    CheckBox bhawans;
     char[] subStatus=new char[3];
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,18 +35,21 @@ public class NotificationSettings extends AppCompatActivity {
 
         authority=findViewById(R.id.authority_subscription);
         department=findViewById(R.id.department_subscription);
-        placement=findViewById(R.id.placement_subscription);
+        bhawans=findViewById(R.id.bhawans_subscription);
+        centres=findViewById(R.id.centres_subscription);
 
-        String subStatusString = getSharedPreferences("Noticeboard_data", 0).getString("Subscription", "---");
+        String subStatusString = getSharedPreferences("Noticeboard_data", 0).getString("Subscription", "----");
         subStatus[0]=subStatusString.charAt(0);
         subStatus[1]=subStatusString.charAt(1);
         subStatus[2]=subStatusString.charAt(2);
+        subStatus[3]=subStatusString.charAt(3);
         Log.d("",subStatusString);
-        if(subStatusString.equals("---"))
+        if(subStatusString.equals("----"))
         {
             subStatus[0]='1';
             subStatus[1]='1';
             subStatus[2]='1';
+            subStatus[3]='1';
         }
 
         if(subStatus[0]=='1')
@@ -68,13 +72,28 @@ public class NotificationSettings extends AppCompatActivity {
 
         if(subStatus[2]=='1')
         {
-            placement.setChecked(true);
+            bhawans.setChecked(true);
         }
         else
         {
-            placement.setChecked(false);
+            bhawans.setChecked(false);
         }
-        placement.setOnClickListener(new View.OnClickListener() {
+
+        if(subStatus[3]=='1')
+        {
+            centres.setChecked(true);
+        }
+        else
+        {
+            centres.setChecked(false);
+        }
+        centres.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeStatus();
+            }
+        });
+        bhawans.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 changeStatus();
@@ -92,14 +111,24 @@ public class NotificationSettings extends AppCompatActivity {
                 changeStatus();
             }
         });
-        findViewById(R.id.Placement_office_row).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.Centres_row).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                placement.callOnClick();
-                if(placement.isChecked())
-                    placement.setChecked(false);
+                centres.callOnClick();
+                if(centres.isChecked())
+                    centres.setChecked(false);
                 else
-                    placement.setChecked(true);
+                    centres.setChecked(true);
+            }
+        });
+        findViewById(R.id.Bhawans_row).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bhawans.callOnClick();
+                if(bhawans.isChecked())
+                    bhawans.setChecked(false);
+                else
+                    bhawans.setChecked(true);
             }
         });
         findViewById(R.id.Authorities_row).setOnClickListener(new View.OnClickListener() {
@@ -125,7 +154,8 @@ public class NotificationSettings extends AppCompatActivity {
     }
     void changeStatus()
     {if (FirebaseMessaging.getInstance()!=null) {
-        FirebaseMessaging.getInstance().subscribeToTopic("Placement%20Office");
+        FirebaseMessaging.getInstance().subscribeToTopic("Bhawans");
+        FirebaseMessaging.getInstance().subscribeToTopic("Centres");
         FirebaseMessaging.getInstance().subscribeToTopic("Authorities");
         FirebaseMessaging.getInstance().subscribeToTopic("Departments");
     }
@@ -145,13 +175,21 @@ public class NotificationSettings extends AppCompatActivity {
             FirebaseMessaging.getInstance().unsubscribeFromTopic("Departments");
             subStatus[1] = '0';
         }
-        if(placement.isChecked()) {
-            FirebaseMessaging.getInstance().subscribeToTopic("Placement%20Office");
+        if(bhawans.isChecked()) {
+            FirebaseMessaging.getInstance().subscribeToTopic("Bhawans");
             subStatus[2] = '1';
         }
         else {
-            FirebaseMessaging.getInstance().unsubscribeFromTopic("Placement%20Office");
+            FirebaseMessaging.getInstance().unsubscribeFromTopic("Bhwanas");
             subStatus[2] = '0';
+        }
+        if(centres.isChecked()) {
+            FirebaseMessaging.getInstance().subscribeToTopic("Centres");
+            subStatus[3] = '1';
+        }
+        else {
+            FirebaseMessaging.getInstance().unsubscribeFromTopic("Centres");
+            subStatus[3] = '0';
         }
         SharedPreferences pref = getApplicationContext().getSharedPreferences("Noticeboard_data", 0);
         SharedPreferences.Editor edit = pref.edit();

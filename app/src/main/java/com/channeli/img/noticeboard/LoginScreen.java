@@ -71,7 +71,7 @@ public class LoginScreen extends AppCompatActivity {
                     @Override
                     public void onResponse( Call<LoginResponse> call, Response<LoginResponse> response) {
                         if (response.body() == null) {
-                            Toast.makeText(LoginScreen.this, "wrong credentials :(", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginScreen.this, "Wrong Credentials :(", Toast.LENGTH_SHORT).show();
 
 
                         } else {
@@ -83,10 +83,11 @@ public class LoginScreen extends AppCompatActivity {
                             edit.putString("access_token", response.body().getAccess());
                             edit.putString("token_time", sdf.format(Calendar.getInstance().getTime()));
                             edit.putString("login_time", sdf.format(Calendar.getInstance().getTime()));
-                            edit.putString("Subscription", "111");
+                            edit.putString("Subscription", "1111");
                             edit.apply();
                             if (FirebaseMessaging.getInstance()!=null) {
-                                FirebaseMessaging.getInstance().subscribeToTopic("Placement%20Office");
+                                FirebaseMessaging.getInstance().subscribeToTopic("Bhawans");
+                                FirebaseMessaging.getInstance().subscribeToTopic("Centres");
                                 FirebaseMessaging.getInstance().subscribeToTopic("Authorities");
                                 FirebaseMessaging.getInstance().subscribeToTopic("Departments");
                             }
@@ -99,7 +100,7 @@ public class LoginScreen extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<LoginResponse> call, Throwable t) {
-                        Toast.makeText(LoginScreen.this, "connection issue", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginScreen.this, "Connection Issue", Toast.LENGTH_SHORT).show();
 
                     }
                 });

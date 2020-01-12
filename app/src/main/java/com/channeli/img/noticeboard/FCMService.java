@@ -64,12 +64,11 @@ public class FCMService extends FirebaseMessagingService {
 
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         return new NotificationCompat.Builder(this,CHANNEL_ID)
-                .setSmallIcon(R.drawable.notification_logo)
+                .setSmallIcon(R.drawable.logo_for_notifications)
                 .setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setSound(defaultSoundUri)
-                .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.notification_logo))
-                .setColor(Color.parseColor("#ffffff"))
+                .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.logo_for_notifications))
                 .setShowWhen(true)
                 .setTicker("New Notice!")
                 .setPriority(Notification.PRIORITY_HIGH)
