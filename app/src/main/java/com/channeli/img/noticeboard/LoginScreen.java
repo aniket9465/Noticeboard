@@ -91,9 +91,20 @@ public class LoginScreen extends AppCompatActivity {
                                 FirebaseMessaging.getInstance().subscribeToTopic("Authorities");
                                 FirebaseMessaging.getInstance().subscribeToTopic("Departments");
                             }
-                            Intent in = new Intent(LoginScreen.this, NoticeListScreen.class);
-                            startActivity(in);
-                            finish();
+                            int id = getIntent().getIntExtra("id",-1);
+                            if( id == -1 ) {
+                                Intent in = new Intent(LoginScreen.this, NoticeListScreen.class);
+                                startActivity(in);
+                                finish();
+                            }
+                            else
+                            {
+                                Intent in = new Intent(LoginScreen.this, NoticeViewScreen.class);
+                                in.putExtra("id",id);
+                                in.putExtra("loginPage",true);
+                                startActivity(in);
+                                finish();
+                            }
 
                         }
                     }

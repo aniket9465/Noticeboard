@@ -526,7 +526,7 @@ public class NoticeListScreen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("market://details?id=com.channeli.noticeboard"));
+                intent.setData(Uri.parse("market://details?id=com.channeli.img.noticeboard"));
                 startActivity(intent);
             }
         });
@@ -559,6 +559,12 @@ public class NoticeListScreen extends AppCompatActivity {
         UtilityFunctions.tokenRefresh(this);
 
         String access_token = getSharedPreferences("Noticeboard_data", 0).getString("access_token", null);
+        if(access_token == null)
+        {
+            Intent intent = new Intent(NoticeListScreen.this,LoginScreen.class);
+            startActivity(intent);
+            finish();
+        }
         retrofit=UtilityFunctions.getRetrofitInstance(getResources().getString(R.string.base_url),retrofit);
         ApiInterface api_service = retrofit.create(ApiInterface.class);
 

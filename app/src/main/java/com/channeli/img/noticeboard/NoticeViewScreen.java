@@ -41,6 +41,7 @@ public class NoticeViewScreen extends AppCompatActivity {
     Boolean bookmarked;
     Intent returnIntent;
     String dataString;
+    Boolean loginPage;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
 
@@ -66,7 +67,7 @@ public class NoticeViewScreen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent calling = getIntent();
-                if(calling.getBooleanExtra("notification",false))
+                if(calling.getBooleanExtra("notification",false) || dataString != null || loginPage)
                 {
                     Intent i = new Intent(NoticeViewScreen.this,NoticeListScreen.class);
                     startActivity(i);
@@ -80,6 +81,7 @@ public class NoticeViewScreen extends AppCompatActivity {
         Intent i = getIntent();
         dataString = i.getDataString();
         Boolean expired =  i.getBooleanExtra("Expired",false);
+        loginPage =  i.getBooleanExtra("loginPage",false);
         final Integer id;
         Integer tempId;
         if(dataString != null)
@@ -127,6 +129,14 @@ public class NoticeViewScreen extends AppCompatActivity {
 
 
         String access_token = getSharedPreferences("Noticeboard_data", 0).getString("access_token", null);
+
+        if(access_token == null)
+        {
+            Intent intent = new Intent(NoticeViewScreen.this,LoginScreen.class);
+            intent.putExtra("id", id);
+            startActivity(intent);
+            finish();
+        }
 
         Call<NoticeContentResponse> call = api_service.noticeContent(id,"Bearer "+ access_token);
 
@@ -287,7 +297,7 @@ public class NoticeViewScreen extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Intent calling= getIntent();
-        if(calling.getBooleanExtra("notification",false) || dataString != null)
+        if(calling.getBooleanExtra("notification",false) || dataString != null || loginPage)
         {
             Intent i = new Intent(NoticeViewScreen.this,NoticeListScreen.class);
             startActivity(i);

@@ -310,12 +310,16 @@
         <ListView
             android:id="@+id/subfilters"
             android:layout_width="match_parent"
-            android:layout_height="479dp"
+            android:layout_height="0dp"
             android:layout_marginStart="10dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/view6"
             app:layout_constraintTop_toTopOf="@id/view6" />
+
         <View
+            android:id="@+id/view7"
             android:layout_width="fill_parent"
             android:layout_height="1dp"
             android:background="#999999"
