@@ -166,16 +166,17 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.no
                 call.enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
-                        Log.d(".......",list.get(position).getId().toString()+" ");
                         if(response.code()==201||response.code()==200) {
-                            if (list.get(position).getBookmark()) {
-                                ((ImageView) v).setImageResource(R.drawable.bookmark);
-                                list.get(position).bookmark = !list.get(position).getBookmark();
-                                Toast.makeText(context, "Notice Unmarked", Toast.LENGTH_SHORT).show();
-                            } else {
-                                ((ImageView) v).setImageResource(R.drawable.bookmarked);
-                                list.get(position).bookmark = !list.get(position).getBookmark();
-                                Toast.makeText(context, "Notice Bookmarked", Toast.LENGTH_SHORT).show();
+                            if(list != null && list.size() > position) {
+                                if (list.get(position).getBookmark()) {
+                                    ((ImageView) v).setImageResource(R.drawable.bookmark);
+                                    list.get(position).bookmark = !list.get(position).getBookmark();
+                                    Toast.makeText(context, "Notice Unmarked", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    ((ImageView) v).setImageResource(R.drawable.bookmarked);
+                                    list.get(position).bookmark = !list.get(position).getBookmark();
+                                    Toast.makeText(context, "Notice Bookmarked", Toast.LENGTH_SHORT).show();
+                                }
                             }
                         }
                         else
@@ -230,7 +231,7 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.no
             holder.date.setText(list.get(position).getDatetimeModified());
         }
 
-        holder.subject.setText(list.get(position).getBanner().getName());
+        holder.banner.setText(list.get(position).getBanner().getName());
 
         holder.subject.setText(list.get(position).getTitle());
 
