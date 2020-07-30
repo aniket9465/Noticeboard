@@ -184,9 +184,8 @@ public class NoticeViewScreen extends AppCompatActivity {
 
                     if(response.body().getContent()!=null) {
                         Log.d("",""+response.body().getContent());
-                        String encodedHtml = Base64.encodeToString(response.body().getContent().getBytes(),
-                                Base64.NO_PADDING);
-                        browser.loadData(encodedHtml, "text/html", "base64");
+                        String html = response.body().getContent();
+                        browser.loadDataWithBaseURL(getResources().getString(R.string.base_url),html, "text/html", null,null);
                     }
                     browser.setWebViewClient(new WebViewClient() {
                         @Override

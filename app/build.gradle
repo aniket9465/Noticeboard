@@ -6,8 +6,8 @@ android {
         applicationId "com.channeli.img.noticeboard"
         minSdkVersion 17
         targetSdkVersion 28
-        versionCode 4
-        versionName "1.03"
+        versionCode 5
+        versionName "1.0s4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
