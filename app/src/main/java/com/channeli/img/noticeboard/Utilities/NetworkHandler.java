@@ -1,5 +1,8 @@
 package com.channeli.img.noticeboard.Utilities;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.security.cert.CertificateException;
 
 import javax.net.ssl.HostnameVerifier;
@@ -16,10 +19,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class NetworkHandler {
 
     public static Retrofit getRetrofit(String BASE_URL) {
-
+        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
         return new Retrofit.Builder()
                 .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .client(getUnsafeOkHttpClient())
                 .build();
     }

@@ -3,5 +3,5 @@
     <string name="base_url">https://internet.channeli.in</string>
     <string name="base_url_frontend">https://internet.channeli.in</string>
     <string name="title_activity_login">Login</string>
-    <string name="contact_img">Having trouble signing in? <a href="https://intranet.channeli.in/helpcentre">Contact IMG</a></string>
+    <string name="contact_img">Having trouble signing in? <a href="https://internet.channeli.in/helpcentre">Contact IMG</a></string>
 </resources>

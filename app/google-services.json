@@ -1,39 +1,37 @@
 {
   "project_info": {
-    "project_number": "272029473313",
-    "firebase_url": "https://notification-omni.firebaseio.com",
-    "project_id": "notification-omni",
-    "storage_bucket": "notification-omni.appspot.com"
+    "project_number": "215723781757",
+    "firebase_url": "https://channeli-v2-notifications.firebaseio.com",
+    "project_id": "channeli-v2-notifications",
+    "storage_bucket": "channeli-v2-notifications.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:272029473313:android:c274cd3b898b64c5",
+        "mobilesdk_app_id": "1:215723781757:android:7e147ce4cc21febc264b14",
         "android_client_info": {
           "package_name": "com.channeli.img.noticeboard"
         }
       },
       "oauth_client": [
         {
-          "client_id": "272029473313-69bmjibc9a6is1emsdanqfa8fvj9g0i5.apps.googleusercontent.com",
+          "client_id": "215723781757-fsp0oniajs7qf4m5d2sunp2faghf5lg6.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyC1u2xcaItm7T219wbgG_VQnKCYpHkLV1Y"
+          "current_key": "AIzaSyB5xax2o1N_lW9cCF_7O579oElck2yHbQc"
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
+          "other_platform_oauth_client": [
+            {
+              "client_id": "215723781757-fsp0oniajs7qf4m5d2sunp2faghf5lg6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

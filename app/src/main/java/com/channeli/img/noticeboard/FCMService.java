@@ -32,31 +32,16 @@ public class FCMService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
-        JSONObject data=new JSONObject(remoteMessage.getData());
+        String title=remoteMessage.getNotification().getTitle();
+        String body=remoteMessage.getNotification().getBody();
 
-        String category="All";
-        String subject="";
-        Integer id=-1;
-        Boolean bookmarked=false;
-        try {
-            category=data.getString("category");
-            subject=data.getString("subject");
-            bookmarked=data.getBoolean("bookmarked");
-            id=data.getInt("id");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        sendNotification(generateNotification(category,subject,bookmarked,id));
+        sendNotification(generateNotification(title,body));
 
     }
 
 
-    private Notification generateNotification(String category,String subject,boolean bookmarked,Integer id){
-        Intent intent = new Intent(this, NoticeViewScreen.class);
-        intent.putExtra("notification",true);
-        intent.putExtra("bookmarked",bookmarked);
-        intent.putExtra("id",id);
+    private Notification generateNotification(String title,String body){
+        Intent intent = new Intent(this, NoticeListScreen.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, ((int)System.currentTimeMillis()%1000), intent,
@@ -73,8 +58,8 @@ public class FCMService extends FirebaseMessagingService {
                 .setTicker("New Notice!")
                 .setPriority(Notification.PRIORITY_HIGH)
                 .setContentIntent(pendingIntent)
-                .setContentTitle(category+" Notice")
-                .setContentText(subject)
+                .setContentTitle(title)
+                .setContentText(body)
                 .build();
     }
 

@@ -49,6 +49,7 @@ public class SplashScreen extends AppCompatActivity {
 
                 if(diff<6)
                 {
+                    UtilityFunctions.tokenRefresh(this);
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {

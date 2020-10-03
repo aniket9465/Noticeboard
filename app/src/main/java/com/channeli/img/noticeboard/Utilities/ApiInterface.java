@@ -3,18 +3,22 @@ package com.channeli.img.noticeboard.Utilities;
 import com.channeli.img.noticeboard.ApiRequestBody.BookmarkReadRequestBody;
 import com.channeli.img.noticeboard.ApiRequestBody.LoginRequestBody;
 import com.channeli.img.noticeboard.ApiRequestBody.RefreshTokenBody;
+import com.channeli.img.noticeboard.ApiRequestBody.TokenBody;
 import com.channeli.img.noticeboard.ApiResponseClasses.Filters;
 import com.channeli.img.noticeboard.ApiResponseClasses.LoginResponse;
 import com.channeli.img.noticeboard.ApiResponseClasses.NoticeContentResponse;
 import com.channeli.img.noticeboard.ApiResponseClasses.NoticeListResponse;
 import com.channeli.img.noticeboard.ApiResponseClasses.UserInfo.UserInfo;
 import com.channeli.img.noticeboard.ApiResponseClasses.accessToken;
+import com.channeli.img.noticeboard.ApiResponseClasses.notificationResponse;
 
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.HTTP;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -27,6 +31,12 @@ public interface ApiInterface {
 
     @POST("token_auth/refresh/")
     Call<accessToken> refreshToken(@Body RefreshTokenBody refreshToken);
+
+    @POST("api/notifications/token/")
+    Call<notificationResponse> notificationToken(@Body TokenBody token, @Header("Authorization") String Authorization);
+
+    @HTTP(method = "DELETE", path = "api/notifications/token/", hasBody = true)
+    Call<notificationResponse> DeleteNotificationToken(@Body TokenBody token, @Header("Authorization") String Authorization);
 
     @GET("api/noticeboard/new/")
     Call<NoticeListResponse> get_notices(@Query(value = "page") String page, @Header("Authorization") String Authorization);

@@ -15,17 +15,22 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.channeli.img.noticeboard.ApiRequestBody.TokenBody;
+import com.channeli.img.noticeboard.ApiResponseClasses.notificationResponse;
 import com.channeli.img.noticeboard.Utilities.ApiInterface;
 import com.channeli.img.noticeboard.ApiRequestBody.LoginRequestBody;
 import com.channeli.img.noticeboard.ApiResponseClasses.LoginResponse;
 import com.channeli.img.noticeboard.Utilities.UtilityFunctions;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
+import java.util.Random;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -63,7 +68,7 @@ public class LoginScreen extends AppCompatActivity {
         SubmitButton.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ApiInterface api_service = UtilityFunctions.getRetrofitInstance(getResources().getString(R.string.base_url), retrofit).create(ApiInterface.class);
+                final ApiInterface api_service = UtilityFunctions.getRetrofitInstance(getResources().getString(R.string.base_url), retrofit).create(ApiInterface.class);
                 LoginRequestBody credentials = new LoginRequestBody(UsernameText.getText().toString(), PasswordText.getText().toString());
                 Call<LoginResponse> call = api_service.login(credentials);
                 Log.d("",call.request().url()+"");
@@ -83,13 +88,45 @@ public class LoginScreen extends AppCompatActivity {
                             edit.putString("access_token", response.body().getAccess());
                             edit.putString("token_time", sdf.format(Calendar.getInstance().getTime()));
                             edit.putString("login_time", sdf.format(Calendar.getInstance().getTime()));
-                            edit.putString("Subscription", "1111");
+//                            edit.putString("Subscription", "1111");
                             edit.apply();
                             if (FirebaseMessaging.getInstance()!=null) {
-                                FirebaseMessaging.getInstance().subscribeToTopic("Bhawans");
-                                FirebaseMessaging.getInstance().subscribeToTopic("Centres");
-                                FirebaseMessaging.getInstance().subscribeToTopic("Authorities");
-                                FirebaseMessaging.getInstance().subscribeToTopic("Departments");
+//                                FirebaseMessaging.getInstance().subscribeToTopic("Bhawans");
+//                                FirebaseMessaging.getInstance().subscribeToTopic("Centres");
+//                                FirebaseMessaging.getInstance().subscribeToTopic("Authorities");
+//                                FirebaseMessaging.getInstance().subscribeToTopic("Departments");
+                                final String token = FirebaseInstanceId.getInstance().getToken();
+//                                Log.d("...","...........................................");
+                                StringBuffer rand = new StringBuffer();
+                                for(int i=0;i<50;++i) {
+                                    rand.append(((char)('a'+(Math.floor(26*Math.random()))%26)));
+                                }
+                                String notificationIdentifier = getSharedPreferences("Noticeboard_data", 0).getString("notificationIdentifier", null);
+                                if(notificationIdentifier==null) {
+                                    final String generatedString = rand.toString();
+                                    TokenBody tokenBody = new TokenBody(token, generatedString);
+//                                Log.d("  ","Bearer "+response.body().getAccess());
+//                                Log.d("... ",token);
+
+                                    final Call<notificationResponse> notifcall = api_service.notificationToken(tokenBody, "Bearer " + response.body().getAccess());
+                                    notifcall.enqueue(new Callback<notificationResponse>() {
+                                        @Override
+                                        public void onResponse(Call<notificationResponse> call, Response<notificationResponse> response) {
+
+                                            Log.d("...", token + response.message() + response.code());
+                                            SharedPreferences preff = getApplicationContext().getSharedPreferences("Noticeboard_data", 0);
+                                            SharedPreferences.Editor editt = preff.edit();
+                                            editt.putString("notificationIdentifier",generatedString);
+                                            editt.apply();
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<notificationResponse> call, Throwable t) {
+                                            Log.d("...", token + "fail");
+                                        }
+                                    });
+                                }
+
                             }
                             int id = getIntent().getIntExtra("id",-1);
                             if( id == -1 ) {

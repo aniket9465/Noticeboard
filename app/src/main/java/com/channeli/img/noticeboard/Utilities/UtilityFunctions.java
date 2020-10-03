@@ -15,9 +15,11 @@ import android.widget.Toast;
 
 import com.channeli.img.noticeboard.ApiRequestBody.LoginRequestBody;
 import com.channeli.img.noticeboard.ApiRequestBody.RefreshTokenBody;
+import com.channeli.img.noticeboard.ApiRequestBody.TokenBody;
 import com.channeli.img.noticeboard.ApiResponseClasses.LoginResponse;
 import com.channeli.img.noticeboard.ApiResponseClasses.UserInfo.UserInfo;
 import com.channeli.img.noticeboard.ApiResponseClasses.accessToken;
+import com.channeli.img.noticeboard.ApiResponseClasses.notificationResponse;
 import com.channeli.img.noticeboard.LoginScreen;
 import com.channeli.img.noticeboard.NoticeListScreen;
 import com.channeli.img.noticeboard.R;
@@ -160,6 +162,22 @@ public class UtilityFunctions {
     }
     public static void logout(Activity activity)
     {
+        Retrofit retrofit=null;
+        String notificationIdentifier = activity.getSharedPreferences("Noticeboard_data", 0).getString("notificationIdentifier", null);
+        ApiInterface api_service = UtilityFunctions.getRetrofitInstance(activity.getResources().getString(R.string.base_url), retrofit).create(ApiInterface.class);
+        TokenBody tokenBody = new TokenBody("token", notificationIdentifier);
+        String access_token = activity.getSharedPreferences("Noticeboard_data", 0).getString("access_token", null);
+        final Call<notificationResponse> notifcall = api_service.DeleteNotificationToken(tokenBody, "Bearer " + access_token);
+        notifcall.enqueue(new Callback<notificationResponse>() {
+            @Override
+            public void onResponse(Call<notificationResponse> call, Response<notificationResponse> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<notificationResponse> call, Throwable t) {
+            }
+        });
         SharedPreferences prefs = activity.getSharedPreferences("Noticeboard_data", 0);
         SharedPreferences.Editor editor = prefs.edit();
         editor.remove("login_time");
@@ -167,11 +185,13 @@ public class UtilityFunctions {
         editor.remove("access_token");
         editor.remove("refresh_token");
         editor.remove("Subscription");
-        if (FirebaseMessaging.getInstance()!=null) {
-            FirebaseMessaging.getInstance().unsubscribeFromTopic("Placement%20Office");
-            FirebaseMessaging.getInstance().unsubscribeFromTopic("Authorities");
-            FirebaseMessaging.getInstance().unsubscribeFromTopic("Departments");
-        }
+        editor.remove("notificationIdentifier");
+
+//        if (FirebaseMessaging.getInstance()!=null) {
+//            FirebaseMessaging.getInstance().unsubscribeFromTopic("Placement%20Office");
+//            FirebaseMessaging.getInstance().unsubscribeFromTopic("Authorities");
+//            FirebaseMessaging.getInstance().unsubscribeFromTopic("Departments");
+//        }
 
 
         editor.apply();

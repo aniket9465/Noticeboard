@@ -1,6 +1,7 @@
 package com.channeli.img.noticeboard;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -12,6 +13,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -264,7 +266,7 @@ public class NoticeListScreen extends AppCompatActivity {
                                     mlist.add(0, new NoticeCardResponse("Important Unread Notices", unreadImportantNotices));
                             }
                         }
-                        adapter.notifyData(mlist);
+                        adapter.notifyDataSetChanged();
                         if(mlist.size()==0)
                         {
                             findViewById(R.id.NoNotices).setVisibility(View.VISIBLE);
@@ -288,7 +290,7 @@ public class NoticeListScreen extends AppCompatActivity {
                 if(mlist.size()!=0)
                     mlist.remove(mlist.size()-1);
                 mScrollListener.nextPage=null;
-                adapter.notifyData(mlist);
+                adapter.notifyDataSetChanged();
                 Toast.makeText(NoticeListScreen.this, "No Internet", Toast.LENGTH_SHORT).show();
                 findViewById(R.id.NoNotices).setVisibility(View.INVISIBLE);
                 findViewById(R.id.NoInternet).setVisibility(View.VISIBLE);
@@ -419,7 +421,7 @@ public class NoticeListScreen extends AppCompatActivity {
 
                 mlist.clear();
                 mlist.addAll(tmpMlist);
-                adapter.notifyData(mlist);
+                adapter.notifyDataSetChanged();
                 Log.d("",tmpPos+" "+mlist.size()+"");
                 manager.scrollToPositionWithOffset(tmpPos, 0);
                 mScrollListener.currentPage=tmpCurrPage;
@@ -535,9 +537,13 @@ public class NoticeListScreen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                ((DrawerLayout) findViewById(R.id.list_of_notices)).closeDrawer(Gravity.LEFT);
-                Intent intent = new Intent(NoticeListScreen.this,NotificationSettings.class);
-                startActivity(intent);
+                String url = "https://internet.channeli.in/settings/manage_notifications";
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+//                ((DrawerLayout) findViewById(R.id.list_of_notices)).closeDrawer(Gravity.LEFT);
+//                Intent intent = new Intent(NoticeListScreen.this,NotificationSettings.class);
+//                startActivity(intent);
             }
         });
 
@@ -605,7 +611,6 @@ public class NoticeListScreen extends AppCompatActivity {
                        }
                    }
                }
-               adapter.notifyData(mlist);
                adapter.notifyDataSetChanged();
             }
 
@@ -639,7 +644,6 @@ public class NoticeListScreen extends AppCompatActivity {
                     }
                 }
 
-                adapter.notifyData(mlist);
                 adapter.notifyDataSetChanged();
 
             }
@@ -649,7 +653,7 @@ public class NoticeListScreen extends AppCompatActivity {
     public void applyFilters(View v)
     {
         mlist.clear();
-        adapter.notifyData(mlist);
+        adapter.notifyDataSetChanged();
         mScrollListener.resetState();
         filterDialog.setNew();
         findViewById(R.id.swipeContainer).setVisibility(View.VISIBLE);
@@ -762,7 +766,7 @@ public class NoticeListScreen extends AppCompatActivity {
                 if(position!=-1)
                 {
                     mlist.get(position).setBookmark(bookmarked);
-                    adapter.notifyData(mlist);
+                    adapter.notifyDataSetChanged();
                 }
             }
         }
